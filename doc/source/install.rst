@@ -94,6 +94,12 @@ Project deployment
 
       python manage.py collectstatic
 
+* Patch the pyFF modyle with files in pyff-patch
+   
+  .. code-block:: bash
+
+      cp pyff-patch/* met-venv/lib/python2.7/site-packages/pyff/
+
 
 Apache configuration
 ********************
