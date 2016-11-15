@@ -948,7 +948,10 @@ def federation_pre_save(sender, instance, **kwargs):
 
     slug = slugify(unicode(instance.name))[:200]
     if instance.file_url and instance.file_url != '':
-        instance.fetch_metadata_file(slug)
+        try:
+            instance.fetch_metadata_file(slug)
+        except Exception, e:
+            pass
     if instance.name:
         instance.slug = slugify(unicode(instance))[:200]
 
