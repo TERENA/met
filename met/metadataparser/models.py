@@ -842,6 +842,7 @@ class Entity(Base):
             cached_entity_categories = { entity_category.category_id: entity_category for entity_category in db_entity_categories }
 
             entity_categories = self._get_or_create_ecategories(cached_entity_categories)
+            self.entity_categories.all().delete()
             if len(entity_categories) > 0:
                 self.entity_categories.add(*entity_categories)
 
