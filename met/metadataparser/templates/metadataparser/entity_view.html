@@ -266,7 +266,7 @@
       <td>
           <ul>
               {% for cont in entity.contacts %}
-                  <li><a href="{{ cont.email }}" target="_blank">{{ cont.name }}</a> [{{ cont.type }}]</li>
+                  <li><a href="{{ cont.email|mailto }}" target="_blank">{{ cont.name }}</a> [{{ cont.type }}]</li>
               {% endfor %}
           </ul>
       </td>

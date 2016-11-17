@@ -93,3 +93,7 @@ div.summary .btn-toolbar {
 #pipelist li:last-child:after {
     content: "";
 }
+
+footer {
+    text-align: center;
+}

@@ -273,6 +273,13 @@ def display_etype(value, separator=', '):
             return value
 
 
+@register.filter(name='mailto')
+def mailto(value):
+    if value.startswith('mailto:'):
+        return value
+    else:
+        return 'mailto:%s' % value
+
 @register.filter(name='wrap')
 def wrap(value, length):
     value = unicode(value)
