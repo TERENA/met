@@ -14,9 +14,10 @@ import logging
 from datetime import date
 
 from django.conf import settings
+from django.db.models import Count
 
 from met.metadataparser.utils import send_mail
-from met.metadataparser.models import Federation
+from met.metadataparser.models import Federation, Entity
 
 if settings.PROFILE:
     from silk.profiling.profiler import silk_profile as profile
@@ -83,6 +84,9 @@ def refresh(fed_name=None, force_refresh=False, logger=None):
                 log('Sending following error via email: %s' % error_msg, logger, logging.INFO)
                 _send_message_via_email(error_msg, federation, logger)
     
+    log('Removing entities with no federation associated...', logger, logging.INFO)
+    Entity.objects.all().annotate(federationslength=Count("federations")).filter(federationslength__lte=0).delete()
+
     log('Refreshing metadata terminated.', logger, logging.INFO)
 
 def log(message, logger=None, severity=logging.INFO):
