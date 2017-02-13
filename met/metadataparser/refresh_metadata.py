@@ -44,6 +44,11 @@ def _fetch_new_metadata_file(federation, logger):
 def refresh(fed_name=None, force_refresh=False, logger=None):
     log('Starting refreshing metadata ...', logger, logging.INFO)
 
+    log('Deleting all previous entity categories ...', logger, logging.INFO)
+    entities = Entity.objects.all()
+    for entity in entities:
+        entity.entity_categories.all().delete()
+
     federations = Federation.objects.all()
     federations.prefetch_related('etypes', 'federations', 'entity_categories')
 
