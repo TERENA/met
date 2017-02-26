@@ -66,6 +66,7 @@ def refresh(fed_name=None, force_refresh=False, logger=None):
              
                 log('[%s] Updating federation ...' % federation, logger, logging.DEBUG)
                 federation.process_metadata()
+                federation.save()
             
                 log('[%s] Updating federation entities ...' % federation, logger, logging.DEBUG)
                 removed, updated = federation.process_metadata_entities()

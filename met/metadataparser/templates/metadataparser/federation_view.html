@@ -90,27 +90,35 @@
     {% endif %}
 
     {% if federation.country %}
-        <p>{% trans "Country" %}: {{ federation.country }}</p>
+        <p><b>{% trans "Country" %}:</b> {{ federation.country }}</p>
     {% endif %}
 
     {% if federation.registration_authority %}
-        <p>{% trans "Registration authority" %}: {{ federation.registration_authority }}</p>
+        <p><b>{% trans "Registration authority" %}:</b> {{ federation.registration_authority }}</p>
     {% endif %}
 
     {% if federation.url %}
-        <p>{% trans "Federation external website" %}: <a href="{{ federation.url }}">{{ federation.url }}</a></p>
+        <p><b>{% trans "Federation external website" %}:</b> <a href="{{ federation.url }}">{{ federation.url }}</a></p>
     {% endif %}
 
     {% if federation.type %}
-        <p>{% trans "Federation type" %}: {% get_property fed_types federation.type %}</p>
+        <p><b>{% trans "Federation type" %}:</b> {% get_property fed_types federation.type %}</p>
     {% endif %}
 
     {% if federation.fee_schedule_url %}
-        <p>{% trans "Fee schedule URL" %}: <a href="{{ federation.fee_schedule_url }}">{{ federation.fee_schedule_url }}</a></p>
+        <p><b>{% trans "Fee schedule URL" %}:</b> <a href="{{ federation.fee_schedule_url }}">{{ federation.fee_schedule_url }}</a></p>
     {% endif %}
 
     {% if federation.metadata_update %}
-        <p>{% trans "Metadata updated on" %}: {{ federation.metadata_update }}</a></p>
+        <p><b>{% trans "Metadata updated on" %}:</b> {{ federation.metadata_update }}</p>
+    {% endif %}
+
+    {% if federation.certificates %}
+        <p><b>{% trans "Certificates statistics" %}:</b><br/>
+        {% for key,val in federation.certificates.items %}
+            {{ key }}: {{ val }} {% if not forloop.last %} | {% endif %}
+        {% endfor %}
+        </p>
     {% endif %}
 </td><td width="50%" align="right">
     {% if statcharts %}

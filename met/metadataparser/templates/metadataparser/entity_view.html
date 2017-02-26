@@ -88,6 +88,16 @@
       </td>
     </tr>
     <tr>
+      <td class="first-col"><strong>{% trans "Certificates statistics" %}:</strong></td>
+      <td>
+          <ul id="pipelist">
+              {% for key,val in entity.certificates.items %}
+              <li>{{ key }}: {{ val }}</li>
+              {% endfor %}
+          </ul>
+      </td>
+    </tr>
+    <tr>
       <td class="first-col"><strong>{% trans "Entity Categories" %}:</strong></td>
       <td>
           <ul>
