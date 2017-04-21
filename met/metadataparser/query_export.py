@@ -28,18 +28,8 @@ def export_csv(model, filename, fields):
 
     writer.writerow(fields)
 
-    entities = []
-    for entity in model:
-        entities.append({
-            'entityid': entity.entityid,
-            'name': entity.name,
-            'absolute_url': entity.get_absolute_url(),
-            'types': [unicode(item) for item in entity.types.all()],
-            'federations': [(unicode(item.name), item.get_absolute_url()) for item in entity.federations.all()],
-        })
-
     # Write data to CSV file
-    for obj in entities:
+    for obj in model:
         row = []
         for field in fields:
             row.append("%s" % obj[field])
@@ -51,17 +41,7 @@ def export_csv(model, filename, fields):
 def export_json(model, filename, fields):
     objs = []
 
-    entities = []
-    for entity in model:
-        entities.append({
-            'entityid': entity.entityid,
-            'name': entity.name,
-            'absolute_url': entity.get_absolute_url(),
-            'types': [unicode(item) for item in entity.types.all()],
-            'federations': [(unicode(item.name), item.get_absolute_url()) for item in entity.federations.all()],
-        })
-
-    for obj in entities:
+    for obj in model:
         item = {}
         for field in fields:
             if type(obj[field]) == set:

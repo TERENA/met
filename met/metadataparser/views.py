@@ -631,7 +631,17 @@ def search_service(request):
         objects = Entity.objects.filter(**filters)
 
     if objects and 'format' in request.GET.keys():
-        return export_query_set(request.GET.get('format'), objects,
+        entities = []
+        for entity in objects:
+            entities.append({
+                'entityid': entity.entityid,
+                'name': entity.name,
+                'absolute_url': entity.get_absolute_url(),
+                'types': [unicode(item) for item in entity.types.all()],
+                'federations': [(unicode(item.name), item.get_absolute_url()) for item in entity.federations.all()],
+            })
+
+        return export_query_set(request.GET.get('format'), entities,
                                 'entities_search_result', ('entityid', 'types', 'federations'))
 
     entities = []
