@@ -186,7 +186,7 @@ class MetadataParser(object):
     @staticmethod
     def entity_categories(entity):
         elements = entity.xpath(".//mdattr:EntityAttributes"
-                                "//saml:Attribute[@Name='http://macedir.org/entity-category-support' or @Name='http://macedir.org/entity-category']"
+                                "//saml:Attribute[@Name='http://macedir.org/entity-category-support' or @Name='http://macedir.org/entity-category' or @Name='urn:oasis:names:tc:SAML:attribute:assurance-certification']"
                                 "//saml:AttributeValue",
                                 namespaces=NAMESPACES)
         categories = [dnnode.text.strip() for dnnode in elements]
