@@ -16,7 +16,7 @@ from datetime import date
 from django.conf import settings
 from django.db.models import Count
 
-from met.metadataparser.utils import send_mail
+from met.metadataparser.utils import send_mail, send_slack
 from met.metadataparser.models import Federation, Entity
 
 if settings.PROFILE:
@@ -24,12 +24,13 @@ if settings.PROFILE:
 else:
     from met.metadataparser.templatetags.decorators import noop_decorator as profile
 
-def _send_message_via_email(error_msg, federation, logger=None):
+def _send_message_via_email_and_slack(error_msg, federation, logger=None):
     mail_config_dict = getattr(settings, "MAIL_CONFIG")
     try:
         subject = mail_config_dict['refresh_subject'] % federation
         from_address = mail_config_dict['from_email_address']
         send_mail(from_address, subject, '%s' % error_msg)
+        send_slack('%s' % error_msg)
     except Exception, errorMessage:
         log('Message could not be posted successfully: %s' % errorMessage, logger, logging.ERROR)
 
@@ -88,7 +89,7 @@ def refresh(fed_name=None, force_refresh=False, logger=None):
         finally:
             if error_msg:
                 log('Sending following error via email: %s' % error_msg, logger, logging.INFO)
-                _send_message_via_email(error_msg, federation, logger)
+                _send_message_via_email_and_slack(error_msg, federation, logger)
     
     log('Removing entities with no federation associated...', logger, logging.INFO)
     Entity.objects.all().annotate(federationslength=Count("federations")).filter(federationslength__lte=0).delete()
