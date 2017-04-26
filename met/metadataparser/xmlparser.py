@@ -213,11 +213,17 @@ class MetadataParser(object):
         hashes = {}
 
         for x in element.xpath(".//ds:X509Certificate", namespaces=NAMESPACES):
-            text = x.text.replace("\n", "").replace(" ", "").replace("\t", "")
-            text = "\n".join(MetadataParser._chunkstring(text, 64))
-            certText = "\n".join(["-----BEGIN CERTIFICATE-----", text, '-----END CERTIFICATE-----'])
-            cert = x509.load_pem_x509_certificate(certText, default_backend())
-            certName = cert.signature_hash_algorithm.name
+            certName = 'invalid'
+
+            try:
+                text = x.text.replace("\n", "").replace(" ", "").replace("\t", "")
+                text = "\n".join(MetadataParser._chunkstring(text, 64))
+                certText = "\n".join(["-----BEGIN CERTIFICATE-----", text, '-----END CERTIFICATE-----'])
+                cert = x509.load_pem_x509_certificate(certText, default_backend())
+                certName = cert.signature_hash_algorithm.name
+            except Exception, e:
+                pass
+
             if certName not in hashes:
                 hashes[certName] = 0
             hashes[certName] += 1
