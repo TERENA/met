@@ -46,7 +46,7 @@ def _connect_to_smtp(server, port=25, login_type=None, username=None, password=N
 
 def send_slack(message):
     slack_config_dict = getattr(settings, "SLACK_CONFIG")
-    if slack_config_dict and 'token' in slack_config_dict:
+    if slack_config_dict and 'token' in slack_config_dict and slack_config_dict['token']:
         slack_token = slack_config_dict['token']
         slack_channel = slack_config_dict['channel'] if 'channel' in slack_config_dict else '#devops'
         sc = SlackClient(slack_token)
