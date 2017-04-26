@@ -30,7 +30,7 @@ def _send_message_via_email_and_slack(error_msg, federation, logger=None):
         subject = mail_config_dict['refresh_subject'] % federation
         from_address = mail_config_dict['from_email_address']
         send_mail(from_address, subject, '%s' % error_msg)
-        send_slack('%s' % error_msg)
+        send_slack('%s, - %s' % (subject, error_msg))
     except Exception, errorMessage:
         log('Message could not be posted successfully: %s' % errorMessage, logger, logging.ERROR)
 
