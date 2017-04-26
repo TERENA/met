@@ -84,6 +84,8 @@ def refresh(fed_name=None, force_refresh=False, logger=None):
             log('[%s] NOT Computed statistics: %s' % (federation, not_computed), logger, logging.DEBUG)
 
         except Exception, e:
+            if error_msg is None:
+                error_msg = 'Exception %s' % type(e).__name__
             error_msg = '%s %s' % (error_msg, e)
 
         finally:

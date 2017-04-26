@@ -966,19 +966,21 @@ def federation_pre_save(sender, instance, **kwargs):
     if kwargs.has_key('update_fields') and kwargs['update_fields'] == set(['file']):
         return
 
-    slug = slugify(unicode(instance.name))[:200]
-    if instance.file_url and instance.file_url != '':
-        try:
-            instance.fetch_metadata_file(slug)
-        except Exception, e:
-            pass
+    #slug = slugify(unicode(instance.name))[:200]
+    #if instance.file_url and instance.file_url != '':
+    #    try:
+    #        instance.fetch_metadata_file(slug)
+    #    except Exception, e:
+    #        pass
+
     if instance.name:
         instance.slug = slugify(unicode(instance))[:200]
 
 
 @receiver(pre_save, sender=Entity, dispatch_uid='entity_pre_save')
 def entity_pre_save(sender, instance, **kwargs):
-    if instance.file_url:
-        slug = slugify(unicode(instance.name))[:200]
-        instance.fetch_metadata_file(slug)
-        instance.process_metadata()
+    #if refetch and instance.file_url:
+    #    slug = slugify(unicode(instance.name))[:200]
+    #    instance.fetch_metadata_file(slug)
+    #    instance.process_metadata()
+    pass
