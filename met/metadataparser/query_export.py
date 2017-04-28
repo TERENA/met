@@ -27,6 +27,7 @@ def export_csv(model, filename, fields):
     # Write headers to CSV file
 
     writer.writerow(fields)
+
     # Write data to CSV file
     for obj in model:
         row = []
@@ -39,6 +40,7 @@ def export_csv(model, filename, fields):
 
 def export_json(model, filename, fields):
     objs = []
+
     for obj in model:
         item = {}
         for field in fields:

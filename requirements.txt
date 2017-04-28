@@ -11,3 +11,4 @@ simplejson
 django-mysqlpool
 django-silk
 pyff
+slackclient

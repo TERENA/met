@@ -19,7 +19,7 @@ try:
     from local_settings import ADMINS, INTERNAL_IPS, ALLOWED_HOSTS, CACHES
     from local_settings import SAML_CREATE_UNKNOWN_USER, SAML_DJANGO_USER_MAIN_ATTRIBUTE, SAML_ATTRIBUTE_MAPPING, ORGANIZATION_NAME, SAML2DIR
     from local_settings import LOGIN_URL, LOGOUT_URL, SAML_DESCRIPTION, SAML_ENTITYID, SAML_CONFIG, DJANGO_FEDERATIONS, DJANGO_ADDITIONAL_IDPS
-    from local_settings import MAIL_CONFIG, OWA_BASEURL, OWA_SITEID
+    from local_settings import MAIL_CONFIG, SLACK_CONFIG, OWA_BASEURL, OWA_SITEID
 except Exception:
     print "Error in loading local_settings"
 

@@ -212,6 +212,11 @@ DJANGO_ADDITIONAL_IDPS = [
   },
 ]
 
+SLACK_CONFIG = {
+  'token': '###SLACK_API_TOKEN',
+  'channel': '#devops',
+}
+
 MAIL_CONFIG = {
   # Email server name
   'email_server': 'mailserver.daasi.de',

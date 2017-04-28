@@ -13,6 +13,7 @@
 import hashlib, smtplib
 from email.mime.text import MIMEText
 from django.conf import settings
+from slackclient import SlackClient
 
 def compare_filecontents(a, b):
     if a is None:
@@ -42,6 +43,19 @@ def _connect_to_smtp(server, port=25, login_type=None, username=None, password=N
             raise
 
     return smtp_send
+
+def send_slack(message):
+    slack_config_dict = getattr(settings, "SLACK_CONFIG")
+    if slack_config_dict and 'token' in slack_config_dict and slack_config_dict['token']:
+        slack_token = slack_config_dict['token']
+        slack_channel = slack_config_dict['channel'] if 'channel' in slack_config_dict else '#devops'
+        sc = SlackClient(slack_token)
+
+        sc.api_call(
+          "chat.postMessage",
+          channel=slack_channel,
+          text=message
+        )
 
 def send_mail(from_email_address, subject, message):
     mail_config_dict = getattr(settings, "MAIL_CONFIG")

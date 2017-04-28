@@ -11,6 +11,9 @@
 #########################################################################################
 
 from lxml import etree
+from cryptography import x509
+from cryptography.hazmat.backends import default_backend
+import simplejson as json
 
 NAMESPACES = {
     'xml': 'http://www.w3.org/XML/1998/namespace',
@@ -65,9 +68,9 @@ class MetadataParser(object):
             raise ValueError('filename is required')
 
         self.filename = filename
-        context = etree.iterparse(self.filename, events=('start',), huge_tree=True, remove_blank_text=True)
-        context = iter(context)
-        _, self.rootelem = context.next()
+        with open(filename, 'r') as myfile:
+            data = myfile.read().replace('\n', '')
+        self.rootelem = etree.fromstring(data)
         self.file_id = self.rootelem.get('ID', None)
         self.is_federation = self.rootelem.tag == FEDERATION_ROOT_TAG
         self.is_entity = not self.is_federation
@@ -87,6 +90,7 @@ class MetadataParser(object):
         entity['attr_requested'] = MetadataParser.entity_requested_attributes(element)
         entity['contacts'] = MetadataParser.entity_contacts(element)
         entity['registration_policy'] = MetadataParser.registration_policy(element)
+        entity['certstats'] = MetadataParser.get_certstats(element)
 
         return entity
 
@@ -139,6 +143,10 @@ class MetadataParser(object):
 
         return federation
 
+    @staticmethod
+    def _chunkstring(string, length):
+        return (string[0+i:length+i] for i in range(0, len(string), length))
+
     def get_entity(self, entityid, details=True):
         context = etree.iterparse(self.filename, tag=addns('EntityDescriptor'), events=('end',), huge_tree=True, remove_blank_text=True)
         element = None
@@ -149,7 +157,7 @@ class MetadataParser(object):
 
     def entity_exist(self, entityid):
         entity_xpath = self.rootelem.xpath("//md:EntityDescriptor[@entityID='%s']"
-                                         % entityid, namespaces=NAMESPACES)
+                                           % entityid, namespaces=NAMESPACES)
         return len(entity_xpath) > 0
 
     @staticmethod
@@ -178,7 +186,7 @@ class MetadataParser(object):
     @staticmethod
     def entity_categories(entity):
         elements = entity.xpath(".//mdattr:EntityAttributes"
-                                "//saml:Attribute[@Name='http://macedir.org/entity-category-support' or @Name='http://macedir.org/entity-category']"
+                                "//saml:Attribute[@Name='http://macedir.org/entity-category-support' or @Name='http://macedir.org/entity-category' or @Name='urn:oasis:names:tc:SAML:attribute:assurance-certification']"
                                 "//saml:AttributeValue",
                                 namespaces=NAMESPACES)
         categories = [dnnode.text.strip() for dnnode in elements]
@@ -199,6 +207,28 @@ class MetadataParser(object):
             return protocols.split(' ')
 
         return []
+
+    @staticmethod
+    def get_certstats(element):
+        hashes = {}
+
+        for x in element.xpath(".//ds:X509Certificate", namespaces=NAMESPACES):
+            certName = 'invalid'
+
+            try:
+                text = x.text.replace("\n", "").replace(" ", "").replace("\t", "")
+                text = "\n".join(MetadataParser._chunkstring(text, 64))
+                certText = "\n".join(["-----BEGIN CERTIFICATE-----", text, '-----END CERTIFICATE-----'])
+                cert = x509.load_pem_x509_certificate(certText, default_backend())
+                certName = cert.signature_hash_algorithm.name
+            except Exception, e:
+                pass
+
+            if certName not in hashes:
+                hashes[certName] = 0
+            hashes[certName] += 1
+
+        return json.dumps(hashes)
 
     @staticmethod
     def entity_displayname(entity):
