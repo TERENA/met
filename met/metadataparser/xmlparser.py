@@ -17,7 +17,7 @@ import simplejson as json
 
 NAMESPACES = {
     'xml': 'http://www.w3.org/XML/1998/namespace',
-    'xs': 'xs="http://www.w3.org/2001/XMLSchema',
+    'xs': 'http://www.w3.org/2001/XMLSchema',
     'xsi': 'http://www.w3.org/2001/XMLSchema-instance',
     'md': 'urn:oasis:names:tc:SAML:2.0:metadata',
     'mdui': 'urn:oasis:names:tc:SAML:metadata:ui',
