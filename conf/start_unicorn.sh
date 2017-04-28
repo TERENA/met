@@ -42,4 +42,5 @@ exec $VENV/bin/gunicorn ${DJANGO_WSGI_MODULE}:application \
   --bind=unix:$SOCKFILE \
   --timeout $TIMEOUT \
   --log-level=error \
-  --log-file=-
+  --log-file=- \
+  --max-requests 100
