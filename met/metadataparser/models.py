@@ -61,7 +61,7 @@ def update_obj(mobj, obj, attrs=None):
         if (getattr(mobj, attrb, None) and
             getattr(obj, attrb, None) and
             getattr(mobj, attrb) != getattr(obj, attrb)):
-            setattr(obj, attrb,  getattr(mobj, attrb))
+            setattr(obj, attrb, getattr(mobj, attrb))
 
 class JSONField(models.CharField):
     """JSONField is a generic textfield that neatly serializes/unserializes
@@ -245,12 +245,18 @@ class Federation(Base):
     metadata_update = models.DateField(blank=True, null=True,
                                        unique=False, verbose_name=_(u'Metadata update date'))
 
+    certstats = models.CharField(blank=True, null=True, max_length=200,
+                                 unique=False, verbose_name=_(u'Certificate Stats'))
+
+    @property
+    def certificates(self):
+        return json.loads(self.certstats)
+
     @property
     def _metadata(self):
         if not hasattr(self, '_metadata_cache'):
             self._metadata_cache = self.load_file()
         return self._metadata_cache
-
     def __unicode__(self):
         return self.name
 
@@ -274,6 +280,7 @@ class Federation(Base):
             raise XmlDescriptionError("XML Haven't federation form")
 
         update_obj(metadata.get_federation(), self)
+        self.certstats = MetadataParser.get_certstats(metadata.rootelem)
 
     def _remove_deleted_entities(self, entities_from_xml, request):
         entities_to_remove = []
@@ -301,12 +308,14 @@ class Federation(Base):
         self.entity_set.add(*entities_to_add)
 
     @staticmethod
-    def _entity_has_changed(entity, entityid, name, registration_authority):
+    def _entity_has_changed(entity, entityid, name, registration_authority, certstats):
         if entity.entityid != entityid:
             return True
         if entity.name != name:
             return True
         if entity.registration_authority != registration_authority:
+            return True
+        if entity.certstats != certstats:
             return True
 
         return False
@@ -332,11 +341,12 @@ class Federation(Base):
             entityid = entity.entityid
             name = entity.name
             registration_authority = entity.registration_authority
+            certstats = entity.certstats
  
             entity_from_xml = self._metadata.get_entity(m_id, True)
             entity.process_metadata(False, entity_from_xml, cached_entity_types)
 
-            if created or self._entity_has_changed(entity, entityid, name, registration_authority):
+            if created or self._entity_has_changed(entity, entityid, name, registration_authority, certstats):
                 entities_to_update.append(entity)
 
             entities_to_add.append(entity)
@@ -581,6 +591,9 @@ class Entity(Base):
     name = JSONField(blank=True, null=True, max_length=2000,
                      verbose_name=_(u'Display Name'))
 
+    certstats = models.CharField(blank=True, null=True, max_length=200,
+                                 unique=False, verbose_name=_(u'Certificate Stats'))
+
     entity_categories = models.ManyToManyField(EntityCategory,
                                                verbose_name=_(u'Entity categories'))
 
@@ -589,6 +602,10 @@ class Entity(Base):
     longlist = EntityManager()
 
     curfed = None
+
+    @property
+    def certificates(self):
+        return json.loads(self.certstats)
 
     @property
     def registration_authority_xml(self):
@@ -859,6 +876,8 @@ class Entity(Base):
         if newname and newname != '':
             self.name = newname
 
+        self.certstats = self._get_property('certstats')
+
         if str(self._get_property('registration_authority')) != '':
             self.registration_authority = self._get_property('registration_authority')
 
@@ -956,19 +975,21 @@ def federation_pre_save(sender, instance, **kwargs):
     if kwargs.has_key('update_fields') and kwargs['update_fields'] == set(['file']):
         return
 
-    slug = slugify(unicode(instance.name))[:200]
-    if instance.file_url and instance.file_url != '':
-        try:
-            instance.fetch_metadata_file(slug)
-        except Exception, e:
-            pass
+    #slug = slugify(unicode(instance.name))[:200]
+    #if instance.file_url and instance.file_url != '':
+    #    try:
+    #        instance.fetch_metadata_file(slug)
+    #    except Exception, e:
+    #        pass
+
     if instance.name:
         instance.slug = slugify(unicode(instance))[:200]
 
 
 @receiver(pre_save, sender=Entity, dispatch_uid='entity_pre_save')
 def entity_pre_save(sender, instance, **kwargs):
-    if instance.file_url:
-        slug = slugify(unicode(instance.name))[:200]
-        instance.fetch_metadata_file(slug)
-        instance.process_metadata()
+    #if refetch and instance.file_url:
+    #    slug = slugify(unicode(instance.name))[:200]
+    #    instance.fetch_metadata_file(slug)
+    #    instance.process_metadata()
+    pass
