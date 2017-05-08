@@ -434,12 +434,15 @@ class Federation(Base):
     @classmethod
     def get_sp(cls, entities, xml_name, ref_date=None):
         selected = entities.filter(types__xmlname=xml_name)
+        if not ref_date or ref_date >= pytz.utc.localize(datetime.now() - timedelta(days = 1)):
+            return len(selected)
+
         count = 0
         for entity in selected:
             reginst = None
             if entity.registration_instant:
                 reginst = pytz.utc.localize(entity.registration_instant)
-            if not ref_date or (reginst and reginst > ref_date):
+            if reginst and reginst > ref_date:
                 continue
             count += 1
         return count
@@ -447,12 +450,15 @@ class Federation(Base):
     @classmethod
     def get_idp(cls, entities, xml_name, ref_date=None):
         selected = entities.filter(types__xmlname=xml_name)
+        if not ref_date or ref_date >= pytz.utc.localize(datetime.now() - timedelta(days = 1)):
+            return len(selected)
+
         count = 0
         for entity in selected:
             reginst = None
             if entity.registration_instant:
                 reginst = pytz.utc.localize(entity.registration_instant)
-            if not ref_date or (reginst and reginst > ref_date):
+            if reginst and reginst > ref_date:
                 continue
             count += 1
         return count
@@ -460,12 +466,15 @@ class Federation(Base):
     @classmethod
     def get_aa(cls, entities, xml_name, ref_date=None):
         selected = entities.filter(types__xmlname=xml_name)
+        if not ref_date or ref_date >= pytz.utc.localize(datetime.now() - timedelta(days = 1)):
+            return len(selected)
+
         count = 0
         for entity in selected:
             reginst = None
             if entity.registration_instant:
                 reginst = pytz.utc.localize(entity.registration_instant)
-            if not ref_date or (reginst and reginst > ref_date):
+            if reginst and reginst > ref_date:
                 continue
             count += 1
         return count
