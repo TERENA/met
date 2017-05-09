@@ -865,11 +865,7 @@ class Entity(Base):
             cached_entity_categories = { entity_category.category_id: entity_category for entity_category in db_entity_categories }
 
             # Delete categories no more present in XML
-            category_to_delete = []
-            for category in cached_entity_categories:
-                if not category in self.xml_categories:
-                    category_to_delete.append(cached_entity_categories[category])
-            self.entity_categories.remove(*category_to_delete)
+            self.entity_categories.clear()
 
             # Create all entities, if not alread in database
             entity_categories = self._get_or_create_ecategories(cached_entity_categories)
@@ -879,7 +875,7 @@ class Entity(Base):
                 self.entity_categories.add(*entity_categories)
         else:
             # No categories in XML, delete eventual categorie sin DB
-            self.entity_categories.all().delete()
+            self.entity_categories.clear()
 
         newname = self._get_property('displayName')
         if newname and newname != '':
