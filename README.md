@@ -10,3 +10,8 @@ Metadata Explorer Tool is a fast way to find federations, entities and his relat
 * You can find most federated entities.
 
 To install this software please refer to [this documentation page](doc/source/install.rst).
+
+To test the software you have to install selenium and use the command
+```
+python manage.py test tests --liveserver=localhost:9000-9300
+```
