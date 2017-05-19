@@ -310,14 +310,19 @@ class Federation(Base):
     @staticmethod
     def _entity_has_changed(entity, entityid, name, registration_authority, certstats, display_protocols):
         if entity.entityid != entityid:
+            print "changed id"
             return True
         if entity.name != name:
+            print "changed name"
             return True
         if entity.registration_authority != registration_authority:
+            print "changed ra"
             return True
         if entity.certstats != certstats:
+            print "changed certstat: %s %s" % (entity.certstats, certstats)
             return True
         if entity._display_protocols != display_protocols:
+            print "changed disp protocol"
             return True
 
         return False
@@ -346,7 +351,7 @@ class Federation(Base):
             certstats = entity.certstats
             display_protocols = entity._display_protocols
  
-            entity_from_xml = self._metadata.get_entity(m_id, True)
+            entity_from_xml = self._metadata.get_entity(m_id, False)
             entity.process_metadata(False, entity_from_xml, cached_entity_types)
 
             if created or self._entity_has_changed(entity, entityid, name, registration_authority, certstats, display_protocols):
@@ -501,21 +506,18 @@ class Federation(Base):
         return self.get_stat_protocol(entities, xml_name, 'IDPSSODescriptor', ref_date)
 
     def get_stat_protocol(self, entities, xml_name, service_type, ref_date):
-        selected = entities.filter(types__xmlname=service_type)
+        selected = entities.filter(types__xmlname=service_type, _display_protocols__contains=xml_name)
+        if not ref_date or ref_date >= pytz.utc.localize(datetime.now() - timedelta(days = 1)):
+            return len(selected)
+
         count = 0
         for entity in selected:
             reginst = None
             if entity.registration_instant:
                 reginst = pytz.utc.localize(entity.registration_instant)
-            if not ref_date or (reginst and reginst > ref_date):
+            if reginst and reginst > ref_date:
                 continue
-
-            try:
-                if xml_name in entity._display_protocols:
-                    count += 1
-            except Exception:
-                pass
-        return count
+            count += 1
 
     def can_edit(self, user, delete):
         if user.is_superuser:

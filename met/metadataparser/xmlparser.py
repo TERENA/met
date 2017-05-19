@@ -90,7 +90,6 @@ class MetadataParser(object):
         entity['attr_requested'] = MetadataParser.entity_requested_attributes(element)
         entity['contacts'] = MetadataParser.entity_contacts(element)
         entity['registration_policy'] = MetadataParser.registration_policy(element)
-        entity['certstats'] = MetadataParser.get_certstats(element)
 
         return entity
 
@@ -120,6 +119,7 @@ class MetadataParser(object):
                 entity['entity_categories'] = MetadataParser.entity_categories(element)
                 entity['entity_types'] = MetadataParser.entity_types(element)
                 entity['protocols'] = MetadataParser.entity_protocols(element, entity['entity_types'])
+                entity['certstats'] = MetadataParser.get_certstats(element)
 
                 if details:
                     entity_details = MetadataParser._get_entity_details(element)
