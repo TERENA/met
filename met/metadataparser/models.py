@@ -310,19 +310,14 @@ class Federation(Base):
     @staticmethod
     def _entity_has_changed(entity, entityid, name, registration_authority, certstats, display_protocols):
         if entity.entityid != entityid:
-            print "changed id"
             return True
         if entity.name != name:
-            print "changed name"
             return True
         if entity.registration_authority != registration_authority:
-            print "changed ra"
             return True
         if entity.certstats != certstats:
-            print "changed certstat: %s %s" % (entity.certstats, certstats)
             return True
         if entity._display_protocols != display_protocols:
-            print "changed disp protocol"
             return True
 
         return False
