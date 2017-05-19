@@ -308,7 +308,7 @@ class Federation(Base):
         self.entity_set.add(*entities_to_add)
 
     @staticmethod
-    def _entity_has_changed(entity, entityid, name, registration_authority, certstats):
+    def _entity_has_changed(entity, entityid, name, registration_authority, certstats, display_protocols):
         if entity.entityid != entityid:
             return True
         if entity.name != name:
@@ -316,6 +316,8 @@ class Federation(Base):
         if entity.registration_authority != registration_authority:
             return True
         if entity.certstats != certstats:
+            return True
+        if entity._display_protocols != display_protocols:
             return True
 
         return False
@@ -342,11 +344,12 @@ class Federation(Base):
             name = entity.name
             registration_authority = entity.registration_authority
             certstats = entity.certstats
+            display_protocols = entity._display_protocols
  
             entity_from_xml = self._metadata.get_entity(m_id, True)
             entity.process_metadata(False, entity_from_xml, cached_entity_types)
 
-            if created or self._entity_has_changed(entity, entityid, name, registration_authority, certstats):
+            if created or self._entity_has_changed(entity, entityid, name, registration_authority, certstats, display_protocols):
                 entities_to_update.append(entity)
 
             entities_to_add.append(entity)
@@ -508,7 +511,7 @@ class Federation(Base):
                 continue
 
             try:
-                if Entity.READABLE_PROTOCOLS[xml_name] in entity.display_protocols:
+                if xml_name in entity._display_protocols:
                     count += 1
             except Exception:
                 pass
@@ -606,6 +609,9 @@ class Entity(Base):
     entity_categories = models.ManyToManyField(EntityCategory,
                                                verbose_name=_(u'Entity categories'))
 
+    _display_protocols = models.CharField(blank=True, null=True, max_length=300,
+                                          unique=False, verbose_name=_(u'Display Protocols'))
+
     objects = models.Manager()
 
     longlist = EntityManager()
@@ -634,29 +640,44 @@ class Entity(Base):
 
     @property
     def protocols(self):
-        return ' '.join(self._get_property('protocols'))
+        try:
+            return ' '.join(self._get_property('protocols'))
+        except Exception, e:
+            return ''
 
     @property
     def languages(self):
-        return ' '.join(self._get_property('languages'))
+        try:
+            return ' '.join(self._get_property('languages'))
+        except Exception, e:
+            return ''
 
     @property
     def scopes(self):
-        return ' '.join(self._get_property('scopes'))
+        try:
+            return ' '.join(self._get_property('scopes'))
+        except Exception, e:
+            return ''
 
     @property
     def attributes(self):
-        attributes = self._get_property('attr_requested')
-        if not attributes:
+        try:
+            attributes = self._get_property('attr_requested')
+            if not attributes:
+                return []
+            return attributes['required']
+        except Exception, e:
             return []
-        return attributes['required']
 
     @property
     def attributes_optional(self):
-        attributes = self._get_property('attr_requested')
-        if not attributes:
+        try:
+            attributes = self._get_property('attr_requested')
+            if not attributes:
+                return []
+            return attributes['optional']
+        except Exception, e:
             return []
-        return attributes['optional']
 
     @property
     def organization(self):
@@ -673,43 +694,68 @@ class Entity(Base):
 
     @property
     def display_name(self):
-        return self._get_property('displayName')
+        try:
+            return self._get_property('displayName')
+        except Exception, e:
+            return ''
 
     @property
     def federations_count(self):
-        return str(self.federations.all().count())
+        try:
+            return str(self.federations.all().count())
+        except Exception, e:
+            return ''
         
     @property
     def description(self):
-        return self._get_property('description')
+        try:
+            return self._get_property('description')
+        except Exception, e:
+            return ''
 
     @property
     def info_url(self):
-        return self._get_property('infoUrl')
+        try:
+            return self._get_property('infoUrl')
+        except Exception, e:
+            return ''
 
     @property
     def privacy_url(self):
-        return self._get_property('privacyUrl')
+        try:
+            return self._get_property('privacyUrl')
+        except Exception, e:
+            return ''
 
     @property
     def xml(self):
-        return self._get_property('xml')
+        try:
+            return self._get_property('xml')
+        except Exception, e:
+            return ''
 
     @property
     def xml_types(self):
-        return self._get_property('entity_types')
+        try:
+            return self._get_property('entity_types')
+        except Exception, e:
+            return []
 
     @property
     def xml_categories(self):
-        return self._get_property('entity_categories')
+        try:
+            return self._get_property('entity_categories')
+        except Exception, e:
+            return []
 
     @property
     def display_protocols(self):
         protocols = []
 
-        xml_protocols = self._get_property('protocols')
+        #xml_protocols = self._get_property('protocols')
+        xml_protocols = self._display_protocols
         if xml_protocols:
-            for proto in xml_protocols:
+            for proto in xml_protocols.split(' '):
                 protocols.append(self.READABLE_PROTOCOLS.get(proto, proto))
 
         return protocols
@@ -880,6 +926,10 @@ class Entity(Base):
         newname = self._get_property('displayName')
         if newname and newname != '':
             self.name = newname
+
+        newprotocols = self.protocols
+        if newprotocols and newprotocols != "":
+            self._display_protocols = newprotocols
 
         self.certstats = self._get_property('certstats')
 
