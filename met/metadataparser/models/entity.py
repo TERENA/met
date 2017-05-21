@@ -489,17 +489,3 @@ class Entity(Base):
                 return True
 
         return False
-
-    def has_changed(self, entityid, name, registration_authority, certstats, display_protocols):
-        if self.entityid != entityid:
-            return True
-        if self.name != name:
-            return True
-        if self.registration_authority != registration_authority:
-            return True
-        if self.certstats != certstats:
-            return True
-        if self._display_protocols != display_protocols:
-            return True
-
-        return False
