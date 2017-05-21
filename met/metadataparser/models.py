@@ -305,7 +305,10 @@ class Federation(Base):
         for e in entities_to_update:
             e.save()
 
-        self.entity_set.add(*entities_to_add)
+        for e in entities_to_add:
+            membership = Entity_Federations.objects.get_or_create(federation=self, entity=e)[0]
+            membership.registration_instant = e.registration_instant.date()
+            membership.save()
 
     @staticmethod
     def _entity_has_changed(entity, entityid, name, registration_authority, certstats, display_protocols):
@@ -320,7 +323,7 @@ class Federation(Base):
         if entity._display_protocols != display_protocols:
             return True
 
-        return False
+        return True ###ABFalse
 
     def _add_new_entities(self, entities, entities_from_xml, request, federation_slug):
         db_entity_types = EntityType.objects.all()
@@ -436,51 +439,27 @@ class Federation(Base):
 
     @classmethod
     def get_sp(cls, entities, xml_name, ref_date=None):
-        selected = entities.filter(types__xmlname=xml_name)
-        if not ref_date or ref_date >= pytz.utc.localize(datetime.now() - timedelta(days = 1)):
-            return len(selected)
-
-        count = 0
-        for entity in selected:
-            reginst = None
-            if entity.registration_instant:
-                reginst = pytz.utc.localize(entity.registration_instant)
-            if reginst and reginst > ref_date:
-                continue
-            count += 1
-        return count
+        if ref_date:
+            selected = entities.filter(types__xmlname=xml_name, entity_federations__registration_instant__lt = ref_date)
+        else:
+            selected = entities.filter(types__xmlname=xml_name)
+        return len(selected)
 
     @classmethod
     def get_idp(cls, entities, xml_name, ref_date=None):
-        selected = entities.filter(types__xmlname=xml_name)
-        if not ref_date or ref_date >= pytz.utc.localize(datetime.now() - timedelta(days = 1)):
-            return len(selected)
-
-        count = 0
-        for entity in selected:
-            reginst = None
-            if entity.registration_instant:
-                reginst = pytz.utc.localize(entity.registration_instant)
-            if reginst and reginst > ref_date:
-                continue
-            count += 1
-        return count
+        if ref_date:
+            selected = entities.filter(types__xmlname=xml_name, entity_federations__registration_instant__lt = ref_date)
+        else:
+            selected = entities.filter(types__xmlname=xml_name)
+        return len(selected)
 
     @classmethod
     def get_aa(cls, entities, xml_name, ref_date=None):
-        selected = entities.filter(types__xmlname=xml_name)
-        if not ref_date or ref_date >= pytz.utc.localize(datetime.now() - timedelta(days = 1)):
-            return len(selected)
-
-        count = 0
-        for entity in selected:
-            reginst = None
-            if entity.registration_instant:
-                reginst = pytz.utc.localize(entity.registration_instant)
-            if reginst and reginst > ref_date:
-                continue
-            count += 1
-        return count
+        if ref_date:
+            selected = entities.filter(types__xmlname=xml_name, entity_federations__registration_instant__lt = ref_date)
+        else:
+            selected = entities.filter(types__xmlname=xml_name)
+        return len(selected)
 
     def get_sp_saml1(self, entities, xml_name, ref_date = None):
         return self.get_stat_protocol(entities, xml_name, 'SPSSODescriptor', ref_date)
@@ -501,18 +480,11 @@ class Federation(Base):
         return self.get_stat_protocol(entities, xml_name, 'IDPSSODescriptor', ref_date)
 
     def get_stat_protocol(self, entities, xml_name, service_type, ref_date):
-        selected = entities.filter(types__xmlname=service_type, _display_protocols__contains=xml_name)
-        if not ref_date or ref_date >= pytz.utc.localize(datetime.now() - timedelta(days = 1)):
-            return len(selected)
-
-        count = 0
-        for entity in selected:
-            reginst = None
-            if entity.registration_instant:
-                reginst = pytz.utc.localize(entity.registration_instant)
-            if reginst and reginst > ref_date:
-                continue
-            count += 1
+        if ref_date:
+            selected = entities.filter(types__xmlname=service_type, _display_protocols__contains=xml_name, entity_federations__registration_instant__lt = ref_date)
+        else:
+            selected = entities.filter(types__xmlname=service_type, _display_protocols__contains=xml_name)
+        return len(selected)
 
     def can_edit(self, user, delete):
         if user.is_superuser:
@@ -592,7 +564,7 @@ class Entity(Base):
     entityid = models.CharField(blank=False, max_length=200, unique=True,
                                 verbose_name=_(u'EntityID'), db_index=True)
 
-    federations = models.ManyToManyField(Federation,
+    federations = models.ManyToManyField(Federation, through='Entity_Federations',
                                          verbose_name=_(u'Federations'))
 
     types = models.ManyToManyField(EntityType, verbose_name=_(u'Type'))
@@ -999,6 +971,15 @@ class Entity(Base):
                 return True
 
         return False
+
+
+class Entity_Federations(models.Model):
+    entity = models.ForeignKey(Entity)
+
+    federation = models.ForeignKey(Federation)
+
+    registration_instant = models.DateField(blank=True, null=True,
+                                            verbose_name=_(u'Registration Instant'))
 
 
 class EntityStat(models.Model):

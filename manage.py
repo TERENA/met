@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env PYTHONWARNINGS=ignore python
 
 #################################################################
 # MET v2 Metadate Explorer Tool
