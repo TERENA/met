@@ -131,9 +131,11 @@ class Federation(Base):
 
         return len(entities_to_remove)
 
-    def _update_entities(self, entities_to_update):
+    def _update_entities(self, entities_to_update, entities_to_add):
         for e in entities_to_update:
             e.save()
+
+        for e in entities_to_add:
             membership = Entity_Federations.objects.get_or_create(federation=self, entity=e)[0]
             membership.registration_instant = e.registration_instant.date()
             membership.save()
@@ -165,9 +167,12 @@ class Federation(Base):
             entity_from_xml = self._metadata.get_entity(m_id, False)
             entity.process_metadata(False, entity_from_xml, cached_entity_types)
 
-            entities_to_update.append(entity)
+            if created or entity.has_changed(entityid, name, registration_authority, certstats, display_protocols):
+                entities_to_update.append(entity)
 
-        self._update_entities(entities_to_update)
+            entities_to_add.append(entity)
+
+        self._update_entities(entities_to_update, entities_to_add)
         return len(entities_to_update) 
 
     @staticmethod
@@ -180,6 +185,7 @@ class Federation(Base):
 
         entities = Entity.objects.filter(entityid__in=entities_from_xml)
         entities = entities.prefetch_related('types')
+        memberships = Entity_Federations.objects.filter(federation=self)
 
         try:
             first_date = EntityStat.objects.filter(federation=self).aggregate(Max('time'))['time__max']
