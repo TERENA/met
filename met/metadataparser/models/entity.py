@@ -1,5 +1,4 @@
 #################################################################
-
 #
 # This Software is Open Source. See License: https://github.com/TERENA/met/blob/master/LICENSE.md
 # Copyright (c) 2012, TERENA All rights reserved.
