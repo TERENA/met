@@ -45,7 +45,14 @@
     <Compile Include="met\metadataparser\decorators.py" />
     <Compile Include="met\metadataparser\entity_export.py" />
     <Compile Include="met\metadataparser\forms.py" />
-    <Compile Include="met\metadataparser\models.py" />
+    <Compile Include="met\metadataparser\models\base.py" />
+    <Compile Include="met\metadataparser\models\entity.py" />
+    <Compile Include="met\metadataparser\models\entity_category.py" />
+    <Compile Include="met\metadataparser\models\entity_federations.py" />
+    <Compile Include="met\metadataparser\models\entity_stat.py" />
+    <Compile Include="met\metadataparser\models\entity_type.py" />
+    <Compile Include="met\metadataparser\models\federation.py" />
+    <Compile Include="met\metadataparser\models\__init__.py" />
     <Compile Include="met\metadataparser\query_export.py" />
     <Compile Include="met\metadataparser\refresh_metadata.py" />
     <Compile Include="met\metadataparser\summary_export.py" />
@@ -53,7 +60,6 @@
     <Compile Include="met\metadataparser\templatetags\decorators.py" />
     <Compile Include="met\metadataparser\templatetags\metadataparsertags.py" />
     <Compile Include="met\metadataparser\templatetags\__init__.py" />
-    <Compile Include="met\metadataparser\tests.py" />
     <Compile Include="met\metadataparser\urls.py" />
     <Compile Include="met\metadataparser\utils.py" />
     <Compile Include="met\metadataparser\views.py" />
@@ -64,6 +70,11 @@
     <Compile Include="met\portal\tests.py" />
     <Compile Include="met\portal\views.py" />
     <Compile Include="met\portal\__init__.py" />
+    <Compile Include="met\tests\refresh\__init__.py" />
+    <Compile Include="met\tests\testing_utilities.py" />
+    <Compile Include="met\tests\ui\test_functional.py" />
+    <Compile Include="met\tests\ui\__init__.py" />
+    <Compile Include="met\tests\__init__.py" />
     <Compile Include="met\__init__.py" />
     <Compile Include="met\settings.py" />
     <Compile Include="met\urls.py" />
@@ -88,6 +99,7 @@
     <Folder Include="doc\source\" />
     <Folder Include="met\" />
     <Folder Include="met\metadataparser\" />
+    <Folder Include="met\metadataparser\models\" />
     <Folder Include="met\metadataparser\templates\" />
     <Folder Include="met\metadataparser\templates\metadataparser\" />
     <Folder Include="met\metadataparser\templatetags\" />
@@ -102,6 +114,9 @@
     <Folder Include="met\static\css\" />
     <Folder Include="met\static\img\" />
     <Folder Include="met\static\js\" />
+    <Folder Include="met\tests\" />
+    <Folder Include="met\tests\refresh\" />
+    <Folder Include="met\tests\ui\" />
     <Folder Include="saml2\" />
     <Folder Include="saml2\attribute-maps\" />
   </ItemGroup>

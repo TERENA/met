@@ -12,3 +12,5 @@ django-mysqlpool
 django-silk
 pyff
 slackclient
+pyvirtualdisplay
+selenium
