@@ -113,23 +113,14 @@ class Federation(Base):
         self.certstats = MetadataParser.get_certstats(metadata.rootelem)
 
     def _remove_deleted_entities(self, entities_from_xml, request):
-        entities_to_remove = []
+        removed = 0
         for entity in self.entity_set.all():
             #Remove entity relation if does not exist in metadata
             if not entity.entityid in entities_from_xml:
-                entities_to_remove.append(entity)
+                Entity_Federations.objects.filter(federation=self, entity=entity).delete()
+                removed += 1
 
-        if len(entities_to_remove) > 0:
-            self.entity_set.remove(*entities_to_remove)
-
-            if request:
-                for entity in entities_to_remove:
-                    if not entity.federations.exists():
-                        messages.warning(request,
-                                         mark_safe(_("Orphan entity: <a href='%s'>%s</a>" %
-                                         (entity.get_absolute_url(), entity.entityid))))
-
-        return len(entities_to_remove)
+        return removed
 
     def _update_entities(self, entities_to_update, entities_to_add):
         for e in entities_to_update:
@@ -137,7 +128,7 @@ class Federation(Base):
 
         for e in entities_to_add:
             membership = Entity_Federations.objects.get_or_create(federation=self, entity=e)[0]
-            membership.registration_instant = e.registration_instant.date()
+            membership.registration_instant = e.registration_instant.date() if e.registration_instant else None
             membership.save()
 
     def _add_new_entities(self, entities, entities_from_xml, request, federation_slug):
