@@ -27,9 +27,9 @@ from django.utils.translation import ugettext_lazy as _
 from met.metadataparser.templatetags import attributemap
 from met.metadataparser.xmlparser import DESCRIPTOR_TYPES_DISPLAY
 
-from met.metadataparser.met.models.base import JSONField, Base
-from met.metadataparser.met.models.entity_type import EntityType
-from met.metadataparser.met.models.entity_category import EntityCategory
+from met.metadataparser.models.base import JSONField, Base
+from met.metadataparser.models.entity_type import EntityType
+from met.metadataparser.models.entity_category import EntityCategory
 
 TOP_LENGTH = getattr(settings, "TOP_LENGTH", 5)
 

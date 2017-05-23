@@ -26,11 +26,11 @@ from django.template.defaultfilters import slugify
 
 from met.metadataparser.xmlparser import MetadataParser
 
-from met.metadataparser.met.models.base import Base, XmlDescriptionError
-from met.metadataparser.met.models.entity import Entity
-from met.metadataparser.met.models.entity_type import EntityType
-from met.metadataparser.met.models.entity_stat import EntityStat, stats
-from met.metadataparser.met.models.entity_federations import Entity_Federations
+from met.metadataparser.models.base import Base, XmlDescriptionError
+from met.metadataparser.models.entity import Entity
+from met.metadataparser.models.entity_type import EntityType
+from met.metadataparser.models.entity_stat import EntityStat, stats
+from met.metadataparser.models.entity_federations import Entity_Federations
 
 FEDERATION_TYPES = (
     (None, ''),
