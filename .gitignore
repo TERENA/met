@@ -21,5 +21,6 @@ bin
 obj
 env
 .vs
+.vscode
 automatic_refresh/.cache
 saml2/edugain_metadata.xml

@@ -17,7 +17,7 @@ from django.conf import settings
 from django.db.models import Count
 
 from met.metadataparser.utils import send_mail, send_slack
-from met.metadataparser.models import Federation, Entity
+from met.metadataparser.models import Federation, Entity, EntityCategory
 
 if settings.PROFILE:
     from silk.profiling.profiler import silk_profile as profile

@@ -13,9 +13,6 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-#from federation import Federation
-#from entity import Entity
-
 class Entity_Federations(models.Model):
     entity = models.ForeignKey('Entity')
 

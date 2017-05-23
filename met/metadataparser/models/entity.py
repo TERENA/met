@@ -25,10 +25,11 @@ from django.db.models.query import QuerySet
 from django.utils.translation import ugettext_lazy as _
 
 from met.metadataparser.templatetags import attributemap
+from met.metadataparser.xmlparser import DESCRIPTOR_TYPES_DISPLAY
 
-from base import JSONField, Base
-from entity_type import EntityType
-from entity_category import EntityCategory
+from met.metadataparser.met.models.base import JSONField, Base
+from met.metadataparser.met.models.entity_type import EntityType
+from met.metadataparser.met.models.entity_category import EntityCategory
 
 TOP_LENGTH = getattr(settings, "TOP_LENGTH", 5)
 
@@ -348,7 +349,7 @@ class Entity(Base):
         cur_cached_types = [t.xmlname for t in self.types.all()]
         for etype in self.xml_types:
             if etype in cur_cached_types:
-               break
+                break
 
             if cached_entity_types is None:
                 entity_type, _ = EntityType.objects.get_or_create(xmlname=etype,

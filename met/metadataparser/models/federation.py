@@ -15,12 +15,10 @@ import simplejson as json
 
 from datetime import datetime, time, timedelta
 
-from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models import Max
 from django.db.models.signals import pre_save
-from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from django.dispatch import receiver
@@ -28,11 +26,11 @@ from django.template.defaultfilters import slugify
 
 from met.metadataparser.xmlparser import MetadataParser
 
-from base import Base
-from entity import Entity
-from entity_type import EntityType
-from entity_stat import EntityStat, stats
-from entity_federations import Entity_Federations
+from met.metadataparser.met.models.base import Base, XmlDescriptionError
+from met.metadataparser.met.models.entity import Entity
+from met.metadataparser.met.models.entity_type import EntityType
+from met.metadataparser.met.models.entity_stat import EntityStat, stats
+from met.metadataparser.met.models.entity_federations import Entity_Federations
 
 FEDERATION_TYPES = (
     (None, ''),
@@ -112,7 +110,7 @@ class Federation(Base):
         update_obj(metadata.get_federation(), self)
         self.certstats = MetadataParser.get_certstats(metadata.rootelem)
 
-    def _remove_deleted_entities(self, entities_from_xml, request):
+    def _remove_deleted_entities(self, entities_from_xml):
         removed = 0
         for entity in self.entity_set.all():
             #Remove entity relation if does not exist in metadata
@@ -153,7 +151,7 @@ class Federation(Base):
             name = entity.name
             registration_authority = entity.registration_authority
             certstats = entity.certstats
-            display_protocols = entity._display_protocols
+            display_protocols = entity.display_protocols
  
             entity_from_xml = self._metadata.get_entity(m_id, False)
             entity.process_metadata(False, entity_from_xml, cached_entity_types)
@@ -176,7 +174,7 @@ class Federation(Base):
 
         entities = Entity.objects.filter(entityid__in=entities_from_xml)
         entities = entities.prefetch_related('types')
-        memberships = Entity_Federations.objects.filter(federation=self)
+        Entity_Federations.objects.filter(federation=self)
 
         try:
             first_date = EntityStat.objects.filter(federation=self).aggregate(Max('time'))['time__max']
@@ -218,7 +216,7 @@ class Federation(Base):
 
     def process_metadata_entities(self, request=None, federation_slug=None):
         entities_from_xml = self._metadata.get_entities()
-        removed = self._remove_deleted_entities(entities_from_xml, request)
+        removed = self._remove_deleted_entities(entities_from_xml)
 
         entities = {}
         db_entities = Entity.objects.filter(entityid__in=entities_from_xml)
