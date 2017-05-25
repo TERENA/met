@@ -15,6 +15,10 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class EntityCategory(models.Model):
+    """
+    Description of an entity category as defined in SAML here:
+    http://macedir.org/draft-macedir-entity-category-00.html
+    """
     category_id = models.CharField(verbose_name='Entity category ID',
                                    max_length=1000,
                                    blank=False, null=False,

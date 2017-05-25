@@ -43,6 +43,10 @@ def update_obj(mobj, obj, attrs=None):
 
 
 class EntityQuerySet(QuerySet):
+    """
+    Entity queryset.
+    """
+
     def iterator(self):
         cached_federations = {}
         for entity in super(EntityQuerySet, self).iterator():
@@ -72,11 +76,19 @@ class EntityQuerySet(QuerySet):
 
 
 class EntityManager(models.Manager):
+    """
+    Manager for entities.
+    """
+
     def get_queryset(self):
         return EntityQuerySet(self.model, using=self._db)
 
 
 class Entity(Base):
+    """
+    Model describin a federation entity (IdP, SP or AA).
+    """
+
     READABLE_PROTOCOLS = {
         'urn:oasis:names:tc:SAML:1.1:protocol': 'SAML 1.1',
         'urn:oasis:names:tc:SAML:2.0:protocol': 'SAML 2.0',

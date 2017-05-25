@@ -238,8 +238,7 @@ def get_property(obj, prop=None):
     uprop = unicode(prop)
     if not uprop:
         return '<a href="%(link)s">%(name)s</a>' % {"link": obj.get_absolute_url(),
-                                                    "name": unicode(obj),
-                                                    }
+                                                    "name": unicode(obj)}
     if isinstance(obj, dict):
         return obj.get(prop, None)
     if getattr(getattr(obj, uprop, None), 'all', None):

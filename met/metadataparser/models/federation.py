@@ -49,6 +49,10 @@ def update_obj(mobj, obj, attrs=None):
 
 
 class Federation(Base):
+    """
+    Model describing an identity federation.
+    """
+
     name = models.CharField(blank=False, null=False, max_length=200,
                             unique=True, verbose_name=_(u'Name'))
 

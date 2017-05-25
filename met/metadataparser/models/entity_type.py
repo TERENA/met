@@ -15,6 +15,10 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class EntityType(models.Model):
+    """
+    Model describing the type of an entity.
+    """
+
     name = models.CharField(blank=False, max_length=20, unique=True,
                             verbose_name=_(u'Name'), db_index=True)
 

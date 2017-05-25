@@ -28,7 +28,8 @@ from met.metadataparser.utils import compare_filecontents
 
 
 class JSONField(models.CharField):
-    """JSONField is a generic textfield that neatly serializes/unserializes
+    """
+    JSONField is a generic textfield that neatly serializes/unserializes
     JSON objects seamlessly
 
     The json spec claims you must use a collection type at the top level of
@@ -87,6 +88,11 @@ class JSONField(models.CharField):
 
 
 class Base(models.Model):
+    """
+    Class describing an entity that can be updated from metadata file.
+    Each object parsed from the XML extends this base class that contains shared methods.
+    """
+
     file_url = models.CharField(verbose_name='Metadata url',
                                 max_length=1000,
                                 blank=True, null=True,
@@ -180,12 +186,21 @@ class Base(models.Model):
 
     @classmethod
     def process_metadata(cls):
+        """
+        Method that process the metadata file and updates attributes accordingly.
+        """
         raise NotImplementedError()
 
 
 class XmlDescriptionError(Exception):
+    """
+    Class representing an error in the XML file.
+    """
     pass
 
 
 class Dummy(models.Model):
+    """
+    Dummy object necessary to thest Django funcionalities.
+    """
     pass

@@ -18,6 +18,10 @@ stats = getattr(settings, "STATS")
 
 
 class EntityStat(models.Model):
+    """
+    Model describing a statistic information about an entity.
+    """
+
     time = models.DateTimeField(blank=False, null=False,
                                 verbose_name=_(u'Metadata time stamp'))
 

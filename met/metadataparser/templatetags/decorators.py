@@ -12,6 +12,9 @@
 
 
 def noop_decorator(name=None):
+    """
+    Noop decorator doing nothing.
+    """
     def real_noop_decorator(function):
         return function
     return real_noop_decorator

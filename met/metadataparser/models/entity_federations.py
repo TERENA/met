@@ -15,6 +15,10 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class Entity_Federations(models.Model):
+    """
+    Description of the relationship between entities and federations.
+    """
+
     entity = models.ForeignKey('Entity')
 
     federation = models.ForeignKey('Federation')
