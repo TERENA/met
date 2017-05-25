@@ -8,7 +8,7 @@
 # MET v2 was developed for TERENA by Tamim Ziai, DAASI International GmbH, http://www.daasi.de
 # Current version of MET has been revised for performance improvements by Andrea Biancini,
 # Consortium GARR, http://www.garr.it
-#########################################################################################
+##########################################################################
 
 import csv
 from xml.dom.minidom import Document
@@ -17,11 +17,13 @@ from django.http import HttpResponse, HttpResponseBadRequest
 from django.template.defaultfilters import slugify
 import simplejson as json
 
+
 class SetEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, set):
             return list(obj)
         return json.JSONEncoder.default(self, obj)
+
 
 def _serialize_value_to_csv(value):
     if type(value) is list:
@@ -34,6 +36,7 @@ def _serialize_value_to_csv(value):
         serialized = "%s" % value
 
     return serialized
+
 
 def export_entity_csv(entity):
     response = HttpResponse(content_type='text/csv')
@@ -113,10 +116,10 @@ def export_entity_xml(entity):
 
 
 export_entity_modes = {
-            'csv': export_entity_csv,
-            'json': export_entity_json,
-            'xml': export_entity_xml,
-        }
+    'csv': export_entity_csv,
+    'json': export_entity_json,
+    'xml': export_entity_xml,
+}
 
 
 def export_entity(mode, entity):

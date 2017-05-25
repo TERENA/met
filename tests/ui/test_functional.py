@@ -1,5 +1,6 @@
 from pyvirtualdisplay import Display
 from selenium import webdriver
+from selenium.common.exceptions import NoSuchElementException
 from django.core.urlresolvers import reverse
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.utils import formats
@@ -24,10 +25,10 @@ class FunctionalTest(StaticLiveServerTestCase):
 
     def _is_text_present(self, text):
         try:
-            body = self.selenium.find_element_by_tag_name("body") # find body tag element
+            body = self.selenium.find_element_by_tag_name("body")
         except NoSuchElementException, e:
             return False
-        return text in body.text # check if the text is in body's text
+        return text in body.text  # check if the text is in body's text
 
     def test_home_title(self):
         """

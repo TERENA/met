@@ -8,7 +8,7 @@
 # MET v2 was developed for TERENA by Tamim Ziai, DAASI International GmbH, http://www.daasi.de
 # Current version of MET has been revised for performance improvements by Andrea Biancini,
 # Consortium GARR, http://www.garr.it
-#########################################################################################
+##########################################################################
 
 import logging
 from datetime import date
@@ -24,6 +24,7 @@ if settings.PROFILE:
 else:
     from met.metadataparser.templatetags.decorators import noop_decorator as profile
 
+
 def _send_message_via_email_and_slack(error_msg, federation, logger=None):
     mail_config_dict = getattr(settings, "MAIL_CONFIG")
     try:
@@ -32,7 +33,9 @@ def _send_message_via_email_and_slack(error_msg, federation, logger=None):
         send_mail(from_address, subject, '%s' % error_msg)
         send_slack('%s, - %s' % (subject, error_msg))
     except Exception, errorMessage:
-        log('Message could not be posted successfully: %s' % errorMessage, logger, logging.ERROR)
+        log('Message could not be posted successfully: %s' %
+            errorMessage, logger, logging.ERROR)
+
 
 def _fetch_new_metadata_file(federation, logger):
     try:
@@ -41,6 +44,7 @@ def _fetch_new_metadata_file(federation, logger):
     except Exception, errorMessage:
         log('%s' % errorMessage, logger, logging.ERROR)
         return "%s" % errorMessage, False
+
 
 def refresh(fed_name=None, force_refresh=False, logger=None):
     log('Starting refreshing metadata ...', logger, logging.INFO)
@@ -54,29 +58,40 @@ def refresh(fed_name=None, force_refresh=False, logger=None):
 
         error_msg = None
         try:
-            log('[%s] Refreshing metadata ...'  % federation, logger, logging.INFO)
-            error_msg, data_changed = _fetch_new_metadata_file(federation, logger)
-    
+            log('[%s] Refreshing metadata ...' %
+                federation, logger, logging.INFO)
+            error_msg, data_changed = _fetch_new_metadata_file(
+                federation, logger)
+
             if not error_msg and (force_refresh or data_changed):
-                log('[%s] Updating database ...' % federation, logger, logging.INFO)
-             
-                log('[%s] Updating federation ...' % federation, logger, logging.DEBUG)
+                log('[%s] Updating database ...' %
+                    federation, logger, logging.INFO)
+
+                log('[%s] Updating federation ...' %
+                    federation, logger, logging.DEBUG)
                 federation.process_metadata()
                 federation.save()
-            
-                log('[%s] Updating federation entities ...' % federation, logger, logging.DEBUG)
+
+                log('[%s] Updating federation entities ...' %
+                    federation, logger, logging.DEBUG)
                 removed, updated = federation.process_metadata_entities()
-                log('[%s] Removed %s old entities and updated %s entities.' % (federation, removed, updated), logger, logging.INFO)
-            
-                log('[%s] Updating federation file and metadata_data...' % federation, logger, logging.DEBUG)
+                log('[%s] Removed %s old entities and updated %s entities.' %
+                    (federation, removed, updated), logger, logging.INFO)
+
+                log('[%s] Updating federation file and metadata_data...' %
+                    federation, logger, logging.DEBUG)
                 federation.metadata_update = date.today()
                 federation.save(update_fields=['file', 'metadata_update'])
-                log('[%s] Federation update time modified with %s' % (federation, federation.metadata_update), logger, logging.INFO)
+                log('[%s] Federation update time modified with %s' % (
+                    federation, federation.metadata_update), logger, logging.INFO)
 
-            log('[%s] Updating federation statistics ...' % federation, logger, logging.DEBUG)
+            log('[%s] Updating federation statistics ...' %
+                federation, logger, logging.DEBUG)
             (computed, not_computed) = federation.compute_new_stats()
-            log('[%s] Computed statistics: %s' % (federation, computed), logger, logging.DEBUG)
-            log('[%s] NOT Computed statistics: %s' % (federation, not_computed), logger, logging.DEBUG)
+            log('[%s] Computed statistics: %s' %
+                (federation, computed), logger, logging.DEBUG)
+            log('[%s] NOT Computed statistics: %s' %
+                (federation, not_computed), logger, logging.DEBUG)
 
         except Exception, e:
             if error_msg is None:
@@ -85,20 +100,24 @@ def refresh(fed_name=None, force_refresh=False, logger=None):
 
         finally:
             if error_msg:
-                log('Sending following error via email: %s' % error_msg, logger, logging.INFO)
-                _send_message_via_email_and_slack(error_msg, federation, logger)
-    
+                log('Sending following error via email: %s' %
+                    error_msg, logger, logging.INFO)
+                _send_message_via_email_and_slack(
+                    error_msg, federation, logger)
+
     log('Removing entity categories with no entity associated...', logger, logging.INFO)
-    EntityCategory.objects.all().annotate(entitylength=Count("entities")).filter(entitylength__lte=0).delete()
+    EntityCategory.objects.all().annotate(entitylength=Count("entities")
+                                          ).filter(entitylength__lte=0).delete()
 
     log('Removing entities with no federation associated...', logger, logging.INFO)
-    Entity.objects.all().annotate(federationslength=Count("federations")).filter(federationslength__lte=0).delete()
+    Entity.objects.all().annotate(federationslength=Count("federations")
+                                  ).filter(federationslength__lte=0).delete()
 
     log('Refreshing metadata terminated.', logger, logging.INFO)
+
 
 def log(message, logger=None, severity=logging.INFO):
     if logger:
         logger.log(severity, message)
     else:
         print(message)
-

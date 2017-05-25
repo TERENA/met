@@ -1,4 +1,4 @@
-#################################################################
+##########################################################################
 # MET v2 Metadate Explorer Tool
 #
 # This Software is Open Source. See License: https://github.com/TERENA/met/blob/master/LICENSE.md
@@ -8,7 +8,7 @@
 # MET v2 was developed for TERENA by Tamim Ziai, DAASI International GmbH, http://www.daasi.de
 # Current version of MET has been revised for performance improvements by Andrea Biancini,
 # Consortium GARR, http://www.garr.it
-#########################################################################################
+##########################################################################
 
 from django.conf import settings
 
@@ -22,12 +22,12 @@ from entity_stat import EntityStat
 
 TOP_LENGTH = getattr(settings, "TOP_LENGTH", 5)
 
-__all__ = [ 'TOP_LENGTH',
-            'FEDERATION_TYPES',
-            'Federation',
-            'EntityType',
-            'EntityCategory',
-            'Entity',
-            'Entity_Federations',
-            'EntityStat',
-            'Dummy']
+__all__ = ['TOP_LENGTH',
+           'FEDERATION_TYPES',
+           'Federation',
+           'EntityType',
+           'EntityCategory',
+           'Entity',
+           'Entity_Federations',
+           'EntityStat',
+           'Dummy']

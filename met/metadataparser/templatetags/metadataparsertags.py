@@ -8,7 +8,7 @@
 # MET v2 was developed for TERENA by Tamim Ziai, DAASI International GmbH, http://www.daasi.de
 # Current version of MET has been revised for performance improvements by Andrea Biancini,
 # Consortium GARR, http://www.garr.it
-#########################################################################################
+##########################################################################
 
 from django import template
 from django.template.base import Node, TemplateSyntaxError
@@ -26,13 +26,13 @@ register = template.Library()
 class AddGetParameter(Node):
     def __init__(self, values):
         self.values = values
-        
+
     def render(self, context):
         req = template.resolve_variable('request', context)
         params = req.GET.copy()
         for key, value in self.values.items():
             params[key] = value.resolve(context)
-        return '?%s' %  params.urlencode()
+        return '?%s' % params.urlencode()
 
 
 @register.tag()
@@ -82,7 +82,7 @@ def entity_list(context, entities, categories=None, pagination=None, curfed=None
     return {'request': request,
             'entities': entities,
             'categories': categories,
-            'curfed' : curfed,
+            'curfed': curfed,
             'show_filters': context.get('show_filters'),
             'append_query': append_query,
             'show_total': show_total,
@@ -115,7 +115,7 @@ def entity_filters(context, entities, categories):
             'entity_type': entity_type,
             'entity_category': entity_category,
             'entities': entities,
-            'categories': categories }
+            'categories': categories}
 
 
 @register.simple_tag()
@@ -218,7 +218,6 @@ def l10n_property(context, prop, lang):
     return prop
 
 
-
 @register.simple_tag(takes_context=True)
 def organization_property(context, organizations, prop, lang):
     if not isinstance(organizations, list):
@@ -245,7 +244,7 @@ def get_property(obj, prop=None):
         return obj.get(prop, None)
     if getattr(getattr(obj, uprop, None), 'all', None):
         return '. '.join(['<a href="%(link)s">%(name)s</a>' % {"link": item.get_absolute_url(),
-                                                    "name": unicode(item)}
+                                                               "name": unicode(item)}
                           for item in getattr(obj, uprop).all()])
     if isinstance(getattr(obj, uprop, ''), list):
         return ', '.join(getattr(obj, uprop, []))
@@ -279,6 +278,7 @@ def mailto(value):
         return value
     else:
         return 'mailto:%s' % value
+
 
 @register.filter(name='wrap')
 def wrap(value, length):
@@ -331,6 +331,7 @@ def canedit(parser, token):
         {% endcanedit %}
     """
     return do_canedit(parser, token)
+
 
 @register.filter
 @stringfilter

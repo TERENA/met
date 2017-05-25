@@ -8,7 +8,7 @@
 # MET v2 was developed for TERENA by Tamim Ziai, DAASI International GmbH, http://www.daasi.de
 # Current version of MET has been revised for performance improvements by Andrea Biancini,
 # Consortium GARR, http://www.garr.it
-#########################################################################################
+##########################################################################
 
 from lxml import etree
 from cryptography import x509
@@ -27,7 +27,7 @@ NAMESPACES = {
     'mdrpi': 'urn:oasis:names:tc:SAML:metadata:rpi',
     'shibmd': 'urn:mace:shibboleth:metadata:1.0',
     'mdattr': 'urn:oasis:names:tc:SAML:metadata:attribute',
-    }
+}
 
 SAML_METADATA_NAMESPACE = NAMESPACES['md']
 
@@ -58,6 +58,7 @@ def getlang(node):
     elif addns('lang', NAMESPACES['xml']) in node.attrib:
         return node.attrib[addns('lang', NAMESPACES['xml'])]
 
+
 FEDERATION_ROOT_TAG = addns('EntitiesDescriptor')
 ENTITY_ROOT_TAG = addns('EntityDescriptor')
 
@@ -87,9 +88,11 @@ class MetadataParser(object):
         entity['organization'] = MetadataParser.entity_organization(element)
         entity['logos'] = MetadataParser.entity_logos(element)
         entity['scopes'] = MetadataParser.entity_attribute_scope(element)
-        entity['attr_requested'] = MetadataParser.entity_requested_attributes(element)
+        entity['attr_requested'] = MetadataParser.entity_requested_attributes(
+            element)
         entity['contacts'] = MetadataParser.entity_contacts(element)
-        entity['registration_policy'] = MetadataParser.registration_policy(element)
+        entity['registration_policy'] = MetadataParser.registration_policy(
+            element)
 
         return entity
 
@@ -110,19 +113,23 @@ class MetadataParser(object):
 
                 entity['entityid'] = entityid
                 entity['file_id'] = element.get('ID', None)
-                entity['displayName'] = MetadataParser.entity_displayname(element)
+                entity['displayName'] = MetadataParser.entity_displayname(
+                    element)
                 reg_info = MetadataParser.registration_information(element)
                 if reg_info and 'authority' in reg_info:
-                   entity['registration_authority'] = reg_info['authority']
+                    entity['registration_authority'] = reg_info['authority']
                 if reg_info and 'instant' in reg_info:
-                   entity['registration_instant'] = reg_info['instant']
-                entity['entity_categories'] = MetadataParser.entity_categories(element)
+                    entity['registration_instant'] = reg_info['instant']
+                entity['entity_categories'] = MetadataParser.entity_categories(
+                    element)
                 entity['entity_types'] = MetadataParser.entity_types(element)
-                entity['protocols'] = MetadataParser.entity_protocols(element, entity['entity_types'])
+                entity['protocols'] = MetadataParser.entity_protocols(
+                    element, entity['entity_types'])
                 entity['certstats'] = MetadataParser.get_certstats(element)
 
                 if details:
-                    entity_details = MetadataParser._get_entity_details(element)
+                    entity_details = MetadataParser._get_entity_details(
+                        element)
                     entity.update(entity_details)
                     entity = dict((k, v) for k, v in entity.iteritems() if v)
 
@@ -145,10 +152,11 @@ class MetadataParser(object):
 
     @staticmethod
     def _chunkstring(string, length):
-        return (string[0+i:length+i] for i in range(0, len(string), length))
+        return (string[0 + i:length + i] for i in range(0, len(string), length))
 
     def get_entity(self, entityid, details=True):
-        context = etree.iterparse(self.filename, tag=addns('EntityDescriptor'), events=('end',), huge_tree=True, remove_blank_text=True)
+        context = etree.iterparse(self.filename, tag=addns(
+            'EntityDescriptor'), events=('end',), huge_tree=True, remove_blank_text=True)
         element = None
         for element in MetadataParser._get_entity_by_id(context, entityid, details):
             return element
@@ -171,7 +179,8 @@ class MetadataParser(object):
 
     def get_entities(self):
         # Return entityid list
-        context = etree.iterparse(self.filename, tag=addns('EntityDescriptor'), events=('end',), huge_tree=True, remove_blank_text=True)
+        context = etree.iterparse(self.filename, tag=addns(
+            'EntityDescriptor'), events=('end',), huge_tree=True, remove_blank_text=True)
         return list(self._get_entities_id(context))
 
     @staticmethod
@@ -216,10 +225,13 @@ class MetadataParser(object):
             certName = 'invalid'
 
             try:
-                text = x.text.replace("\n", "").replace(" ", "").replace("\t", "")
+                text = x.text.replace("\n", "").replace(
+                    " ", "").replace("\t", "")
                 text = "\n".join(MetadataParser._chunkstring(text, 64))
-                certText = "\n".join(["-----BEGIN CERTIFICATE-----", text, '-----END CERTIFICATE-----'])
-                cert = x509.load_pem_x509_certificate(certText, default_backend())
+                certText = "\n".join(
+                    ["-----BEGIN CERTIFICATE-----", text, '-----END CERTIFICATE-----'])
+                cert = x509.load_pem_x509_certificate(
+                    certText, default_backend())
                 certName = cert.signature_hash_algorithm.name
             except Exception, e:
                 pass
@@ -293,7 +305,7 @@ class MetadataParser(object):
         if None in languages.keys():
             del languages[None]
         return languages
- 
+
     @staticmethod
     def entity_organization(entity):
         orgs = entity.xpath(".//md:Organization",
@@ -342,9 +354,9 @@ class MetadataParser(object):
     @staticmethod
     def registration_policy(entity):
         reg_policy = entity.xpath(".//md:Extensions"
-                                "//mdrpi:RegistrationInfo"
-                                "//mdrpi:RegistrationPolicy",
-                                namespaces=NAMESPACES)
+                                  "//mdrpi:RegistrationInfo"
+                                  "//mdrpi:RegistrationPolicy",
+                                  namespaces=NAMESPACES)
         languages = {}
         for dn_node in reg_policy:
             lang = getlang(dn_node)
@@ -378,7 +390,8 @@ class MetadataParser(object):
         for attr_node in xmllogos:
             required = attr_node.attrib.get('isRequired', 'false')
             index = 'required' if required == 'true' else 'optional'
-            attrs[index].append([attr_node.attrib.get('Name', None), attr_node.attrib.get('FriendlyName', None)])
+            attrs[index].append([attr_node.attrib.get(
+                'Name', None), attr_node.attrib.get('FriendlyName', None)])
         return attrs
 
     @staticmethod
@@ -398,10 +411,12 @@ class MetadataParser(object):
                 surname = surname[0].text
             else:
                 surname = None
-            email = cont_node.xpath(".//md:EmailAddress", namespaces=NAMESPACES)
+            email = cont_node.xpath(
+                ".//md:EmailAddress", namespaces=NAMESPACES)
             if email:
                 email = email[0].text
             else:
                 email = None
-            cont.append({ 'type': c_type, 'name': name, 'surname': surname, 'email': email })
+            cont.append({'type': c_type, 'name': name,
+                         'surname': surname, 'email': email})
         return cont

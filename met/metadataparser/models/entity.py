@@ -7,7 +7,7 @@
 # MET v2 was developed for TERENA by Tamim Ziai, DAASI International GmbH, http://www.daasi.de
 # Current version of MET has been revised for performance improvements by Andrea Biancini,
 # Consortium GARR, http://www.garr.it
-#########################################################################################
+##########################################################################
 
 import simplejson as json
 
@@ -32,13 +32,15 @@ from met.metadataparser.models.entity_category import EntityCategory
 
 TOP_LENGTH = getattr(settings, "TOP_LENGTH", 5)
 
+
 def update_obj(mobj, obj, attrs=None):
     for_attrs = attrs or getattr(mobj, 'all_attrs', [])
     for attrb in attrs or for_attrs:
         if (getattr(mobj, attrb, None) and
             getattr(obj, attrb, None) and
-            getattr(mobj, attrb) != getattr(obj, attrb)):
+                getattr(mobj, attrb) != getattr(obj, attrb)):
             setattr(obj, attrb, getattr(mobj, attrb))
+
 
 class EntityQuerySet(QuerySet):
     def iterator(self):
@@ -68,9 +70,11 @@ class EntityQuerySet(QuerySet):
 
             yield entity
 
+
 class EntityManager(models.Manager):
     def get_queryset(self):
         return EntityQuerySet(self.model, using=self._db)
+
 
 class Entity(Base):
     READABLE_PROTOCOLS = {
@@ -192,7 +196,7 @@ class Entity(Base):
             return str(self.federations.all().count())
         except Exception:
             return ''
-        
+
     @property
     def description(self):
         try:
@@ -274,17 +278,20 @@ class Entity(Base):
         contacts = []
         for cur_contact in self._get_property('contacts'):
             if cur_contact['name'] and cur_contact['surname']:
-                contact_name = '%s %s' % (cur_contact['name'], cur_contact['surname'])
+                contact_name = '%s %s' % (
+                    cur_contact['name'], cur_contact['surname'])
             elif cur_contact['name']:
                 contact_name = cur_contact['name']
             elif cur_contact['surname']:
                 contact_name = cur_contact['surname']
             else:
-                contact_name = urlparse(cur_contact['email']).path.partition('?')[0]
+                contact_name = urlparse(
+                    cur_contact['email']).path.partition('?')[0]
             c_type = 'undefined'
             if cur_contact['type']:
                 c_type = cur_contact['type']
-            contacts.append({ 'name': contact_name, 'email': cur_contact['email'], 'type': c_type })
+            contacts.append(
+                {'name': contact_name, 'email': cur_contact['email'], 'type': c_type})
         return contacts
 
     @property
@@ -364,18 +371,21 @@ class Entity(Base):
 
     def _get_or_create_ecategories(self, cached_entity_categories):
         entity_categories = []
-        cur_cached_categories = [t.category_id for t in self.entity_categories.all()]
+        cur_cached_categories = [
+            t.category_id for t in self.entity_categories.all()]
         for ecategory in self.xml_categories:
             if ecategory in cur_cached_categories:
                 break
 
             if cached_entity_categories is None:
-                entity_category, _ = EntityCategory.objects.get_or_create(category_id=ecategory)
+                entity_category, _ = EntityCategory.objects.get_or_create(
+                    category_id=ecategory)
             else:
                 if ecategory in cached_entity_categories:
                     entity_category = cached_entity_categories[ecategory]
                 else:
-                    entity_category = EntityCategory.objects.create(category_id=ecategory)
+                    entity_category = EntityCategory.objects.create(
+                        category_id=ecategory)
             entity_categories.append(entity_category)
         return entity_categories
 
@@ -384,7 +394,8 @@ class Entity(Base):
             self.load_metadata()
 
         if self.entityid.lower() != entity_data.get('entityid').lower():
-            raise ValueError("EntityID is not the same: %s != %s" % (self.entityid.lower(), entity_data.get('entityid').lower()))
+            raise ValueError("EntityID is not the same: %s != %s" % (
+                self.entityid.lower(), entity_data.get('entityid').lower()))
 
         self._entity_cached = entity_data
 
@@ -395,13 +406,15 @@ class Entity(Base):
 
         if self.xml_categories:
             db_entity_categories = EntityCategory.objects.all()
-            cached_entity_categories = { entity_category.category_id: entity_category for entity_category in db_entity_categories }
+            cached_entity_categories = {
+                entity_category.category_id: entity_category for entity_category in db_entity_categories}
 
             # Delete categories no more present in XML
             self.entity_categories.clear()
 
             # Create all entities, if not alread in database
-            entity_categories = self._get_or_create_ecategories(cached_entity_categories)
+            entity_categories = self._get_or_create_ecategories(
+                cached_entity_categories)
 
             # Add categories to entity
             if len(entity_categories) > 0:
@@ -421,7 +434,8 @@ class Entity(Base):
         self.certstats = self._get_property('certstats')
 
         if str(self._get_property('registration_authority')) != '':
-            self.registration_authority = self._get_property('registration_authority')
+            self.registration_authority = self._get_property(
+                'registration_authority')
 
         if auto_save:
             self.save()
@@ -432,7 +446,7 @@ class Entity(Base):
         entity = self._entity_cached.copy()
         entity["types"] = [unicode(f) for f in self.types.all()]
         entity["federations"] = [{u"name": unicode(f), u"url": f.get_absolute_url()}
-                                  for f in self.federations.all()]
+                                 for f in self.federations.all()]
 
         if self.registration_authority:
             entity["registration_authority"] = self.registration_authority
@@ -447,7 +461,7 @@ class Entity(Base):
         return entity
 
     def display_etype(value, separator=', '):
-            return separator.join([unicode(item) for item in value.all()])
+        return separator.join([unicode(item) for item in value.all()])
 
     @classmethod
     def get_most_federated_entities(self, maxlength=TOP_LENGTH, cache_expire=None):
@@ -456,8 +470,10 @@ class Entity(Base):
             entities = cache.get("most_federated_entities")
 
         if not entities or len(entities) < maxlength:
-            # Entities with count how many federations belongs to, and sorted by most first
-            ob_entities = Entity.objects.all().annotate(federationslength=Count("federations")).order_by("-federationslength")
+            # Entities with count how many federations belongs to, and sorted
+            # by most first
+            ob_entities = Entity.objects.all().annotate(
+                federationslength=Count("federations")).order_by("-federationslength")
             ob_entities = ob_entities.prefetch_related('types', 'federations')
             ob_entities = ob_entities[:maxlength]
 

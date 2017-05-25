@@ -1,4 +1,4 @@
-#################################################################
+##########################################################################
 # MET v2 Metadate Explorer Tool
 #
 # This Software is Open Source. See License: https://github.com/TERENA/met/blob/master/LICENSE.md
@@ -8,7 +8,7 @@
 # MET v2 was developed for TERENA by Tamim Ziai, DAASI International GmbH, http://www.daasi.de
 # Current version of MET has been revised for performance improvements by Andrea Biancini,
 # Consortium GARR, http://www.garr.it
-#########################################################################################
+##########################################################################
 
 from os import path
 from lxml import etree
@@ -25,6 +25,7 @@ from pyff.pipes import Plumbing
 
 from met.metadataparser.xmlparser import MetadataParser
 from met.metadataparser.utils import compare_filecontents
+
 
 class JSONField(models.CharField):
     """JSONField is a generic textfield that neatly serializes/unserializes
@@ -114,7 +115,7 @@ class Base(models.Model):
 
     def load_file(self):
         if not hasattr(self, '_loaded_file'):
-            #Only load file and parse it, don't create/update any objects
+            # Only load file and parse it, don't create/update any objects
             if not self.file:
                 return None
             self._loaded_file = MetadataParser(filename=self.file.path)
@@ -130,7 +131,8 @@ class Base(models.Model):
                 curid = "%s%d" % (self.slug, count)
                 load.append("%s as %s" % (stream[0], curid))
                 if stream[1] == 'SP' or stream[1] == 'IDP':
-                    select.append("%s!//md:EntityDescriptor[md:%sSSODescriptor]" % (curid, stream[1]))
+                    select.append(
+                        "%s!//md:EntityDescriptor[md:%sSSODescriptor]" % (curid, stream[1]))
                 else:
                     select.append("%s" % curid)
                 count = count + 1
@@ -141,10 +143,12 @@ class Base(models.Model):
                 pipeline = [{'load': load}, 'select']
 
             md = MDRepository()
-            entities = Plumbing(pipeline=pipeline, id=self.slug).process(md, state={'batch': True, 'stats': {}})
+            entities = Plumbing(pipeline=pipeline, id=self.slug).process(
+                md, state={'batch': True, 'stats': {}})
             return etree.tostring(entities)
         except Exception, e:
-            raise Exception('Getting metadata from %s failed.\nError: %s' % (load_streams, e))
+            raise Exception(
+                'Getting metadata from %s failed.\nError: %s' % (load_streams, e))
 
     def fetch_metadata_file(self, file_name):
         file_url = self.file_url

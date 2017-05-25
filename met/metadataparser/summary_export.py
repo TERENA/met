@@ -8,7 +8,7 @@
 # MET v2 was developed for TERENA by Tamim Ziai, DAASI International GmbH, http://www.daasi.de
 # Current version of MET has been revised for performance improvements by Andrea Biancini,
 # Consortium GARR, http://www.garr.it
-#########################################################################################
+##########################################################################
 
 import csv
 from xml.dom.minidom import Document
@@ -41,7 +41,8 @@ def export_summary_json(qs, relation, filename, counters):
     for obj in qs:
         item = {}
         for counter_label, counter_filter in counters:
-            item[counter_label] = getattr(obj, relation).filter(**counter_filter).count()
+            item[counter_label] = getattr(
+                obj, relation).filter(**counter_filter).count()
         objs[unicode(obj)] = item
     # Return JS file to browser as download
     serialized = json.dumps(objs)
@@ -75,10 +76,10 @@ def export_summary_xml(qs, relation, filename, counters):
 
 
 export_summary_modes = {
-            'csv': export_summary_csv,
-            'json': export_summary_json,
-            'xml': export_summary_xml,
-        }
+    'csv': export_summary_csv,
+    'json': export_summary_json,
+    'xml': export_summary_xml,
+}
 
 
 def export_summary(mode, qs, relation, filename, counters):

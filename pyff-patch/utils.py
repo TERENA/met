@@ -14,7 +14,8 @@ from lxml import etree
 from time import gmtime, strftime, clock
 from pyff.logs import log
 import threading
-import httplib2, httplib
+import httplib2
+import httplib
 import requests
 from email.utils import parsedate
 
@@ -170,7 +171,8 @@ def schema():
         try:
             parser = etree.XMLParser()
             parser.resolvers.add(ResourceResolver())
-            st = etree.parse(pkg_resources.resource_stream(__name__, "schema/schema.xsd"), parser)
+            st = etree.parse(pkg_resources.resource_stream(
+                __name__, "schema/schema.xsd"), parser)
             _SCHEMA = etree.XMLSchema(st)
         except etree.XMLSchemaParseError, ex:
             log.error(_e(ex.error_log))
@@ -239,7 +241,8 @@ class URLFetch(threading.Thread):
 
     def time(self):
         if self.isAlive():
-            raise ValueError("caller attempted to obtain execution time while fetcher still active")
+            raise ValueError(
+                "caller attempted to obtain execution time while fetcher still active")
         return self.end_time - self.start_time
 
     def run(self):
@@ -267,14 +270,16 @@ class URLFetch(threading.Thread):
                     self.result = fd.read()
                     self.cached = False
                     self.date = datetime.now()
-                    self.last_modified = datetime.fromtimestamp(os.stat(path).st_mtime)
+                    self.last_modified = datetime.fromtimestamp(
+                        os.stat(path).st_mtime)
             else:
                 try:
                     h = httplib2.Http(cache=cache, timeout=60,
                                       disable_ssl_certificate_validation=True)  # trust is done using signatures over here
                     resp, content = h.request(self.url)
                     self.status = resp.status
-                    self.last_modified = _parse_date(resp.get('last-modified', resp.get('date', None)))
+                    self.last_modified = _parse_date(
+                        resp.get('last-modified', resp.get('date', None)))
                     if resp.status != 200:
                         raise IOError(resp.reason)
                     self.result = content
@@ -282,7 +287,8 @@ class URLFetch(threading.Thread):
                 except Exception, ex:
                     resp = requests.get(self.url)
                     self.status = resp.status_code
-                    self.last_modified = _parse_date(resp.headers['last-modified'] or resp.headers['date'])
+                    self.last_modified = _parse_date(
+                        resp.headers['last-modified'] or resp.headers['date'])
                     if resp.status_code != 200:
                         raise IOError(httplib.responses[resp.status_code])
                     self.result = resp.content
@@ -290,7 +296,7 @@ class URLFetch(threading.Thread):
 
             log.debug("got %d bytes from '%s'" % (len(self.result), self.url))
         except Exception, ex:
-            #traceback.print_exc()
+            # traceback.print_exc()
             #log.warn("unable to fetch '%s': %s" % (self.url, ex))
             self.ex = ex
             self.result = None

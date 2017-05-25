@@ -8,7 +8,7 @@
 # MET v2 was developed for TERENA by Tamim Ziai, DAASI International GmbH, http://www.daasi.de
 # Current version of MET has been revised for performance improvements by Andrea Biancini,
 # Consortium GARR, http://www.garr.it
-#########################################################################################
+##########################################################################
 
 import csv
 from xml.dom.minidom import Document
@@ -18,7 +18,7 @@ from django.template.defaultfilters import slugify
 import simplejson as json
 
 
-## Taken from http://djangosnippets.org/snippets/790/
+# Taken from http://djangosnippets.org/snippets/790/
 def export_csv(model, filename, fields):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = ('attachment; filename=%s.csv'
@@ -108,10 +108,10 @@ def export_xml(model, filename, fields=None):
 
 
 export_modes = {
-            'csv': export_csv,
-            'json': export_json,
-            'xml': export_xml,
-        }
+    'csv': export_csv,
+    'json': export_json,
+    'xml': export_xml,
+}
 
 
 def export_query_set(mode, qs, filename, fields=None):

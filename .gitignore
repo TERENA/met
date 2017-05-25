@@ -22,5 +22,6 @@ obj
 env
 .vs
 .vscode
+.scannerwork
 automatic_refresh/.cache
 saml2/edugain_metadata.xml

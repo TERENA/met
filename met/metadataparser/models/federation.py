@@ -8,7 +8,7 @@
 # MET v2 was developed for TERENA by Tamim Ziai, DAASI International GmbH, http://www.daasi.de
 # Current version of MET has been revised for performance improvements by Andrea Biancini,
 # Consortium GARR, http://www.garr.it
-#########################################################################################
+##########################################################################
 
 import pytz
 import simplejson as json
@@ -38,13 +38,15 @@ FEDERATION_TYPES = (
     ('mesh', 'Full Mesh'),
 )
 
+
 def update_obj(mobj, obj, attrs=None):
     for_attrs = attrs or getattr(mobj, 'all_attrs', [])
     for attrb in attrs or for_attrs:
         if (getattr(mobj, attrb, None) and
             getattr(obj, attrb, None) and
-            getattr(mobj, attrb) != getattr(obj, attrb)):
+                getattr(mobj, attrb) != getattr(obj, attrb)):
             setattr(obj, attrb, getattr(mobj, attrb))
+
 
 class Federation(Base):
     name = models.CharField(blank=False, null=False, max_length=200,
@@ -55,7 +57,7 @@ class Federation(Base):
 
     url = models.URLField(verbose_name='Federation url',
                           blank=True, null=True)
-    
+
     fee_schedule_url = models.URLField(verbose_name='Fee schedule url',
                                        max_length=150, blank=True, null=True)
 
@@ -63,7 +65,7 @@ class Federation(Base):
                              null=True, verbose_name=_(u'Federation logo'))
 
     is_interfederation = models.BooleanField(default=False, db_index=True,
-                                         verbose_name=_(u'Is interfederation'))
+                                             verbose_name=_(u'Is interfederation'))
 
     slug = models.SlugField(max_length=200, unique=True)
 
@@ -85,6 +87,7 @@ class Federation(Base):
         if not hasattr(self, '_metadata_cache'):
             self._metadata_cache = self.load_file()
         return self._metadata_cache
+
     def __unicode__(self):
         return self.name
 
@@ -113,9 +116,10 @@ class Federation(Base):
     def _remove_deleted_entities(self, entities_from_xml):
         removed = 0
         for entity in self.entity_set.all():
-            #Remove entity relation if does not exist in metadata
+            # Remove entity relation if does not exist in metadata
             if not entity.entityid in entities_from_xml:
-                Entity_Federations.objects.filter(federation=self, entity=entity).delete()
+                Entity_Federations.objects.filter(
+                    federation=self, entity=entity).delete()
                 removed += 1
 
         return removed
@@ -125,13 +129,16 @@ class Federation(Base):
             e.save()
 
         for e in entities_to_add:
-            membership = Entity_Federations.objects.get_or_create(federation=self, entity=e)[0]
-            membership.registration_instant = e.registration_instant.date() if e.registration_instant else None
+            membership = Entity_Federations.objects.get_or_create(
+                federation=self, entity=e)[0]
+            membership.registration_instant = e.registration_instant.date(
+            ) if e.registration_instant else None
             membership.save()
 
     def _add_new_entities(self, entities, entities_from_xml, request, federation_slug):
         db_entity_types = EntityType.objects.all()
-        cached_entity_types = { entity_type.xmlname: entity_type for entity_type in db_entity_types }
+        cached_entity_types = {
+            entity_type.xmlname: entity_type for entity_type in db_entity_types}
 
         entities_to_add = []
         entities_to_update = []
@@ -152,9 +159,10 @@ class Federation(Base):
             registration_authority = entity.registration_authority
             certstats = entity.certstats
             display_protocols = entity.display_protocols
- 
+
             entity_from_xml = self._metadata.get_entity(m_id, False)
-            entity.process_metadata(False, entity_from_xml, cached_entity_types)
+            entity.process_metadata(
+                False, entity_from_xml, cached_entity_types)
 
             if created or entity.has_changed(entityid, name, registration_authority, certstats, display_protocols):
                 entities_to_update.append(entity)
@@ -162,11 +170,11 @@ class Federation(Base):
             entities_to_add.append(entity)
 
         self._update_entities(entities_to_update, entities_to_add)
-        return len(entities_to_update) 
+        return len(entities_to_update)
 
     @staticmethod
     def _daterange(start_date, end_date):
-        for n in range(int ((end_date - start_date).days + 1)):
+        for n in range(int((end_date - start_date).days + 1)):
             yield start_date + timedelta(n)
 
     def compute_new_stats(self):
@@ -177,39 +185,42 @@ class Federation(Base):
         Entity_Federations.objects.filter(federation=self)
 
         try:
-            first_date = EntityStat.objects.filter(federation=self).aggregate(Max('time'))['time__max']
+            first_date = EntityStat.objects.filter(
+                federation=self).aggregate(Max('time'))['time__max']
             if not first_date:
                 raise Exception('Not able to find statistical data in the DB.')
         except Exception:
             first_date = datetime(2010, 1, 1)
             first_date = pytz.utc.localize(first_date)
-      
+
         for curtimestamp in self._daterange(first_date, timezone.now()):
             computed = {}
             not_computed = []
             entity_stats = []
             for feature in stats['features'].keys():
                 fun = getattr(self, 'get_%s' % feature, None)
-    
+
                 if callable(fun):
                     stat = EntityStat()
                     stat.feature = feature
                     stat.time = curtimestamp
                     stat.federation = self
-                    stat.value = fun(entities, stats['features'][feature], curtimestamp)
+                    stat.value = fun(
+                        entities, stats['features'][feature], curtimestamp)
                     entity_stats.append(stat)
                     computed[feature] = stat.value
                 else:
                     not_computed.append(feature)
 
-            from_time = datetime.combine(curtimestamp, time.min) 
+            from_time = datetime.combine(curtimestamp, time.min)
             if timezone.is_naive(from_time):
                 from_time = pytz.utc.localize(from_time)
             to_time = datetime.combine(curtimestamp, time.max)
             if timezone.is_naive(to_time):
                 to_time = pytz.utc.localize(to_time)
 
-            EntityStat.objects.filter(federation=self, time__gte=from_time, time__lte=to_time).delete()
+            EntityStat.objects.filter(
+                federation=self, time__gte=from_time, time__lte=to_time).delete()
             EntityStat.objects.bulk_create(entity_stats)
 
         return (computed, not_computed)
@@ -220,18 +231,21 @@ class Federation(Base):
 
         entities = {}
         db_entities = Entity.objects.filter(entityid__in=entities_from_xml)
-        db_entities = db_entities.prefetch_related('types', 'entity_categories')
+        db_entities = db_entities.prefetch_related(
+            'types', 'entity_categories')
 
         for entity in db_entities.all():
             entities[entity.entityid] = entity
 
         if request and federation_slug:
-            request.session['%s_num_entities' % federation_slug] = len(entities_from_xml)
+            request.session['%s_num_entities' %
+                            federation_slug] = len(entities_from_xml)
             request.session['%s_cur_entities' % federation_slug] = 0
             request.session['%s_process_done' % federation_slug] = False
             request.session.save()
 
-        updated = self._add_new_entities(entities, entities_from_xml, request, federation_slug)
+        updated = self._add_new_entities(
+            entities, entities_from_xml, request, federation_slug)
 
         if request and federation_slug:
             request.session['%s_process_done' % federation_slug] = True
@@ -244,51 +258,56 @@ class Federation(Base):
 
     @classmethod
     def get_sp(cls, entities, xml_name, ref_date=None):
-        if ref_date and ref_date < pytz.utc.localize(datetime.now() - timedelta(days = 1)):
-            selected = entities.filter(types__xmlname=xml_name, entity_federations__registration_instant__lt = ref_date)
+        if ref_date and ref_date < pytz.utc.localize(datetime.now() - timedelta(days=1)):
+            selected = entities.filter(
+                types__xmlname=xml_name, entity_federations__registration_instant__lt=ref_date)
         else:
             selected = entities.filter(types__xmlname=xml_name)
         return len(selected)
 
     @classmethod
     def get_idp(cls, entities, xml_name, ref_date=None):
-        if ref_date and ref_date < pytz.utc.localize(datetime.now() - timedelta(days = 1)):
-            selected = entities.filter(types__xmlname=xml_name, entity_federations__registration_instant__lt = ref_date)
+        if ref_date and ref_date < pytz.utc.localize(datetime.now() - timedelta(days=1)):
+            selected = entities.filter(
+                types__xmlname=xml_name, entity_federations__registration_instant__lt=ref_date)
         else:
             selected = entities.filter(types__xmlname=xml_name)
         return len(selected)
 
     @classmethod
     def get_aa(cls, entities, xml_name, ref_date=None):
-        if ref_date and ref_date < pytz.utc.localize(datetime.now() - timedelta(days = 1)):
-            selected = entities.filter(types__xmlname=xml_name, entity_federations__registration_instant__lt = ref_date)
+        if ref_date and ref_date < pytz.utc.localize(datetime.now() - timedelta(days=1)):
+            selected = entities.filter(
+                types__xmlname=xml_name, entity_federations__registration_instant__lt=ref_date)
         else:
             selected = entities.filter(types__xmlname=xml_name)
         return len(selected)
 
-    def get_sp_saml1(self, entities, xml_name, ref_date = None):
+    def get_sp_saml1(self, entities, xml_name, ref_date=None):
         return self.get_stat_protocol(entities, xml_name, 'SPSSODescriptor', ref_date)
 
-    def get_sp_saml2(self, entities, xml_name, ref_date = None):
+    def get_sp_saml2(self, entities, xml_name, ref_date=None):
         return self.get_stat_protocol(entities, xml_name, 'SPSSODescriptor', ref_date)
 
-    def get_sp_shib1(self, entities, xml_name, ref_date = None):
+    def get_sp_shib1(self, entities, xml_name, ref_date=None):
         return self.get_stat_protocol(entities, xml_name, 'SPSSODescriptor', ref_date)
 
-    def get_idp_saml1(self, entities, xml_name, ref_date = None):
+    def get_idp_saml1(self, entities, xml_name, ref_date=None):
         return self.get_stat_protocol(entities, xml_name, 'IDPSSODescriptor', ref_date)
 
-    def get_idp_saml2(self, entities, xml_name, ref_date = None):
+    def get_idp_saml2(self, entities, xml_name, ref_date=None):
         return self.get_stat_protocol(entities, xml_name, 'IDPSSODescriptor', ref_date)
 
-    def get_idp_shib1(self, entities, xml_name, ref_date = None):
+    def get_idp_shib1(self, entities, xml_name, ref_date=None):
         return self.get_stat_protocol(entities, xml_name, 'IDPSSODescriptor', ref_date)
 
     def get_stat_protocol(self, entities, xml_name, service_type, ref_date):
-        if ref_date and ref_date < pytz.utc.localize(datetime.now() - timedelta(days = 1)):
-            selected = entities.filter(types__xmlname=service_type, _display_protocols__contains=xml_name, entity_federations__registration_instant__lt = ref_date)
+        if ref_date and ref_date < pytz.utc.localize(datetime.now() - timedelta(days=1)):
+            selected = entities.filter(types__xmlname=service_type, _display_protocols__contains=xml_name,
+                                       entity_federations__registration_instant__lt=ref_date)
         else:
-            selected = entities.filter(types__xmlname=service_type, _display_protocols__contains=xml_name)
+            selected = entities.filter(
+                types__xmlname=service_type, _display_protocols__contains=xml_name)
         return len(selected)
 
     def can_edit(self, user, delete):
@@ -300,6 +319,7 @@ class Federation(Base):
             return True
         return False
 
+
 @receiver(pre_save, sender=Federation, dispatch_uid='federation_pre_save')
 def federation_pre_save(sender, instance, **kwargs):
     # Skip pre_save if only file name is saved
@@ -307,7 +327,7 @@ def federation_pre_save(sender, instance, **kwargs):
         return
 
     #slug = slugify(unicode(instance.name))[:200]
-    #if instance.file_url and instance.file_url != '':
+    # if instance.file_url and instance.file_url != '':
     #    try:
     #        instance.fetch_metadata_file(slug)
     #    except Exception, e:
@@ -319,7 +339,7 @@ def federation_pre_save(sender, instance, **kwargs):
 
 @receiver(pre_save, sender=Entity, dispatch_uid='entity_pre_save')
 def entity_pre_save(sender, instance, **kwargs):
-    #if refetch and instance.file_url:
+    # if refetch and instance.file_url:
     #    slug = slugify(unicode(instance.name))[:200]
     #    instance.fetch_metadata_file(slug)
     #    instance.process_metadata()

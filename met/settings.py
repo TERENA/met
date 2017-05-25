@@ -8,7 +8,7 @@
 # MET v2 was developed for TERENA by Tamim Ziai, DAASI International GmbH, http://www.daasi.de
 # Current version of MET has been revised for performance improvements by Andrea Biancini,
 # Consortium GARR, http://www.garr.it
-#########################################################################################
+##########################################################################
 
 # Django settings for met project.
 
@@ -80,7 +80,7 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
@@ -93,7 +93,7 @@ SECRET_KEY = 'wcc$cfn0p!+@kv%@9y^u3^6fax5_a-n84^o*gl94!%kqc!fm-n'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-     #'django.template.loaders.eggs.Loader',
+    #'django.template.loaders.eggs.Loader',
 )
 
 MIDDLEWARE_CLASSES = filter(None, (
@@ -175,10 +175,10 @@ LOGGING = {
             'class': 'logging.FileHandler',
             'filename': '/var/log/djangosaml2.log',
             'formatter': 'verbose',
-         }
+        }
     },
     'loggers': {
-       'django': {
+        'django': {
             'handlers': ['console'],
             'propagate': True,
             'level': 'ERROR',
@@ -189,8 +189,8 @@ LOGGING = {
         #    'propagate': True,
         #},
         'djangosaml2': {
-             'handlers': ['saml2file'],
-             'level': 'ERROR',
+            'handlers': ['saml2file'],
+            'level': 'ERROR',
         },
         'silk': {
             'handlers': ['console'],
