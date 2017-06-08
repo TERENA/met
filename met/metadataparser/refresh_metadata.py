@@ -80,8 +80,8 @@ def refresh(fed_name=None, force_refresh=False, logger=None):
 
         except Exception, e:
             if error_msg is None:
-                error_msg = 'Exception %s' % type(e).__name__
-            error_msg = '%s %s' % (error_msg, e)
+                error_msg = '%s' % e
+            error_msg = '%s\n%s' % (error_msg, e)
 
         finally:
             if error_msg:

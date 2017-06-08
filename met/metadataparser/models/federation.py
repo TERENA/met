@@ -63,7 +63,7 @@ class Federation(Base):
                              null=True, verbose_name=_(u'Federation logo'))
 
     is_interfederation = models.BooleanField(default=False, db_index=True,
-                                         verbose_name=_(u'Is interfederation'))
+                                             verbose_name=_(u'Is interfederation'))
 
     slug = models.SlugField(max_length=200, unique=True)
 
@@ -170,6 +170,7 @@ class Federation(Base):
             yield start_date + timedelta(n)
 
     def compute_new_stats(self):
+        if not self._metadata: return ([], [])
         entities_from_xml = self._metadata.get_entities()
 
         entities = Entity.objects.filter(entityid__in=entities_from_xml)
@@ -215,6 +216,7 @@ class Federation(Base):
         return (computed, not_computed)
 
     def process_metadata_entities(self, request=None, federation_slug=None):
+        if not self._metadata: return
         entities_from_xml = self._metadata.get_entities()
         removed = self._remove_deleted_entities(entities_from_xml)
 
