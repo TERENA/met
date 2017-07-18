@@ -105,13 +105,19 @@ def refresh(fed_name=None, force_refresh=False, logger=None):
                 _send_message_via_email_and_slack(
                     error_msg, federation, logger)
 
-    log('Removing entity categories with no entity associated...', logger, logging.INFO)
-    EntityCategory.objects.all().annotate(entitylength=Count("entities")
-                                          ).filter(entitylength__lte=0).delete()
+    try:
+        log('Removing entity categories with no entity associated...', logger, logging.INFO)
+        EntityCategory.objects.all().annotate(entitylength=Count("entity")
+                                              ).filter(entitylength__lte=0).delete()
+    except Exception, errorMessage:
+        log('Error: %s' % errorMessage, logger, logging.ERROR)
 
-    log('Removing entities with no federation associated...', logger, logging.INFO)
-    Entity.objects.all().annotate(federationslength=Count("federations")
-                                  ).filter(federationslength__lte=0).delete()
+    try:
+        log('Removing entities with no federation associated...', logger, logging.INFO)
+        Entity.objects.all().annotate(federationslength=Count("federations")
+                                      ).filter(federationslength__lte=0).delete()
+    except Exception, errorMessage:
+        log('Error: %s' % errorMessage, logger, logging.ERROR)
 
     log('Refreshing metadata terminated.', logger, logging.INFO)
 
