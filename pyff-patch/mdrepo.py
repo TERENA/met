@@ -352,7 +352,7 @@ and verified.
                     xml = thread.result.strip()
 
                     if thread.status is not None:
-                        info['Status'] = thread.status_code
+                        info['Status'] = thread.resp.status_code
 
                     t = self.parse_metadata(
                         StringIO(xml), key=thread.verify, base_url=thread.url)
