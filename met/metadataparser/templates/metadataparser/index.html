@@ -2,7 +2,6 @@
 {% load i18n metadataparsertags %}
 
 {% block appendheader %}
-
 {% endblock %}
 
 {% block extrajs %}
@@ -20,50 +19,521 @@
 </script>
 {% endblock %}
 
-
 {% block content %}
+<section class="hero">
+  <div class="background" id="world-map"></div>
 
+  <div class="container text-center">
+    <a class="hero-brand" href="http://www.refeds.org" title="Home"><img alt="Refeds" src="{{ STATIC_URL }}img/refeds.png"></a>
 
-<ul class="querybuttons nav nav-pills">
-  <li class="active">
-    <a href="#entitiessummary">{% trans "Entities summary" %}</a>
-  </li>
-  <li class="active">
-    <a href="#mostfederatedentities">{% trans "Most federated entities" %}</a>
-  </li>
-  <li class="active">
-    <a href="#interfederationsummary">{% trans "Interfederations summary" %}</a>
-  </li>
-  <li class="active">
-    <a href="#federationssummary">{% trans "Federations summary" %}</a>
-  </li>
-</ul>
+    <h1>
+      Metadata Explorer Tool
+    </h1>
 
-<div class="summary">
-<h2 id="entitiessummary">{% trans "Entities summary" %}</h2>
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th>{% trans "Entities" %}</th>
+    <p class="tagline">
+      A fast way to find federations, entities and his relations through entity/federation metadata file information.
+    </p>
+
+    <a class="btn btn-full" href="#about">View Federations Data</a>
+  </div>
+</section>
+      
+<header id="header">
+  <div class="container">
+    <div id="logo" class="pull-left">
+      <h1><a href="#hero">MET</a></h1>
+    </div>
+          
+    <nav id="nav-menu-container">
+      <ul class="nav-menu">
+        <li><a href="#summary">Entities Summary</a></li>
+        <li><a href="#features">Most Federated Entities</a></li>
+        <li><a href="#portfolio">Interfederations Summary</a></li>
+        <li><a href="#portfolio">Federation Summary</a></li>
+      </ul>
+    </nav>
+        
+    <nav class="nav social-nav pull-right hidden-sm-down">
+      {% if request.user.is_authenticated %}
+        <a href="{{ portal_settings.LOGOUT_URL }}?next={{ request.get_full_path|iriencode }}">{{ request.user }} - {% trans "Logout" %}</a>
+      {% else %}
+        <a href="#" class="signin">{% trans "Login" %}</a>
+      {% endif %}
+    </nav>
+  </div>
+</header>
+    
+<section class="about" id="summary">
+  <div class="container text-center">
+    <h2>Entities Summary</h2>
+    <p>The Metadata Explorer Tools every day collects and analyze meteadatas for a vast number of federations worldwide. Currently these are the numbers of the entities collected by this tool.</p>
+    <p><a class="btn" href="{% url 'search_entities' %}">{% trans "Search Entities" %}</a></p>
+
+    <div class="row stats-row">
+      <div class="stats-col text-center col-md-3 col-sm-6">
+        <div class="circle">
+          <span class="stats-no" data-toggle="counter-up">{% get_fed_total totals 'All' %}</span> {% trans "Entities" %}
+        </div>
+      </div>
+
       {% for etype in entity_types %}
-      <th class="entitytype">{{ etype|display_etype }}</th>
+      <div class="stats-col text-center col-md-3 col-sm-6">
+        <div class="circle">
+          <span class="stats-no" data-toggle="counter-up">{% get_fed_total totals etype %}</span> {{ etype|display_etype }}
+        </div>
+      </div>
       {% endfor %}
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>{% get_fed_total totals 'All' %}</td>
-      {% for etype in entity_types %}
-      <td class="entitytype">{% get_fed_total totals etype %}</td>
-      {% endfor %}
-    </tr>
-  </tbody>
-</table>
+    </div>
+  </div>
+</section>
 
-<div class="btn-group pull-right">
-  <a class="btn" href="{% url 'search_entities' %}">{% trans "Search Entities" %}</a>
-</div>
-</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Parallax -->
+
+      <div class="block bg-primary block-pd-lg block-bg-overlay text-center" data-bg-img="{{ STATIC_URL }}img/parallax-bg.jpg" data-settings='{"stellar-background-ratio": 0.6}' data-toggle="parallax-bg">
+        <h2>
+          Welcome to a perfect theme
+        </h2>
+
+        <p>
+          This is the most powerful theme with thousands of options that you have never seen before.
+        </p>
+        <img alt="Bell - A perfect theme" class="gadgets-img hidden-md-down" src="{{ STATIC_URL }}img/gadgets.png">
+      </div>
+      <!-- /Parallax -->
+      <!-- Features -->
+
+      <section class="features" id="features">
+        <div class="container">
+          <h2 class="text-center">
+            Features
+          </h2>
+
+          <div class="row">
+            <div class="feature-col col-lg-4 col-xs-12">
+              <div class="card card-block text-center">
+                <div>
+                  <div class="feature-icon">
+                    <span class="fa fa-rocket"></span>
+                  </div>
+                </div>
+
+                <div>
+                  <h3>
+                    Custom Design
+                  </h3>
+
+                  <p>
+                    Eque feugiat contentiones ei has. Id summo mundi explicari his, nec in maiorum scriptorem.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="feature-col col-lg-4 col-xs-12">
+              <div class="card card-block text-center">
+                <div>
+                  <div class="feature-icon">
+                    <span class="fa fa-envelope"></span>
+                  </div>
+                </div>
+
+                <div>
+                  <h3>
+                    Responsive Layout
+                  </h3>
+
+                  <p>
+                    Eque feugiat contentiones ei has. Id summo mundi explicari his, nec in maiorum scriptorem.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="feature-col col-lg-4 col-xs-12">
+              <div class="card card-block text-center">
+                <div>
+                  <div class="feature-icon">
+                    <span class="fa fa-bell"></span>
+                  </div>
+                </div>
+
+                <div>
+                  <h3>
+                    Innovative Ideas
+                  </h3>
+
+                  <p>
+                    Eque feugiat contentiones ei has. Id summo mundi explicari his, nec in maiorum scriptorem.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="feature-col col-lg-4 col-xs-12">
+              <div class="card card-block text-center">
+                <div>
+                  <div class="feature-icon">
+                    <span class="fa fa-database"></span>
+                  </div>
+                </div>
+
+                <div>
+                  <h3>
+                    Good Documentation
+                  </h3>
+
+                  <p>
+                    Eque feugiat contentiones ei has. Id summo mundi explicari his, nec in maiorum scriptorem.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="feature-col col-lg-4 col-xs-12">
+              <div class="card card-block text-center">
+                <div>
+                  <div class="feature-icon">
+                    <span class="fa fa-cutlery"></span>
+                  </div>
+                </div>
+
+                <div>
+                  <h3>
+                    Excellent Features
+                  </h3>
+
+                  <p>
+                    Eque feugiat contentiones ei has. Id summo mundi explicari his, nec in maiorum scriptorem.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="feature-col col-lg-4 col-xs-12">
+              <div class="card card-block text-center">
+                <div>
+                  <div class="feature-icon">
+                    <span class="fa fa-dashboard"></span>
+                  </div>
+                </div>
+
+                <div>
+                  <h3>
+                    Retina Ready
+                  </h3>
+
+                  <p>
+                    Eque feugiat contentiones ei has. Id summo mundi explicari his, nec in maiorum scriptorem.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- /Features -->
+      <!-- Call to Action -->
+
+      <section class="cta">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-9 col-sm-12 text-lg-left text-center">
+              <h2>
+                Call to Action Section
+              </h2>
+
+              <p>
+                Lorem ipsum dolor sit amet, nec ad nisl mandamus imperdiet, ut corpora cotidieque cum. Et brute iracundia his, est eu idque dictas gubergren
+              </p>
+            </div>
+
+            <div class="col-lg-3 col-sm-12 text-lg-right text-center">
+              <a class="btn btn-ghost" href="#">Buy This Theme</a>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- /Call to Action -->
+      <!-- Portfolio -->
+
+      <section class="portfolio" id="portfolio">
+        <div class="container text-center">
+          <h2>
+            Portfolio
+          </h2>
+
+          <p>
+            Voluptua scripserit per ad, laudem viderer sit ex. Ex alia corrumpit voluptatibus usu, sed unum convenire id. Ut cum nisl moderatius, Per nihil dicant commodo an.
+          </p>
+        </div>
+
+        <div class="portfolio-grid">
+          <div class="row">
+            <div class="col-lg-3 col-sm-6 col-xs-12">
+              <div class="card card-block">
+                <a href="#"><img alt="" src="{{ STATIC_URL }}img/porf-1.jpg">
+                <div class="portfolio-over">
+                  <div>
+                    <h3 class="card-title">
+                      The Dude Rockin'
+                    </h3>
+
+                    <p class="card-text">
+                      Lorem ipsum dolor sit amet, eu sed suas eruditi honestatis.
+                    </p>
+                  </div>
+                </div></a>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-sm-6 col-xs-12">
+              <div class="card card-block">
+                <a href="#"><img alt="" src="{{ STATIC_URL }}img/porf-2.jpg">
+                <div class="portfolio-over">
+                  <div>
+                    <h3 class="card-title">
+                      The Dude Rockin'
+                    </h3>
+
+                    <p class="card-text">
+                      Lorem ipsum dolor sit amet, eu sed suas eruditi honestatis.
+                    </p>
+                  </div>
+                </div></a>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-sm-6 col-xs-12">
+              <div class="card card-block">
+                <a href="#"><img alt="" src="{{ STATIC_URL }}img/porf-3.jpg">
+                <div class="portfolio-over">
+                  <div>
+                    <h3 class="card-title">
+                      The Dude Rockin'
+                    </h3>
+
+                    <p class="card-text">
+                      Lorem ipsum dolor sit amet, eu sed suas eruditi honestatis.
+                    </p>
+                  </div>
+                </div></a>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-sm-6 col-xs-12">
+              <div class="card card-block">
+                <a href="#"><img alt="" src="{{ STATIC_URL }}img/porf-4.jpg">
+                <div class="portfolio-over">
+                  <div>
+                    <h3 class="card-title">
+                      The Dude Rockin'
+                    </h3>
+
+                    <p class="card-text">
+                      Lorem ipsum dolor sit amet, eu sed suas eruditi honestatis.
+                    </p>
+                  </div>
+                </div></a>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-lg-3 col-sm-6 col-xs-12">
+              <div class="card card-block">
+                <a href="#"><img alt="" src="{{ STATIC_URL }}img/porf-5.jpg">
+                <div class="portfolio-over">
+                  <div>
+                    <h3 class="card-title">
+                      The Dude Rockin'
+                    </h3>
+
+                    <p class="card-text">
+                      Lorem ipsum dolor sit amet, eu sed suas eruditi honestatis.
+                    </p>
+                  </div>
+                </div></a>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-sm-6 col-xs-12">
+              <div class="card card-block">
+                <a href="#"><img alt="" src="{{ STATIC_URL }}img/porf-6.jpg">
+                <div class="portfolio-over">
+                  <div>
+                    <h3 class="card-title">
+                      The Dude Rockin'
+                    </h3>
+
+                    <p class="card-text">
+                      Lorem ipsum dolor sit amet, eu sed suas eruditi honestatis.
+                    </p>
+                  </div>
+                </div></a>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-sm-6 col-xs-12">
+              <div class="card card-block">
+                <a href="#"><img alt="" src="{{ STATIC_URL }}img/porf-7.jpg">
+                <div class="portfolio-over">
+                  <div>
+                    <h3 class="card-title">
+                      The Dude Rockin'
+                    </h3>
+
+                    <p class="card-text">
+                      Lorem ipsum dolor sit amet, eu sed suas eruditi honestatis.
+                    </p>
+                  </div>
+                </div></a>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-sm-6 col-xs-12">
+              <div class="card card-block">
+                <a href="#"><img alt="" src="{{ STATIC_URL }}img/porf-8.jpg">
+                <div class="portfolio-over">
+                  <div>
+                    <h3 class="card-title">
+                      The Dude Rockin'
+                    </h3>
+
+                    <p class="card-text">
+                      Lorem ipsum dolor sit amet, eu sed suas eruditi honestatis.
+                    </p>
+                  </div>
+                </div></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- /Portfolio -->
+      <!-- Team -->
+
+      <section class="team" id="team">
+        <div class="container">
+          <h2 class="text-center">
+            Meet our team
+          </h2>
+
+          <div class="row">
+            <div class="col-sm-3 col-xs-6">
+              <div class="card card-block">
+                <a href="#"><img alt="" class="team-img" src="{{ STATIC_URL }}img/team-1.jpg">
+                <div class="card-title-wrap">
+                  <span class="card-title">Sergio Fez</span> <span class="card-text">Art Director</span>
+                </div>
+
+                <div class="team-over">
+                  <h4 class="hidden-md-down">
+                    Connect with me
+                  </h4>
+
+                  <nav class="social-nav">
+                    <a href="#"><i class="fa fa-twitter"></i></a> <a href="#"><i class="fa fa-facebook"></i></a> <a href="#"><i class="fa fa-linkedin"></i></a> <a href="#"><i class="fa fa-envelope"></i></a>
+                  </nav>
+
+                  <p>
+                    Lorem ipsum dolor sit amet, eu sed suas eruditi honestatis.
+                  </p>
+                </div></a>
+              </div>
+            </div>
+
+            <div class="col-sm-3 col-xs-6">
+              <div class="card card-block">
+                <a href="#"><img alt="" class="team-img" src="{{ STATIC_URL }}img/team-2.jpg">
+                <div class="card-title-wrap">
+                  <span class="card-title">Sergio Fez</span> <span class="card-text">Art Director</span>
+                </div>
+
+                <div class="team-over">
+                  <h4 class="hidden-md-down">
+                    Connect with me
+                  </h4>
+
+                  <nav class="social-nav">
+                    <a href="#"><i class="fa fa-twitter"></i></a> <a href="#"><i class="fa fa-facebook"></i></a> <a href="#"><i class="fa fa-linkedin"></i></a> <a href="#"><i class="fa fa-envelope"></i></a>
+                  </nav>
+
+                  <p>
+                    Lorem ipsum dolor sit amet, eu sed suas eruditi honestatis.
+                  </p>
+                </div></a>
+              </div>
+            </div>
+
+            <div class="col-sm-3 col-xs-6">
+              <div class="card card-block">
+                <a href="#"><img alt="" class="team-img" src="{{ STATIC_URL }}img/team-3.jpg">
+                <div class="card-title-wrap">
+                  <span class="card-title">Sergio Fez</span> <span class="card-text">Art Director</span>
+                </div>
+
+                <div class="team-over">
+                  <h4 class="hidden-md-down">
+                    Connect with me
+                  </h4>
+
+                  <nav class="social-nav">
+                    <a href="#"><i class="fa fa-twitter"></i></a> <a href="#"><i class="fa fa-facebook"></i></a> <a href="#"><i class="fa fa-linkedin"></i></a> <a href="#"><i class="fa fa-envelope"></i></a>
+                  </nav>
+
+                  <p>
+                    Lorem ipsum dolor sit amet, eu sed suas eruditi honestatis.
+                  </p>
+                </div></a>
+              </div>
+            </div>
+
+            <div class="col-sm-3 col-xs-6">
+              <div class="card card-block">
+                <a href="#"><img alt="" class="team-img" src="{{ STATIC_URL }}img/team-4.jpg">
+                <div class="card-title-wrap">
+                  <span class="card-title">Sergio Fez</span> <span class="card-text">Art Director</span>
+                </div>
+
+                <div class="team-over">
+                  <h4 class="hidden-md-down">
+                    Connect with me
+                  </h4>
+
+                  <nav class="social-nav">
+                    <a href="#"><i class="fa fa-twitter"></i></a> <a href="#"><i class="fa fa-facebook"></i></a> <a href="#"><i class="fa fa-linkedin"></i></a> <a href="#"><i class="fa fa-envelope"></i></a>
+                  </nav>
+
+                  <p>
+                    Lorem ipsum dolor sit amet, eu sed suas eruditi honestatis.
+                  </p>
+                </div></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- /Team -->
 
 <div class="summary">
   <h2 id="mostfederatedentities">{% trans "Most federated entities" %}</h2>
