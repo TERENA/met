@@ -162,11 +162,11 @@ class Federation(Base):
             name = entity.name
             registration_authority = entity.registration_authority
             certstats = entity.certstats
-            display_protocols = entity.display_protocols
+            display_protocols = entity._display_protocols
 
             entity_from_xml = self._metadata.get_entity(m_id, False)
             entity.process_metadata(
-                True, entity_from_xml, cached_entity_types)
+                False, entity_from_xml, cached_entity_types)
 
             if created or entity.has_changed(entityid, name, registration_authority, certstats, display_protocols):
                 entities_to_update.append(entity)
