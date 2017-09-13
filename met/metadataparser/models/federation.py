@@ -166,7 +166,7 @@ class Federation(Base):
 
             entity_from_xml = self._metadata.get_entity(m_id, False)
             entity.process_metadata(
-                False, entity_from_xml, cached_entity_types)
+                True, entity_from_xml, cached_entity_types)
 
             if created or entity.has_changed(entityid, name, registration_authority, certstats, display_protocols):
                 entities_to_update.append(entity)
