@@ -255,8 +255,8 @@ class Entity(Base):
     def display_protocols(self):
         protocols = []
 
-        #xml_protocols = self._get_property('protocols')
-        xml_protocols = self._display_protocols
+        xml_protocols = self.protocols
+        #xml_protocols = self._display_protocols
         if xml_protocols:
             for proto in xml_protocols.split(' '):
                 protocols.append(self.READABLE_PROTOCOLS.get(proto, proto))
