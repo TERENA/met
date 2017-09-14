@@ -162,13 +162,12 @@ class Federation(Base):
             name = entity.name
             registration_authority = entity.registration_authority
             certstats = entity.certstats
-            display_protocols = entity._display_protocols
 
             entity_from_xml = self._metadata.get_entity(m_id, False)
             entity.process_metadata(
                 False, entity_from_xml, cached_entity_types)
 
-            if created or entity.has_changed(entityid, name, registration_authority, certstats, display_protocols):
+            if created or entity.has_changed(entityid, name, registration_authority, certstats):
                 entities_to_update.append(entity)
 
             entities_to_add.append(entity)
@@ -198,7 +197,7 @@ class Federation(Base):
             first_date = datetime(2010, 1, 1)
             first_date = pytz.utc.localize(first_date)
 
-        for curtimestamp in self._daterange(first_date, timezone.now()):
+        for curtimestamp in self._daterange(first_date, timezone.now() - timedelta(1)):
             computed = {}
             not_computed = []
             entity_stats = []
