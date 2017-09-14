@@ -309,12 +309,12 @@ class Federation(Base):
 
     def get_stat_protocol(self, entities, xml_name, service_type, ref_date):
         if ref_date and ref_date < pytz.utc.localize(datetime.now() - timedelta(days=1)):
-            selected = entities.filter(types__xmlname=service_type, _display_protocols__contains=xml_name,
+            selected = entities.filter(types__xmlname=service_type,
                                        entity_federations__registration_instant__lt=ref_date)
         else:
-            selected = entities.filter(
-                types__xmlname=service_type, _display_protocols__contains=xml_name)
-        return len(selected)
+            selected = entities.filter(types__xmlname=service_type)
+
+        return len([e for e in selected if xml_name in e.protocols])
 
     def can_edit(self, user, delete):
         if user.is_superuser:
