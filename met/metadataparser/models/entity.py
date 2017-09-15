@@ -112,6 +112,9 @@ class Entity(Base):
     entity_categories = models.ManyToManyField('EntityCategory',
                                                verbose_name=_(u'Entity categories'))
 
+    _display_protocols = models.CharField(blank=True, null=True, max_length=300,		
+                                          unique=False, verbose_name=_(u'Display Protocols'))
+
     objects = models.Manager()
 
     longlist = EntityManager()
@@ -437,6 +440,10 @@ class Entity(Base):
 
         self.certstats = self._get_property('certstats')
 
+        newprotocols = self.protocols		
+        if newprotocols and newprotocols != "":		
+            self._display_protocols = newprotocols
+
         if str(self._get_property('registration_authority')) != '':
             self.registration_authority = self._get_property(
                 'registration_authority')
@@ -510,7 +517,7 @@ class Entity(Base):
 
         return False
 
-    def has_changed(self, entityid, name, registration_authority, certstats):
+    def has_changed(self, entityid, name, registration_authority, certstats, display_protocols):
         if self.entityid != entityid:
             return True
         if self.name != name:
@@ -518,6 +525,8 @@ class Entity(Base):
         if self.registration_authority != registration_authority:
             return True
         if self.certstats != certstats:
+            return True
+        if self._display_protocols != display_protocols:
             return True
 
         return False

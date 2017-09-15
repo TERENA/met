@@ -162,12 +162,13 @@ class Federation(Base):
             name = entity.name
             registration_authority = entity.registration_authority
             certstats = entity.certstats
+            display_protocols = entity._display_protocols
 
             entity_from_xml = self._metadata.get_entity(m_id, False)
             entity.process_metadata(
                 False, entity_from_xml, cached_entity_types)
 
-            if created or entity.has_changed(entityid, name, registration_authority, certstats):
+            if created or entity.has_changed(entityid, name, registration_authority, certstats, display_protocols):
                 entities_to_update.append(entity)
 
             entities_to_add.append(entity)
@@ -309,11 +310,13 @@ class Federation(Base):
     def get_stat_protocol(self, entities, xml_name, service_type, ref_date):
         if ref_date and ref_date < pytz.utc.localize(datetime.now() - timedelta(days=1)):
             selected = entities.filter(types__xmlname=service_type,
+                                       _display_protocols__contains=xml_name,
                                        entity_federations__registration_instant__lt=ref_date)
         else:
-            selected = entities.filter(types__xmlname=service_type)
+            selected = entities.filter(types__xmlname=service_type,
+                                       _display_protocols__contains=xml_name)
 
-        return len([e for e in selected if xml_name in e.protocols])
+        return len(selected)
 
     def can_edit(self, user, delete):
         if user.is_superuser:
