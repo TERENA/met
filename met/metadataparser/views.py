@@ -33,7 +33,7 @@ from django.utils import timezone
 from chartit import DataPool, Chart
 
 from met.metadataparser.decorators import user_can_edit
-from met.metadataparser.models import Federation, Entity, EntityStat, EntityCategory, TOP_LENGTH, FEDERATION_TYPES
+from met.metadataparser.models import Federation, Entity, EntityStat, EntityCategory, Entity_Federations, TOP_LENGTH, FEDERATION_TYPES
 from met.metadataparser.forms import (FederationForm, EntityForm, EntityCommentForm,
                                       EntityProposalForm, ServiceSearchForm, ChartForm, SearchEntitiesForm)
 
@@ -679,10 +679,6 @@ def search_entities(request):
             if entity_type and entity_type != 'All':
                 filters['types__name'] = entity_type
 
-            entity_category = form.cleaned_data['entity_category']
-            if entity_category and entity_category != 'All':
-                filters['entity_categories__category_id'] = entity_category
-
             federations = form.cleaned_data['federations']
             if federations and not 'All' in federations:
                 q_list = [Q(federations__id=f) for f in federations]
@@ -697,6 +693,25 @@ def search_entities(request):
                 ob_entities = ob_entities.filter(*args)
             if filters:
                 ob_entities = ob_entities.filter(**filters)
+
+            entity_category = form.cleaned_data['entity_category']
+            if entity_category and entity_category != 'All':
+                eid_list = []
+
+                for entity in ob_entities.all():
+                    feds = Entity_Federations.objects.filter(entity=entity)
+
+                    if federations and not 'All' in federations:
+                        ec_list = [Q(federation__id=f) for f in federations]
+                        ec_args = (reduce(operator.or_, ec_list),)
+                        feds = feds.filter(*ec_args)
+
+                    feds.prefetch_related('entity_categories')
+                    feds = feds.filter(entity_categories__category_id=entity_category)
+                    eid_list.extend([ Q(entityid=f.entity.entityid) for f in feds])
+
+                eid_args = (reduce(operator.or_, eid_list),)
+                ob_entities = ob_entities.filter(*eid_args)
 
             ob_entities = ob_entities.prefetch_related('types', 'federations')
             pagination = _paginate_fed(ob_entities, form.cleaned_data['page'])

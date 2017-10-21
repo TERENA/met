@@ -50,7 +50,8 @@ def refresh(fed_name=None, force_refresh=False, logger=None):
     log('Starting refreshing metadata ...', logger, logging.INFO)
 
     federations = Federation.objects.all()
-    federations.prefetch_related('etypes', 'federations', 'entity_categories')
+    federations.prefetch_related('etypes', 'federations')
+    #TODO prefetch related, add federations->entity_categories
 
     for federation in federations:
         if fed_name and federation.slug != fed_name:
@@ -107,7 +108,7 @@ def refresh(fed_name=None, force_refresh=False, logger=None):
 
     try:
         log('Removing entity categories with no entity associated...', logger, logging.INFO)
-        EntityCategory.objects.all().annotate(entitylength=Count("entity")
+        EntityCategory.objects.all().annotate(entitylength=Count("entity_federations")
                                               ).filter(entitylength__lte=0).delete()
     except Exception, errorMessage:
         log('Error: %s' % errorMessage, logger, logging.ERROR)

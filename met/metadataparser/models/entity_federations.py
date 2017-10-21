@@ -25,3 +25,10 @@ class Entity_Federations(models.Model):
 
     registration_instant = models.DateField(blank=True, null=True,
                                             verbose_name=_(u'Registration Instant'))
+
+    entity_categories = models.ManyToManyField('EntityCategory',
+                                               verbose_name=_(u'Entity categories'))
+
+    def __unicode__(self):
+        cats = [ c.name for c in self.entity_categories.all() ]
+        return "%s in federation %s %s" % (self.entity.entityid, self.federation.slug, cats)

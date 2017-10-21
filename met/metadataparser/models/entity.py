@@ -28,7 +28,7 @@ from met.metadataparser.xmlparser import DESCRIPTOR_TYPES_DISPLAY
 
 from met.metadataparser.models.base import JSONField, Base
 from met.metadataparser.models.entity_type import EntityType
-from met.metadataparser.models.entity_category import EntityCategory
+from met.metadataparser.models.entity_federations import Entity_Federations
 
 TOP_LENGTH = getattr(settings, "TOP_LENGTH", 5)
 
@@ -108,9 +108,6 @@ class Entity(Base):
 
     certstats = models.CharField(blank=True, null=True, max_length=200,
                                  unique=False, verbose_name=_(u'Certificate Stats'))
-
-    entity_categories = models.ManyToManyField('EntityCategory',
-                                               verbose_name=_(u'Entity categories'))
 
     _display_protocols = models.CharField(blank=True, null=True, max_length=300,		
                                           unique=False, verbose_name=_(u'Display Protocols'))
@@ -243,6 +240,13 @@ class Entity(Base):
             return self._get_property('entity_types')
         except Exception:
             return []
+
+    @property
+    def entity_categories(self):
+        if self.curfed:
+            efed = Entity_Federations.objects.get_or_create(federation=self.curfed, entity=self)[0]
+            return efed.entity_categories
+        return None
 
     @property
     def xml_categories(self):
@@ -380,27 +384,7 @@ class Entity(Base):
             entity_types.append(entity_type)
         return entity_types
 
-    def _get_or_create_ecategories(self, cached_entity_categories):
-        entity_categories = []
-        cur_cached_categories = [
-            t.category_id for t in self.entity_categories.all()]
-        for ecategory in self.xml_categories:
-            if ecategory in cur_cached_categories:
-                break
-
-            if cached_entity_categories is None:
-                entity_category, _ = EntityCategory.objects.get_or_create(
-                    category_id=ecategory)
-            else:
-                if ecategory in cached_entity_categories:
-                    entity_category = cached_entity_categories[ecategory]
-                else:
-                    entity_category = EntityCategory.objects.create(
-                        category_id=ecategory)
-            entity_categories.append(entity_category)
-        return entity_categories
-
-    def process_metadata(self, auto_save=True, entity_data=None, cached_entity_types=None):
+    def process_metadata(self, auto_save=True, entity_data=None, cached_entity_types=None, federation=None):
         if not entity_data:
             self.load_metadata()
 
@@ -414,25 +398,6 @@ class Entity(Base):
             entity_types = self._get_or_create_etypes(cached_entity_types)
             if len(entity_types) > 0:
                 self.types.add(*entity_types)
-
-        if self.xml_categories:
-            db_entity_categories = EntityCategory.objects.all()
-            cached_entity_categories = {
-                entity_category.category_id: entity_category for entity_category in db_entity_categories}
-
-            # Delete categories no more present in XML
-            self.entity_categories.clear()
-
-            # Create all entities, if not alread in database
-            entity_categories = self._get_or_create_ecategories(
-                cached_entity_categories)
-
-            # Add categories to entity
-            if len(entity_categories) > 0:
-                self.entity_categories.add(*entity_categories)
-        else:
-            # No categories in XML, delete eventual categorie sin DB
-            self.entity_categories.clear()
 
         newname = self._get_property('displayName')
         if newname and newname != '':

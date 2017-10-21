@@ -30,6 +30,7 @@ from met.metadataparser.models.base import Base, XmlDescriptionError
 from met.metadataparser.models.entity import Entity
 from met.metadataparser.models.entity_type import EntityType
 from met.metadataparser.models.entity_stat import EntityStat, stats
+from met.metadataparser.models.entity_category import EntityCategory
 from met.metadataparser.models.entity_federations import Entity_Federations
 
 FEDERATION_TYPES = (
@@ -128,15 +129,53 @@ class Federation(Base):
 
         return removed
 
+    def _get_or_create_ecategories(self, entity, cached_entity_categories):
+        entity_categories = []
+        efed = Entity_Federations.objects.get_or_create(federation=self, entity=entity)[0]
+        cur_cached_categories = [
+            t.category_id for t in efed.entity_categories.all()]
+        for ecategory in entity.xml_categories:
+            if ecategory in cur_cached_categories:
+                break
+
+            if cached_entity_categories is None:
+                entity_category, _ = EntityCategory.objects.get_or_create(
+                    category_id=ecategory)
+            else:
+                if ecategory in cached_entity_categories:
+                    entity_category = cached_entity_categories[ecategory]
+                else:
+                    entity_category = EntityCategory.objects.create(
+                        category_id=ecategory)
+            entity_categories.append(entity_category)
+        return entity_categories
+
     def _update_entities(self, entities_to_update, entities_to_add):
         for e in entities_to_update:
             e.save()
 
         for e in entities_to_add:
-            membership = Entity_Federations.objects.get_or_create(
-                federation=self, entity=e)[0]
-            membership.registration_instant = e.registration_instant.date(
-            ) if e.registration_instant else None
+            membership = Entity_Federations.objects.get_or_create(federation=self, entity=e)[0]
+            membership.registration_instant = e.registration_instant.date() if e.registration_instant else None
+
+            if e.xml_categories:
+                db_entity_categories = EntityCategory.objects.all()
+                cached_entity_categories = {
+                    entity_category.category_id: entity_category for entity_category in db_entity_categories}
+
+                # Delete categories no more present in XML
+                membership.entity_categories.clear()
+
+                # Create all entities, if not alread in database
+                entity_categories = self._get_or_create_ecategories(e, cached_entity_categories)
+
+                # Add categories to entity
+                if len(entity_categories) > 0:
+                    membership.entity_categories.add(*entity_categories)
+            else:
+                # No categories in XML, delete eventual categorie sin DB
+                membership.entity_categories.clear()
+
             membership.save()
 
     def _add_new_entities(self, entities, entities_from_xml, request, federation_slug):
@@ -165,8 +204,7 @@ class Federation(Base):
             display_protocols = entity._display_protocols
 
             entity_from_xml = self._metadata.get_entity(m_id, False)
-            entity.process_metadata(
-                False, entity_from_xml, cached_entity_types)
+            entity.process_metadata(False, entity_from_xml, cached_entity_types, self)
 
             if created or entity.has_changed(entityid, name, registration_authority, certstats, display_protocols):
                 entities_to_update.append(entity)
@@ -237,8 +275,8 @@ class Federation(Base):
 
         entities = {}
         db_entities = Entity.objects.filter(entityid__in=entities_from_xml)
-        db_entities = db_entities.prefetch_related(
-            'types', 'entity_categories')
+        db_entities = db_entities.prefetch_related('types')
+        #TODO add prefetch related, federations, entity_categories
 
         for entity in db_entities.all():
             entities[entity.entityid] = entity
