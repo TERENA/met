@@ -101,7 +101,7 @@
       <td class="first-col"><strong>{% trans "Entity Categories" %}:</strong></td>
       <td>
           <ul>
-              {% for curcat in entity.xml_categories %}
+              {% for curcat in entity.entity_categories.all %}
               <li>{{ curcat }}</li>
               {% endfor %}
           </ul>
