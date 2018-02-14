@@ -42,6 +42,9 @@
   {% endfor %}
   </ul>
 </div>
+
+<p style="margin-top:5px; float:left">&nbsp;&nbsp;&nbsp;&nbsp;<i>{% trans "on" %} {{ entity.curfed.metadata_update }} ({{ entity.curfed.metadata_update|timesince }} {% trans "ago" %})</i></p>
+
 <!--form method="get" action="{{ entity.absolute_url }}"><i>{% trans "Information retrieved from federation: " %}</i>
   <select name="federation" onchange="this.form.submit()">
   {% for curfed in entity.federations.all %}

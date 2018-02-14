@@ -77,8 +77,8 @@ class Federation(Base):
     country = models.CharField(blank=True, null=True, max_length=100,
                                unique=False, verbose_name=_(u'Country'))
 
-    metadata_update = models.DateField(blank=True, null=True,
-                                       unique=False, verbose_name=_(u'Metadata update date'))
+    metadata_update = models.DateTimeField(blank=True, null=True,
+                                           unique=False, verbose_name=_(u'Metadata update date and time'))
 
     certstats = models.CharField(blank=True, null=True, max_length=200,
                                  unique=False, verbose_name=_(u'Certificate Stats'))
