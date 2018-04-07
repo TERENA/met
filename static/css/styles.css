@@ -1,0 +1,95 @@
+h1 {
+    font-size: 24px;
+    line-height: 26px;
+}
+
+h2 {
+    font-size: 20px;
+    line-height: 22px;
+}
+
+h3 {
+    font-size: 18px;
+    line-height: 20px;
+}
+
+ul.querybuttons li {
+    margin-left: 2.5em;
+    margin-right: 2.5em;
+}
+
+ul.entity {
+    margin: 20px 0;
+}
+
+ul.entity li {
+    margin: 10px 0;
+    font-size: 16px;
+    line-height: 200%;
+}
+
+ul.entity li strong.labelview {
+    display: block;
+    margin-bottom: 5px;
+}
+
+div.controls ul {
+    list-style: none outside none;
+    margin-left: 0;
+}
+
+.form-search input {
+  width: 400px;
+}
+
+.controls label {
+    display: inline;
+}
+
+div.controls input[type=text] {
+    width: 350px;
+}
+
+div.controls ul {
+    overflow: auto;
+    overflow-x: hidden;
+    width: 350px;
+    max-height: 150px;
+}
+
+.entitytype {
+    width: 80px;
+}
+
+div.summary {
+    margin: 75px 0;
+}
+
+div.summary p {
+    margin: 15px 0;
+}
+div.summary .btn-toolbar {
+    margin-top: 0px;
+}
+
+.first-col {
+    width: 250px;
+}
+
+#pipelist {
+    display: inline;
+    list-style: none;
+    margin-left: 0px;
+}
+
+#pipelist li {
+    display: inline;
+}
+
+#pipelist li:after {
+    content: " | ";
+}
+
+#pipelist li:last-child:after {
+    content: "";
+}

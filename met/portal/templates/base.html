@@ -1,20 +1,250 @@
 <!DOCTYPE html>
 {% load i18n metadataparsertags %}
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>{% trans "Metadata Explorer Tool" %}</title>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <meta name="description" content="{% trans "Metadata Explorer Tool" %}">
-    <meta name="author" content="G&eacute;ant">
-    <script src="{{ STATIC_URL }}js/jquery-1.10.2.min.js"></script>
-    <script src="{{ STATIC_URL }}js/bootstrap.js"></script>
+  <!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <meta charset="utf-8">
+
+      <title>{% trans "Metadata Explorer Tool" %}</title>
+
+      <meta name="description" content="{% trans "Metadata Explorer Tool" %}">
+      <meta name="author" content="G&eacute;ant">
+      <meta content="width=device-width, initial-scale=1.0" name="viewport">
+      <meta content="" name="keywords">
+      <meta content="" name="description">
+      
+      <link href="img/favicon.ico" rel="icon">
+      <link href="https://fonts.googleapis.com/css?family=Raleway:400,500,700|Roboto:400,900" rel="stylesheet">
+      <link href="{{ STATIC_URL }}lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+      <link href="{{ STATIC_URL }}lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+      <link href="{{ STATIC_URL }}css/jquery-jvectormap-2.0.3.css" rel="stylesheet">
+      <link href="{{ STATIC_URL }}css/style.css" rel="stylesheet">
+    </head>
+
+    <body>
+      {% if messages %}
+      <div class="messages row">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags|default:"info" }}">
+          <button type="button" class="close" data-dismiss="alert">×</button>
+          {{ message|safe }}
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      {% block appendheader %}
+      {% endblock %}
+
+      {% block content %}
+      {% endblock %}
+
+      <!-- @component: footer -->
+      <section id="contact">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-12 text-center">
+              <h2 class="section-title">Contact Us</h2>
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col-lg-3 offset-lg-2">
+              <div class="info">
+                <div>
+                  <i class="fa fa-map-marker"></i>
+                  <p>A108 Adam Street<br>New York, NY 535022</p>
+                </div>
+                
+                <div>
+                  <i class="fa fa-envelope"></i>
+                  <p>info@example.com</p>
+                </div>
+                
+                <div>
+                  <i class="fa fa-phone"></i>
+                  <p>+1 5589 55488 55s</p>
+                </div>
+                
+              </div>
+            </div>
+            
+            <div class="col-lg-5">
+              <div class="form">
+                <div id="sendmessage">Your message has been sent. Thank you!</div>
+                <div id="errormessage"></div>
+                <form action="" method="post" role="form" class="contactForm">
+                    <div class="form-group">
+                      <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" data-rule="minlen:4" data-msg="Please enter at least 4 chars" />
+                      <div class="validation"></div>
+                    </div>
+                    <div class="form-group">
+                      <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" data-rule="email" data-msg="Please enter a valid email" />
+                      <div class="validation"></div>
+                    </div>
+                    <div class="form-group">
+                      <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" data-rule="minlen:4" data-msg="Please enter at least 8 chars of subject" />
+                      <div class="validation"></div>
+                    </div>
+                    <div class="form-group">
+                      <textarea class="form-control" name="message" rows="5" data-rule="required" data-msg="Please write something for us" placeholder="Message"></textarea>
+                      <div class="validation"></div>
+                    </div>
+                    <div class="text-center"><button type="submit">Send Message</button></div>
+                </form>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+      </section>
+        
+      <footer class="site-footer">
+        <div class="bottom">
+          <div class="container">
+            <div class="row">
+
+              <div class="col-lg-6 col-xs-12 text-lg-left text-center">
+                <p class="copyright-text">
+                   BELL Theme
+                </p>
+                <div class="credits">
+                    <!-- 
+                    All the links in the footer should remain intact. 
+                    You can delete the links only if you purchased the pro version.
+                    Licensing information: https://bootstrapmade.com/license/
+                    Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/buy/?theme=Bell
+                  -->
+                  <a href="https://bootstrapmade.com/">Bootstrap Themes</a> by BootstrapMade
+                </div>
+              </div>
+              
+              <div class="col-lg-6 col-xs-12 text-lg-right text-center">
+                <ul class="list-inline">
+                  <li class="list-inline-item">
+                    <a href="index.html">Home</a>
+                  </li>
+
+                  <li class="list-inline-item">
+                    <a href="#about">About Us</a>
+                  </li>
+
+                  <li class="list-inline-item">
+                    <a href="#features">Features</a>
+                  </li>
+
+                  <li class="list-inline-item">
+                    <a href="#portfolio">Portfolio</a>
+                  </li>
+
+                  <li class="list-inline-item">
+                    <a href="#team">Team</a>
+                  </li>
+
+                  <li class="list-inline-item">
+                    <a href="#contact">Contact</a>
+                  </li>
+                </ul>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+      </footer>
+      <a class="scrolltop" href="#"><span class="fa fa-angle-up"></span></a>
+
+      <script src="{{ STATIC_URL }}lib/jquery/jquery.min.js"></script>
+      <script src="{{ STATIC_URL }}js/discojuice-3.0.en.min.js"></script>
+      <script src="{{ STATIC_URL }}js/jquery-jvectormap-2.0.3.min.js"></script>
+      <script src="{{ STATIC_URL }}js/jquery-jvectormap-world-mill.js"></script>
+      <script src="{{ STATIC_URL }}lib/superfish/hoverIntent.js"></script>
+      <script src="{{ STATIC_URL }}lib/superfish/superfish.min.js"></script>
+      <script src="{{ STATIC_URL }}lib/tether/js/tether.min.js"></script>
+      <script src="{{ STATIC_URL }}lib/stellar/stellar.min.js"></script>
+      <script src="{{ STATIC_URL }}lib/bootstrap/js/bootstrap.min.js"></script>
+      <script src="{{ STATIC_URL }}lib/counterup/counterup.min.js"></script>
+      <script src="{{ STATIC_URL }}lib/waypoints/waypoints.min.js"></script>
+      <script src="{{ STATIC_URL }}lib/easing/easing.js"></script>
+      <script src="{{ STATIC_URL }}lib/stickyjs/sticky.js"></script>
+      <script src="{{ STATIC_URL }}lib/parallax/parallax.js"></script>
+      <script src="{{ STATIC_URL }}lib/lockfixed/lockfixed.min.js"></script>
+      <script src="{{ STATIC_URL }}js/custom.js"></script>
+      <script src="{{ STATIC_URL }}contactform/contactform.js"></script>
+
+      <script type="text/javascript">
+      var owa_baseUrl = '{{ settings.OWA_BASEURL }}';
+      var owa_cmds = owa_cmds || [];
+      owa_cmds.push(['setSiteId', '{{ settings.OWA_SITEID }}']);
+      owa_cmds.push(['trackPageView']);
+      owa_cmds.push(['trackClicks']);
+      owa_cmds.push(['trackDomStream']);
+
+      (function() {
+          var _owa = document.createElement('script'); _owa.type = 'text/javascript'; _owa.async = true;
+          owa_baseUrl = ('https:' == document.location.protocol ? window.owa_baseSecUrl || owa_baseUrl.replace(/http:/, 'https:') : owa_baseUrl );
+          _owa.src = owa_baseUrl + 'modules/base/js/owa.tracker-combined-min.js';
+          var _owa_s = document.getElementsByTagName('script')[0]; _owa_s.parentNode.insertBefore(_owa, _owa_s);
+      }());
+      </script>
+
+      <script type="text/javascript">
+        var djc = DiscoJuice.Hosted.getConfig(
+          {
+            "target": "a.signin",
+            "title": "{{ portal_settings.SAML_DESCRIPTION }}",
+            "spentityid": "{{ portal_settings.SAML_ENTITYID }}",
+            "responseurl": "static/response.html",
+            "redirectURL": "{{ portal_settings.LOGIN_URL }}?next={{ request.get_full_path|iriencode }}&idp=",
+            "feeds": {{ portal_settings.DJANGO_FEDERATIONS|safe }}
+          }
+        );
+
+        djc.inlinemetadata = {{ portal_settings.DJANGO_ADDITIONAL_IDPS|safe }};
+
+        $(document).ready(function() {
+          $("a.signin").DiscoJuice(djc);      
+        });
+
+        $(function(){
+          $('#world-map').vectorMap({map: 'world_mill'});
+        });
+        </script>
+
+        {% block extrajs %}
+        {% endblock %}
+
+    </body>
+  </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--
     <script src="{{ STATIC_URL }}js/main.js"></script>
     <script src="{{ STATIC_URL }}js/jquery.tablesorter.min.js"></script>
     <script src="{{ STATIC_URL }}js/sort_startup.js"></script>
     <script src="{{ STATIC_URL }}js/highcharts.js"></script>
     <script src="{{ STATIC_URL }}js/discojuice-3.0.en.min.js"></script>
     <script src="{{ STATIC_URL }}js/jquery.dataTables.min.js"></script>
+<<<<<<< HEAD
     <script type="text/javascript">
       var djc = DiscoJuice.Hosted.getConfig(
         {
@@ -34,27 +264,19 @@
       });
     </script>
     <!-- Bootstrap -->
+=======
+>>>>>>> 61666b26b740ece93a449f271380b5ab2425603f
     <link href="{{ STATIC_URL }}css/bootstrap.css" rel="stylesheet">
-    <!--link href="{{ STATIC_URL }}css/bootstrap-responsive.css" rel="stylesheet"-->
     <link href="{{ STATIC_URL }}css/styles.css" rel="stylesheet">
     <link href="{{ STATIC_URL }}css/discojuice.css" rel="stylesheet" />
     <link href="{{ STATIC_URL }}css/jquery.dataTables.css" rel="stylesheet" />
-  </head>
+  <head>
   <body>
     <div class="container">
       <div class="navbar row">
         <div class="navbar-inner">
           <a class="brand" href="{% url 'index' %}"><h1 class="brand"><img class="logo"src="{{ STATIC_URL}}images/refeds.jpg" alt="" width="103" height="99" class="logo">{% trans "Metadata Explorer Tool" %}</h1></a>
           <ul class="nav pull-right">
-          {% if request.user.is_authenticated %}
-            <li class="divider-vertical"></li>
-            <li><p class="navbar-text">{{ request.user }}</p></li>
-            <li class="divider-vertical"></li>
-            <li><p class="navbar-text"><a href="{{ portal_settings.LOGOUT_URL }}?next={{ request.get_full_path|iriencode }}">{% trans "Logout" %}</a></p></li>
-          {% else %}
-            <li class="divider-vertical"></li>
-            <li><a href="#" class="signin">{% trans "Login" %}</a></li>
-          {% endif %}
           </ul>
 	</div>
           <form class="navbar-search pull-right"
@@ -69,6 +291,7 @@
           </form>
        
       </div>
+<<<<<<< HEAD
       <div class="summary">
       {% block appendheader %}
       {% endblock %}
@@ -86,6 +309,11 @@
       <div class="summary">
           {% block content %}
           {% endblock %}
+=======
+      <div class="row">
+      </div>
+      <div class="row">
+>>>>>>> 61666b26b740ece93a449f271380b5ab2425603f
       </div>
     </div>
 
@@ -93,6 +321,7 @@
       <p><a href="http://www.terena.org/">&copy;&nbsp; Copyright 2012-2016 G&eacute;ant</a> | <a href="{% url 'about' %}">About Metadata Explorer Tool</a></p>
       <p><a href="https://github.com/GEANT/met">Get code on Github</a> | <a href="https://github.com/GEANT/met/issues">Report errors here</a></p>
     </footer>
+<<<<<<< HEAD
     {% block extrajs %}
     {% endblock %}
 
@@ -118,3 +347,8 @@ owa_cmds.push(['trackDomStream']);
   </body>
 </html>
 
+=======
+
+  </body>
+</html-->
+>>>>>>> 61666b26b740ece93a449f271380b5ab2425603f
