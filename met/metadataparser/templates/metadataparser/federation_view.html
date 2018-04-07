@@ -84,9 +84,6 @@
 	</h1>
 	{% endblock %}
 
-    {% if federation.metadata_update %}
-        <p><b>{% trans "Metadata updated on" %}:</b> {{ federation.metadata_update }} ({{ federation.metadata_update|timesince }} {% trans "ago" %})</p>
-    {% endif %}
 
 {% block content %}
 <div class="container-tab">
