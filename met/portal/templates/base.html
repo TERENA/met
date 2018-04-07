@@ -30,7 +30,7 @@
       djc.inlinemetadata = {{ portal_settings.DJANGO_ADDITIONAL_IDPS|safe }};
 
       $(document).ready(function() {
-        $("a.signin").DiscoJuice(djc);      
+        $("a.signin").DiscoJuice(djc);
       });
     </script>
     <!-- Bootstrap -->
@@ -44,7 +44,7 @@
     <div class="container">
       <div class="navbar row">
         <div class="navbar-inner">
-          <a class="brand" href="{% url 'index' %}">{% trans "Metadata Explorer Tool" %}</a>
+          <a class="brand" href="{% url 'index' %}"><h1 class="brand"><img class="logo"src="{{ STATIC_URL}}images/refeds.jpg" alt="" width="103" height="99" class="logo">{% trans "Metadata Explorer Tool" %}</h1></a>
           <ul class="nav pull-right">
           {% if request.user.is_authenticated %}
             <li class="divider-vertical"></li>
@@ -56,6 +56,7 @@
             <li><a href="#" class="signin">{% trans "Login" %}</a></li>
           {% endif %}
           </ul>
+	</div>
           <form class="navbar-search pull-right"
             action="{% url 'search_service' %}" method="get">
             {% with nav_searchform.visible_fields|first as field %}
@@ -63,11 +64,12 @@
                {% if field.value %} value="{{ field.value }}" {% endif %}
                type="text" class="search-query"
                placeholder="{{ field.label }}" name="{{ field.name }}"/>
+		<img class="icon-search" src="{{ STATIC_URL}}images/search_button.png">
             {% endwith %}
           </form>
-        </div>
+       
       </div>
-      <div class="row">
+      <div class="summary">
       {% block appendheader %}
       {% endblock %}
       </div>
@@ -81,7 +83,7 @@
         {% endfor %}
       </div>
       {% endif %}
-      <div class="row">
+      <div class="summary">
           {% block content %}
           {% endblock %}
       </div>
@@ -105,13 +107,14 @@ owa_cmds.push(['trackClicks']);
 owa_cmds.push(['trackDomStream']);
 
 (function() {
-	var _owa = document.createElement('script'); _owa.type = 'text/javascript'; _owa.async = true;
-	owa_baseUrl = ('https:' == document.location.protocol ? window.owa_baseSecUrl || owa_baseUrl.replace(/http:/, 'https:') : owa_baseUrl );
-	_owa.src = owa_baseUrl + 'modules/base/js/owa.tracker-combined-min.js';
-	var _owa_s = document.getElementsByTagName('script')[0]; _owa_s.parentNode.insertBefore(_owa, _owa_s);
+        var _owa = document.createElement('script'); _owa.type = 'text/javascript'; _owa.async = true;
+        owa_baseUrl = ('https:' == document.location.protocol ? window.owa_baseSecUrl || owa_baseUrl.replace(/http:/, 'https:') : owa_baseUrl );
+        _owa.src = owa_baseUrl + 'modules/base/js/owa.tracker-combined-min.js';
+        var _owa_s = document.getElementsByTagName('script')[0]; _owa_s.parentNode.insertBefore(_owa, _owa_s);
 }());
 //]]>
 </script>
 <!-- End Open Web Analytics Code -->
   </body>
 </html>
+

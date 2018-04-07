@@ -11,7 +11,7 @@
 ##########################################################################
 
 import logging
-from datetime import date
+from datetime import datetime
 
 from django.conf import settings
 from django.db.models import Count
@@ -81,7 +81,7 @@ def refresh(fed_name=None, force_refresh=False, logger=None):
 
                 log('[%s] Updating federation file and metadata_data...' %
                     federation, logger, logging.DEBUG)
-                federation.metadata_update = date.today()
+                federation.metadata_update = datetime.now()
                 federation.save(update_fields=['file', 'metadata_update'])
                 log('[%s] Federation update time modified with %s' % (
                     federation, federation.metadata_update), logger, logging.INFO)

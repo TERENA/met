@@ -64,71 +64,78 @@
 
 {% block appendheader %}
 
-<div class="btn-group pull-right">
-  <a class="btn" href="{% url 'federation_charts' federation.slug %}">{% trans "Charts" %}</a>
-</div>
 
-{% canedit federation %}
-<div class="btn-group pull-right">
- <a class="btn" href="{% url 'federation_edit' federation.slug %}">{% trans "edit" %}</a>
- {% if add_entity %}
- &nbsp;<a class="btn" href="{% url 'entity_add' federation.slug %}">{% trans "add entity" %}</a>
- {% endif %}
- &nbsp;<a class="btn btn-primary" href="#" onclick="update_entities(); return false" data-toggle="modal" data-target="#saveModal">{% trans "update entities" %}</a>
-</div>
-{% endcanedit %}
-<h1>
- {{ federation }}
-</h1>
-{% endblock %}
+
+	<div class="btn-group pull-right" style="margin-bottom:20px">
+	  <a class="btn" href="{% url 'federation_charts' federation.slug %}">{% trans "Charts" %}</a>
+	</div>
+
+	{% canedit federation %}
+	<div class="btn-group pull-right">
+	 <a class="btn" href="{% url 'federation_edit' federation.slug %}">{% trans "edit" %}</a>
+	 {% if add_entity %}
+	 &nbsp;<a class="btn" href="{% url 'entity_add' federation.slug %}">{% trans "add entity" %}</a>
+	 {% endif %}
+	 &nbsp;<a class="btn btn-primary" href="#" onclick="update_entities(); return false" data-toggle="modal" data-target="#saveModal">{% trans "update entities" %}</a>
+	</div>
+	{% endcanedit %}
+	<h1 style="margin-bottom:25px; clear:both">
+	 {{ federation }}
+	</h1>
+	{% endblock %}
 
 
 {% block content %}
-<table width="100%"><tr><td width="50%">
-    {% if federation.logo %}
-        <p><img alt="{{ federation }} logo" src="{{ MEDIA_URL }}{{ federation.logo }}"/></p>
-    {% endif %}
+<div class="container-tab">
+	<div class="col-md-6-1">
+		<div class="summary">
+			{% if federation.logo %}
+			<p align=center><img alt="{{ federation }} logo" src="{{ MEDIA_URL }}{{ federation.logo }}"/></p>
+			{% else %}
+			 <p align=center><img alt="{{ federation }} logo" src="{{ STATIC_URL}}images/met_noLogo.png"/></p>
+			{% endif %}
+		</div>
+	</div>
+	
+	<div class="col-md-6-2">
+		<div class="summary">
 
-    {% if federation.country %}
-        <p><b>{% trans "Country" %}:</b> {{ federation.country }}</p>
-    {% endif %}
+			{% if federation.country %}
+				<p><b>{% trans "Country" %}:</b> {{ federation.country }}</p>
+			{% endif %}
 
-    {% if federation.registration_authority %}
-        <p><b>{% trans "Registration authority" %}:</b> {{ federation.registration_authority }}</p>
-    {% endif %}
+			{% if federation.registration_authority %}
+				<p><b>{% trans "Registration authority" %}:</b> {{ federation.registration_authority }}</p>
+			{% endif %}
 
-    {% if federation.url %}
-        <p><b>{% trans "Federation external website" %}:</b> <a href="{{ federation.url }}">{{ federation.url }}</a></p>
-    {% endif %}
+			{% if federation.url %}
+				<p><b>{% trans "Federation external website" %}:</b> <a href="{{ federation.url }}">{{ federation.url }}</a></p>
+			{% endif %}
 
-    {% if federation.type %}
-        <p><b>{% trans "Federation type" %}:</b> {% get_property fed_types federation.type %}</p>
-    {% endif %}
+			{% if federation.type %}
+				<p><b>{% trans "Federation type" %}:</b> {% get_property fed_types federation.type %}</p>
+			{% endif %}
 
-    {% if federation.fee_schedule_url %}
-        <p><b>{% trans "Fee schedule URL" %}:</b> <a href="{{ federation.fee_schedule_url }}">{{ federation.fee_schedule_url }}</a></p>
-    {% endif %}
+			{% if federation.fee_schedule_url %}
+				<p><b>{% trans "Fee schedule URL" %}:</b> <a href="{{ federation.fee_schedule_url }}">{{ federation.fee_schedule_url }}</a></p>
+			{% endif %}
 
-    {% if federation.metadata_update %}
-        <p><b>{% trans "Metadata updated on" %}:</b> {{ federation.metadata_update }}</p>
-    {% endif %}
+			{% if federation.metadata_update %}
+				<p><b>{% trans "Metadata updated on" %}:</b> {{ federation.metadata_update }} ({{ federation.metadata_update|timesince }} {% trans "ago" %})</p>
+			{% endif %}
 
-    {% if federation.certificates %}
-        <p><b>{% trans "Certificates statistics" %}:</b><br/>
-        {% for key,val in federation.certificates.items %}
-            {{ key }}: {{ val }} {% if not forloop.last %} | {% endif %}
-        {% endfor %}
-        </p>
-    {% endif %}
-</td><td width="50%" align="right">
-    {% if statcharts %}
-        {% load chartit %}
-        {{ statcharts|load_charts:"pie_chart" }}
+			{% if federation.certificates %}
+				<p><b>{% trans "Certificates statistics" %}:</b><br/>
+				{% for key,val in federation.certificates.items %}
+					{{ key }}: {{ val }} {% if not forloop.last %} | {% endif %}
+				{% endfor %}
+				</p>
+			{% endif %}
+		</div>
+	</div>
+</div>
 
-        <div id='pie_chart'></div>
-    {% endif %}
-</td></tr></table>
 
 {% entity_list entities categories pagination curfed=federation %}
-
+</div>
 {% endblock %}

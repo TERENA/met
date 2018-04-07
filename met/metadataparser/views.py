@@ -32,6 +32,8 @@ from django.utils import timezone
 
 from chartit import DataPool, Chart
 
+from datetime import datetime
+
 from met.metadataparser.decorators import user_can_edit
 from met.metadataparser.models import Federation, Entity, EntityStat, EntityCategory, Entity_Federations, TOP_LENGTH, FEDERATION_TYPES
 from met.metadataparser.forms import (FederationForm, EntityForm, EntityCommentForm,
@@ -183,20 +185,21 @@ def federation_view(request, federation_slug=None):
     entity_category = None
     if request.GET and 'entity_category' in request.GET:
         entity_category = request.GET['entity_category']
-        ob_entities = ob_entities.filter(entity_categories__category_id=entity_category)
 
     ob_entities = ob_entities.prefetch_related('types', 'federations')
     pagination = _paginate_fed(ob_entities, request.GET.get('page'))
 
     entities = []
     for entity in pagination['objects']:
-        entities.append({
-            'entityid': entity.entityid,
-            'name': entity.name,
-            'absolute_url': entity.get_absolute_url(),
-            'types': [unicode(item) for item in entity.types.all()],
-            'federations': [(unicode(item.name), item.get_absolute_url()) for item in entity.federations.all()],
-        })
+        entity.curfed = federation
+        if entity_category is None or entity_category in [c.category_id for c in entity.entity_categories.all()]:
+            entities.append({
+                'entityid': entity.entityid,
+                'name': entity.name,
+                'absolute_url': entity.get_absolute_url(),
+                'types': [unicode(item) for item in entity.types.all()],
+                'federations': [(unicode(item.name), item.get_absolute_url()) for item in entity.federations.all()],
+            })
 
     if 'format' in request.GET:
         return export_query_set(request.GET.get('format'), entities,
@@ -327,13 +330,38 @@ def federation_charts(request, federation_slug=None):
                                               , time__gte = from_time \
                                               , time__lte = to_time).order_by("time")
 
-            s_chart = stats_chart(stats_config_dict, request, service_stats, 'entity_by_type')
+            s_chart = []
 
-            p_chart = stats_chart(stats_config_dict, request, protocol_stats, 'entity_by_protocol', protocols)
+            if len(service_stats) > 0:
+                cur_data = service_stats[0].time.strftime('%d/%m/%y')
+                cur_stat = { 'date': cur_data }
+                for s in service_stats:
+                    if s.time.strftime('%d/%m/%y') != cur_data:
+                        s_chart.append(cur_stat)
+                        cur_data = s.time.strftime('%d/%m/%y')
+                        cur_stat = { 'date': cur_data }
+                    
+                    cur_stat[s.feature] = s.value
+                s_chart.append(cur_stat)
+
+            p_chart = []
+            if len(protocol_stats) > 0:
+                cur_data = protocol_stats[0].time.strftime('%d/%m/%y')
+                cur_stat = { 'date': cur_data }
+                for p in protocol_stats:
+                    if p.time.strftime('%d/%m/%y') != cur_data:
+                        p_chart.append(cur_stat)
+                        cur_data = p.time.strftime('%d/%m/%y')
+                        cur_stat = { 'date': cur_data }
+
+                    cur_stat[p.feature] = p.value
+                p_chart.append(cur_stat)
 
             return render_to_response('metadataparser/federation_chart.html',
                                       {'form': form,
-                                       'statcharts': [s_chart, p_chart],
+                                       'statcharts': ['aa'], #[s_chart, p_chart],
+                                       's_chart': s_chart,
+                                       'p_chart': p_chart,
                                       },
                                       context_instance=RequestContext(request))
 
@@ -463,6 +491,9 @@ def entity_view(request, entityid):
 
     if 'federation' in request.GET:
         federation = get_object_or_404(Federation, slug=request.GET.get('federation'))
+        entity.curfed = federation
+    else:
+        federation = entity.federations.all()[0]
         entity.curfed = federation
 
     if 'format' in request.GET:
