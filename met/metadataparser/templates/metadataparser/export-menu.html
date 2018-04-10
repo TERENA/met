@@ -1,8 +1,10 @@
+
 {% load i18n %}
+
 <div class="btn-group pull-right">
   <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
       {% trans "Export" %}
-      <span class="caret"></span>
+      <span> &nbsp; <font class="freccia" color=white size=3>&#9661;</font></span>
   </a>
   <ul class="dropdown-menu">
     {% for format in formats %}

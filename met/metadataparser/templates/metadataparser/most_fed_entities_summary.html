@@ -1,4 +1,3 @@
-
 {% load i18n metadataparsertags %}
 
 {% if show_filters %}
@@ -7,7 +6,7 @@
 
 {% export_menu entities append_query=append_query onclick=onclick_export %}
 {% if show_total %}
-<p class="total"><strong>{% trans "Total" %}:</strong> {{ pagination.num_objects }}</p>
+<p><strong>{% trans "Total" %}:</strong> {{ pagination.num_objects }}</p>
 {% endif %}
 
 {% if enable_filters %}
@@ -20,7 +19,7 @@ of IDP and SP can be bigger than the number of entities
 {% endif %}
 
 {% if pagination %}
-<div class="pagination" align=center>
+<div class="pagination">
     <ul>
         <li class="{% if pagination.cur_page_number == 1 %}active{% endif %}"><a {% if onclick_page %}onclick="return {{ onclick_page }}(1)"{% endif %} href="{% add_get page=1 %}">&laquo;</a></li>
 
@@ -45,7 +44,7 @@ of IDP and SP can be bigger than the number of entities
 	<div class="table-responsive">
 		<table id="tablepress-3" class="tablepress tablepress-id-3 dataTable no-footer" role="grid" aria-describedby="tablepress-3_info">
 		  <thead>
-			<tr class="row-1" role="row">
+			<tr class="row-1 odd" role="row">
 			  <th class="column-1-head sorting" tabindex="0" aria-controls="tablepress-3" rowspan="1" colspan="1" aria-label="Entity ID: activate to sort column ascending" ><strong class="tabella">EntityID</strong></th>
 			  <th class="column-2-head sorting" tabindex="0" aria-controls="tablepress-3" rowspan="1" colspan="1" aria-label="Type: activate to sort column ascending"><strong class="tabella">Type</strong></th>
 			  <th class="column-3-head sorting" tabindex="0" aria-controls="tablepress-3" rowspan="1" colspan="1" aria-label="Display Name: activate to sort column ascending" nowrap><strong class="tabella">Display Name</strong></th>
@@ -68,12 +67,14 @@ of IDP and SP can be bigger than the number of entities
 			</td>
 			<td class="column-4">
 				<div class="btn-group-fed">
-					<a  class="btn-federations dropdown-toggle" data-toggle="dropdown" href="#">{{ entity.federations|length }} federations</a>
+					<a  class="btn-federations dropdown-toggle" data-toggle="dropdown" href="https://met.refeds.org/#">{{ entity.federations|length }} federations</a>
 					<ul class="dropdown-menu-fed">
 						{% for federation in entity.federations %}
-						<li><a href="{{ federation.1 }}">{{ federation.0 }}</a></li> 
+						<li><a href="{{ federation.1 }}">{{ federation.0 }}</a></li>
 						{% endfor %}
 					</ul>
+				</div>
+			
 			</td>
 			<td class="column-5">
 			{{ entity.federations|length }}
@@ -86,7 +87,7 @@ of IDP and SP can be bigger than the number of entities
 </div>
 
 {% if pagination %}
-<div class="pagination" align=center>
+<div class="pagination">
     <ul>
         <li class="{% if pagination.cur_page_number == 1 %}active{% endif %}"><a {% if onclick_page %}onclick="return {{ onclick_page }}(1)"{% endif %} href="{% add_get page=1 %}">&laquo;</a></li>
 

@@ -62,12 +62,7 @@ div.controls ul {
 }
 
 div.summary {
-    margin: 25px 0;
-}
-
-div.summary .total {
-    padding-top: 10.4px;
-    margin: 0;
+    margin: 75px 0;
 }
 
 div.summary p {
@@ -75,7 +70,6 @@ div.summary p {
 }
 div.summary .btn-toolbar {
     margin-top: 0px;
-	margin-bottom:0px;
 }
 
 .first-col {
@@ -98,8 +92,4 @@ div.summary .btn-toolbar {
 
 #pipelist li:last-child:after {
     content: "";
-}
-
-footer {
-    text-align: center;
 }

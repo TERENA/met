@@ -32,6 +32,8 @@ from django.utils import timezone
 
 from chartit import DataPool, Chart
 
+from datetime import datetime
+
 from met.metadataparser.decorators import user_can_edit
 from met.metadataparser.models import Federation, Entity, EntityStat, EntityCategory, Entity_Federations, TOP_LENGTH, FEDERATION_TYPES
 from met.metadataparser.forms import (FederationForm, EntityForm, EntityCommentForm,
@@ -328,13 +330,38 @@ def federation_charts(request, federation_slug=None):
                                               , time__gte = from_time \
                                               , time__lte = to_time).order_by("time")
 
-            s_chart = stats_chart(stats_config_dict, request, service_stats, 'entity_by_type')
+            s_chart = []
 
-            p_chart = stats_chart(stats_config_dict, request, protocol_stats, 'entity_by_protocol', protocols)
+            if len(service_stats) > 0:
+                cur_data = service_stats[0].time.strftime('%d/%m/%y')
+                cur_stat = { 'date': cur_data }
+                for s in service_stats:
+                    if s.time.strftime('%d/%m/%y') != cur_data:
+                        s_chart.append(cur_stat)
+                        cur_data = s.time.strftime('%d/%m/%y')
+                        cur_stat = { 'date': cur_data }
+                    
+                    cur_stat[s.feature] = s.value
+                s_chart.append(cur_stat)
+
+            p_chart = []
+            if len(protocol_stats) > 0:
+                cur_data = protocol_stats[0].time.strftime('%d/%m/%y')
+                cur_stat = { 'date': cur_data }
+                for p in protocol_stats:
+                    if p.time.strftime('%d/%m/%y') != cur_data:
+                        p_chart.append(cur_stat)
+                        cur_data = p.time.strftime('%d/%m/%y')
+                        cur_stat = { 'date': cur_data }
+
+                    cur_stat[p.feature] = p.value
+                p_chart.append(cur_stat)
 
             return render_to_response('metadataparser/federation_chart.html',
                                       {'form': form,
-                                       'statcharts': [s_chart, p_chart],
+                                       'statcharts': ['aa'], #[s_chart, p_chart],
+                                       's_chart': s_chart,
+                                       'p_chart': p_chart,
                                       },
                                       context_instance=RequestContext(request))
 

@@ -4,37 +4,20 @@
 
 {% block appendheader %}
 
-{% export_menu entities %}
 
-<!--div class="btn-group pull-right">
-  <a class="btn" href="{ % url 'entity_comment' entity.id %}">{ % trans "Comment" %}</a>
-</div>
 
-<div class="btn-group pull-right">
-  <a class="btn" href="{ % url 'entity_proposal' entity.id %}">{ % trans "Proposal" %}</a>
-</div-->
-
-{% canedit entity %}
-<div class="btn-group pull-right">
-  <a class="btn" href="{% url 'entity_edit' entity.id %}">{% trans "edit" %}</a>
-</div>
-{% endcanedit %}
-
-<div class="btn-group pull-right">
-  <a class="btn" href="{% url 'entity_view' entity.entityid %}?viewxml=true{% if entity.curfed %}&federation={{ entity.curfed.slug }}{% endif %}" target="_blank">{% trans "view xml" %}</a>
-</div>
 
 {% if entity.name %}
-  <h2>{% l10n_property entity.name lang %}</h2>
+  <h2 style="clear:both; margin-bottom:25px">{% l10n_property entity.name lang %}</h2>
 {% else %}
-  <h2>{{ entity }}</h2>
+  <h2 style="clear:both; margin-bottom:25px">{{ entity }}</h2>
 {% endif %}
 
-<p style="margin-top:5px; float:left"><i>{% trans "Information retrieved from federation: " %}</i>&nbsp;&nbsp;&nbsp;&nbsp;</p>
-<div class="btn-group pull-left">
-  <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+<p style="margin-top:9.5px; float:left; clear:both; margin-right:10px"><i>{% trans "Information retrieved from federation: " %}</i></p>
+<div class="btn-group pull-left" style="margin-right:10px; margin-bottom:5px">
+  <a class="btn btn1 dropdown-toggle" data-toggle="dropdown" href="#">
       {% if entity.curfed %}{{ entity.curfed }}{% else %}{% trans "Unknown" %}{% endif %}
-      <span class="caret"></span>
+      <span> &nbsp; <font class="freccia" color=white size=3>&#9661;</font></span>
   </a>
   <ul class="dropdown-menu">
   {% for curfed in entity.federations.all %}
@@ -43,7 +26,7 @@
   </ul>
 </div>
 
-<p style="margin-top:5px; float:left">&nbsp;&nbsp;&nbsp;&nbsp;<i>{% trans "on" %} {{ entity.curfed.metadata_update }} ({{ entity.curfed.metadata_update|timesince }} {% trans "ago" %})</i></p>
+<p style="margin-top:9.5px; float:left"><i>{% trans "on" %} {{ entity.curfed.metadata_update }} ({{ entity.curfed.metadata_update|timesince }} {% trans "ago" %})</i></p>
 
 <!--form method="get" action="{{ entity.absolute_url }}"><i>{% trans "Information retrieved from federation: " %}</i>
   <select name="federation" onchange="this.form.submit()">
@@ -54,64 +37,86 @@
 </form-->
 
 <br/><br/><br/>
+<!--div class="btn-group pull-right">
+  <a class="btn" href="{ % url 'entity_comment' entity.id %}">{ % trans "Comment" %}</a>
+</div>
+
+<div class="btn-group pull-right">
+  <a class="btn" href="{ % url 'entity_proposal' entity.id %}">{ % trans "Proposal" %}</a>
+</div-->
+
+<div class="summary" style="clear:both">
+
+	{% export_menu entities %}
+
+	{% canedit entity %}
+	<div class="btn-group pull-right">
+	  <a class="btn" href="{% url 'entity_edit' entity.id %}">{% trans "edit" %}</a>
+	</div>
+	{% endcanedit %}
+
+	<div class="btn-group pull-right">
+	  <a class="btn" href="{% url 'entity_view' entity.entityid %}?viewxml=true{% if entity.curfed %}&federation={{ entity.curfed.slug }}{% endif %}" target="_blank" style="margin-right:20px">{% trans "view xml" %}</a>
+	</div>
 
 {% endblock %}
 
 {% block content %}
-
-<table class="table table-striped">
-  <tbody>
-    <tr>
-      <td class="first-col"><strong>{% trans "Entity ID" %}:</strong></td>
-      <td>{{ entity.entityid }}</td>
-    </tr>
-    <tr>
-      <td class="first-col"><strong>{% trans "Entity type" %}:</strong></td>
-      <td>{{ entity.types|display_etype }}</td>
-    </tr>
-    <tr>
-      <td class="first-col"><strong>{% trans "Registration authority" %}:</strong></td>
-      <td>{{ entity.registration_authority_xml }}
-      {% if entity.registration_instant %}
-         <i>({% trans "since" %} {{ entity.registration_instant|date:"d/m/Y" }})</i>
-      {% endif %}</td>
-    </tr>
-    <tr>
-      <td class="first-col"><strong>{% trans "Registration policy" %}:</strong></td>
-      <td><a href="{% l10n_property entity.registration_policy lang %}" target="_blank">{% l10n_property entity.registration_policy lang %}</a></td>
-    </tr>
-    <tr>
-      <td class="first-col"><strong>{% trans "Federations" %}:</strong></td>
-      <td>
-          <ul id="pipelist">
-              {% for curfed in entity.federations.all %}
-              <li><a href="{% url 'federation_view' curfed.slug %}">{{ curfed }}</a></li>
-              {% endfor %}
-          </ul>
-      </td>
-    </tr>
-    <tr>
-      <td class="first-col"><strong>{% trans "Certificates statistics" %}:</strong></td>
-      <td>
-          <ul id="pipelist">
-              {% for key,val in entity.certificates.items %}
-              <li>{{ key }}: {{ val }}</li>
-              {% endfor %}
-          </ul>
-      </td>
-    </tr>
-    <tr>
-      <td class="first-col"><strong>{% trans "Entity Categories" %}:</strong></td>
-      <td>
-          <ul>
-              {% for curcat in entity.entity_categories.all %}
-              <li>{{ curcat }}</li>
-              {% endfor %}
-          </ul>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<div style="height:25px"></div>
+<div class="summary">
+	<table id=tablepress-6 class="table tablepress">
+	  <tbody>
+		<tr>
+		  <td class="first-col"><strong class="tabella">{% trans "Entity ID" %}:</strong></td>
+		  <td>{{ entity.entityid }}</td>
+		</tr>
+		<tr>
+		  <td class="first-col"><strong class="tabella">{% trans "Entity type" %}:</strong></td>
+		  <td>{{ entity.types|display_etype }}</td>
+		</tr>
+		<tr>
+		  <td class="first-col"><strong class="tabella">{% trans "Registration authority" %}:</strong></td>
+		  <td>{{ entity.registration_authority_xml }}
+		  {% if entity.registration_instant %}
+			 <i>({% trans "since" %} {{ entity.registration_instant|date:"d/m/Y" }})</i>
+		  {% endif %}</td>
+		</tr>
+		<tr>
+		  <td class="first-col"><strong class="tabella">{% trans "Registration policy" %}:</strong></td>
+		  <td><a href="{% l10n_property entity.registration_policy lang %}" target="_blank">{% l10n_property entity.registration_policy lang %}</a></td>
+		</tr>
+		<tr>
+		  <td class="first-col"><strong class="tabella">{% trans "Federations" %}:</strong></td>
+		  <td>
+			  <ul id="pipelist">
+				  {% for curfed in entity.federations.all %}
+				  <li><a href="{% url 'federation_view' curfed.slug %}">{{ curfed }}</a></li>
+				  {% endfor %}
+			  </ul>
+		  </td>
+		</tr>
+		<tr>
+		  <td class="first-col"><strong class="tabella">{% trans "Certificates statistics" %}:</strong></td>
+		  <td>
+			  <ul id="pipelist">
+				  {% for key,val in entity.certificates.items %}
+				  <li>{{ key }}: {{ val }}</li>
+				  {% endfor %}
+			  </ul>
+		  </td>
+		</tr>
+		<tr>
+		  <td class="first-col"><strong class="tabella">{% trans "Entity Categories" %}:</strong></td>
+		  <td>
+			  <ul>
+				  {% for curcat in entity.entity_categories.all %}
+				  <li>{{ curcat }}</li>
+				  {% endfor %}
+			  </ul>
+		  </td>
+		</tr>
+	  </tbody>
+	</table>
 
 {% for logo in entity.logos %}
   {% if logo.external %}
@@ -122,10 +127,14 @@
 {% endfor %}
 
 <ul class="entity unstyled">
-<div class="btn-group pull-right">
+	<li>
+  <h2 class="labelview" style="clear:both">{% trans "Entity properties" %}:</h2>
+  </li>
+
+<div class="btn-group pull-right" style="margin-bottom:8px">
  <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
       {% trans "language" %} [{{lang}}]
-      <span class="caret"></span>
+      <span> &nbsp; <font class="freccia" color=white size=3>&#9661;</font></span>
   </a>
   <ul class="dropdown-menu">
     {% for lang in entity.languages|split:" " %}
@@ -133,15 +142,14 @@
     {% endfor %}
   </ul>
 </div>
-  <li>
-  <strong class="labelview">{% trans "Entity properties" %}:</strong>
-  </li>
+  
 </ul>
 
-<table class="table table-striped">
+
+<table id=tablepress-6 class="table tablepress">
   <tbody>
     <tr>
-      <td class="first-col"><strong>{% trans "Display name" %}:</strong></td>
+      <td class="first-col"><strong class="tabella">{% trans "Display name" %}:</strong></td>
       {% if entity.display_name %}
       <td>{% l10n_property entity.display_name lang %}</td>
       {% else %}
@@ -149,7 +157,7 @@
       {% endif %}
     </tr>
     <tr>
-      <td class="first-col"><strong>{% trans "Description" %}:</strong></td>
+      <td class="first-col"><strong class="tabella">{% trans "Description" %}:</strong></td>
       {% if entity.description %}
       <td>{% l10n_property entity.description lang %}</td>
       {% else %}
@@ -157,7 +165,7 @@
       {% endif %}
     </tr>
     <tr>
-      <td class="first-col"><strong>{% trans "Information URL" %}:</strong></td>
+      <td class="first-col"><strong class="tabella">{% trans "Information URL" %}:</strong></td>
       {% if entity.info_url %}
       <td><a href="{% l10n_property entity.info_url lang %}">{% l10n_property entity.info_url lang %}</a></td>
       {% else %}
@@ -165,7 +173,7 @@
       {% endif %}
     </tr>
     <tr>
-      <td class="first-col"><strong>{% trans "Privacy statement URL" %}:</strong></td>
+      <td class="first-col"><strong class="tabella">{% trans "Privacy statement URL" %}:</strong></td>
       {% if entity.privacy_url %}
       <td><a href="{% l10n_property entity.privacy_url lang %}">{% l10n_property entity.privacy_url lang %}</a></td>
       {% else %}
@@ -173,7 +181,7 @@
       {% endif %}
     </tr>
     <tr>
-      <td class="first-col"><strong>{% trans "Organization name" %}:</strong></td>
+      <td class="first-col"><strong class="tabella">{% trans "Organization name" %}:</strong></td>
       {% if entity.organization %}
       <td>
           {% organization_property entity.organization 'name' lang %}
@@ -183,7 +191,7 @@
       {% endif %}
     </tr>
     <tr>
-      <td class="first-col"><strong>{% trans "Organization display name" %}:</strong></td>
+      <td class="first-col"><strong class="tabella">{% trans "Organization display name" %}:</strong></td>
       {% if entity.organization %}
       <td>
           {% organization_property entity.organization 'displayName' lang %}
@@ -193,7 +201,7 @@
       {% endif %}
     </tr>
     <tr>
-      <td class="first-col"><strong>{% trans "Organization URL" %}:</strong></td>
+      <td class="first-col"><strong class="tabella">{% trans "Organization URL" %}:</strong></td>
       {% if entity.organization %}
       <td>
           <a href="{% organization_property entity.organization 'URL' lang %}">{% organization_property entity.organization 'URL' lang %}</a><br/>
@@ -207,14 +215,14 @@
 
 <ul class="entity unstyled">
   <li>
-  <strong class="labelview">{% trans "Technical details" %}:</strong>
+  <h2 class="labelview">{% trans "Technical details" %}:</h2>
   </li>
 </ul>
 
-<table class="table table-striped">
+<table id=tablepress-6 class="table tablepress">
   <tbody>
     <tr>
-      <td class="first-col"><strong>{% trans "Supported protocols" %}:</strong></td>
+      <td class="first-col"><strong class="tabella">{% trans "Supported protocols" %}:</strong></td>
       {% if entity.display_protocols and entity.display_protocols|length > 0 %}
       <td>
           <ul>
@@ -229,7 +237,7 @@
     </tr>
     {% if 'IDP' in entity.types|display_etype %}
     <tr>
-      <td class="first-col"><strong>{% trans "Scopes" %}:</strong></td>
+      <td class="first-col"><strong class="tabella">{% trans "Scopes" %}:</strong></td>
       {% if entity.scopes %}
       <td>
           <ul>
@@ -245,7 +253,7 @@
     {% endif %}
     {% if 'SP' in entity.types|display_etype %}
     <tr>
-      <td class="first-col"><strong>{% trans "Required attributes" %}:</strong></td>
+      <td class="first-col"><strong class="tabella">{% trans "Required attributes" %}:</strong></td>
       {% if entity.attributes and entity.display_attributes.items|length > 0 %}
       <td>
           <ul>
@@ -259,7 +267,7 @@
       {% endif %}
     </tr>
     <tr>
-      <td class="first-col"><strong>{% trans "Optional attributes" %}:</strong></td>
+      <td class="first-col"><strong class="tabella">{% trans "Optional attributes" %}:</strong></td>
       {% if entity.attributes_optional and entity.display_attributes_optional.items|length > 0 %}
       <td>
           <ul>
@@ -274,7 +282,7 @@
     </tr>
     {% endif %}
     <tr>
-      <td class="first-col"><strong>{% trans "Contacts" %}:</strong></td>
+      <td class="first-col"><strong class="tabella">{% trans "Contacts" %}:</strong></td>
       {% if entity.contacts %}
       <td>
           <ul>
@@ -289,5 +297,6 @@
     </tr>
   </tbody>
 </table>
-
+</div>	
+</div>	
 {% endblock %}

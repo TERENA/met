@@ -20,7 +20,7 @@ of IDP and SP can be bigger than the number of entities
 {% endif %}
 
 {% if pagination %}
-<div class="pagination" align=center>
+<div class="pagination">
     <ul>
         <li class="{% if pagination.cur_page_number == 1 %}active{% endif %}"><a {% if onclick_page %}onclick="return {{ onclick_page }}(1)"{% endif %} href="{% add_get page=1 %}">&laquo;</a></li>
 
@@ -41,52 +41,57 @@ of IDP and SP can be bigger than the number of entities
 </div>
 {% endif %}
 
-<div id="tablepress-3_wrapper" class="dataTable_wrapper no footer">
-	<div class="table-responsive">
-		<table id="tablepress-3" class="tablepress tablepress-id-3 dataTable no-footer" role="grid" aria-describedby="tablepress-3_info">
-		  <thead>
-			<tr class="row-1" role="row">
-			  <th class="column-1-head sorting" tabindex="0" aria-controls="tablepress-3" rowspan="1" colspan="1" aria-label="Entity ID: activate to sort column ascending" ><strong class="tabella">EntityID</strong></th>
-			  <th class="column-2-head sorting" tabindex="0" aria-controls="tablepress-3" rowspan="1" colspan="1" aria-label="Type: activate to sort column ascending"><strong class="tabella">Type</strong></th>
-			  <th class="column-3-head sorting" tabindex="0" aria-controls="tablepress-3" rowspan="1" colspan="1" aria-label="Display Name: activate to sort column ascending" nowrap><strong class="tabella">Display Name</strong></th>
-			  <th class="column-4-head sorting" tabindex="0" aria-controls="tablepress-3" rowspan="1" colspan="1" aria-label="Federations: activate to sort column ascending" ><strong class="tabella">Federations</strong></th>
-			  <th class="column-5-head sorting" tabindex="0" aria-controls="tablepress-3" rowspan="1" colspan="1" aria-label="Number of Federations: activate to sort column ascending" nowrap><strong class="tabella">Number of Federations</strong></th>
-			</tr>
-		  </thead>
-		  <tbody class="row-hover">
-		  {% for entity in entities %}
-		  <tr>
-			<td class="column-1">
-			  <a title="{{ entity.entityid }}"
-				 href="{{ entity.absolute_url }}{% if curfed %}?federation={{ curfed.slug }}{% endif %}">{{ entity.entityid|wrap:50 }}</a>
-			</td>
-			<td class="column-2">
-			  {{ entity.types|display_etype }}
-			</td>
-			<td class="column-3">
-			  {% l10n_property entity.name lang %}
-			</td>
-			<td class="column-4">
-				<div class="btn-group-fed">
-					<a  class="btn-federations dropdown-toggle" data-toggle="dropdown" href="#">{{ entity.federations|length }} federations</a>
-					<ul class="dropdown-menu-fed">
-						{% for federation in entity.federations %}
-						<li><a href="{{ federation.1 }}">{{ federation.0 }}</a></li> 
-						{% endfor %}
-					</ul>
-			</td>
-			<td class="column-5">
-			{{ entity.federations|length }}
-			</td>
-		  </tr>
-		  {% endfor %}
-		  </tbody>
-		</table>
+
+
+	<div id="tablepress-5_wrapper" class="dataTable_wrapper no footer">
+		<div class="table-responsive">
+
+			<table id="tablepress-5" class="tablepress tablepress-id-5 dataTable no-footer" role="grid" aria-describedby="tablepress-5_info">
+			  <thead class="row-1">
+				<tr class="row-1" role="row">
+				  <th class="column-1-head-5 sorting" tabindex="0" aria-controls="tablepress-5" rowspan="1" colspan="1" aria-label="Entity ID: activate to sort column ascending" ><strong class="tabella">EntityID</strong></th>
+				  <th class="column-2-head-5 sorting" tabindex="0" aria-controls="tablepress-5" rowspan="1" colspan="1" aria-label="Type: activate to sort column ascending"><strong class="tabella">Type</strong></th>
+				  <th class="column-3-head-5 sorting" tabindex="0" aria-controls="tablepress-5" rowspan="1" colspan="1" aria-label="Display Name: activate to sort column ascending" nowrap><strong class="tabella">Display Name</strong></th>
+				  <th class="column-4-head-5 sorting" tabindex="0" aria-controls="tablepress-5" rowspan="1" colspan="1" aria-label="Federations: activate to sort column ascending" ><strong class="tabella">Federations</strong></th>
+				  <th class="column-5-head-5 sorting" tabindex="0" aria-controls="tablepress-5" rowspan="1" colspan="1" aria-label="Number of Federations: activate to sort column ascending" nowrap><strong class="tabella">Number of Federations</strong></th>
+				</tr>
+			  </thead>
+			  <tbody class="row-hover">
+			  {% for entity in entities %}
+			  <tr>
+				<td class="column-1">
+				  <a class="tronca" title="{{ entity.entityid }}"
+					 href="{{ entity.absolute_url }}{% if curfed %}?federation={{ curfed.slug }}{% endif %}">{{ entity.entityid|wrap:50 }}</a>
+				</td>
+				<td class="column-2">
+				  {{ entity.types|display_etype }}
+				</td>
+				<td class="column-3">
+				  {% l10n_property entity.name lang %}
+				</td>
+				<td class="column-4">
+					<div class="btn-group-fed">
+						<a  class="btn-federations dropdown-toggle" data-toggle="dropdown" href="#">{{ entity.federations|length }} federations</a>
+						<ul class="dropdown-menu-fed">
+							{% for federation in entity.federations %}
+							<li><a href="{{ federation.1 }}">{{ federation.0 }}</a></li> 
+							{% endfor %}
+						</ul>
+					</div>
+				</td>
+				<td class="column-5">
+				{{ entity.federations|length }}
+				</td>
+			  </tr>
+			  {% endfor %}
+			  </tbody>
+			</table>
+		</div>
 	</div>
-</div>
+
 
 {% if pagination %}
-<div class="pagination" align=center>
+<div class="pagination">
     <ul>
         <li class="{% if pagination.cur_page_number == 1 %}active{% endif %}"><a {% if onclick_page %}onclick="return {{ onclick_page }}(1)"{% endif %} href="{% add_get page=1 %}">&laquo;</a></li>
 
@@ -106,4 +111,3 @@ of IDP and SP can be bigger than the number of entities
     </ul>
 </div>
 {% endif %}
-

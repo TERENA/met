@@ -72,6 +72,20 @@ def federations_summary(context, queryname, counts, federations=None):
             'entity_types': DESCRIPTOR_TYPES}
 
 
+@register.inclusion_tag('metadataparser/interfederations_summary_tag.html', takes_context=True)
+def interfederations_summary(context, queryname, counts, federations=None):
+    if not federations:
+        federations = Federation.objects.all()
+
+    user = context.get('user', None)
+    add_federation = user and user.has_perm('metadataparser.add_federation')
+
+    return {'federations': federations,
+            'add_federation': add_federation,
+            'queryname': queryname,
+            'counts': counts,
+            'entity_types': DESCRIPTOR_TYPES}
+
 @register.inclusion_tag('metadataparser/tag_entity_list.html', takes_context=True)
 def entity_list(context, entities, categories=None, pagination=None, curfed=None, show_total=True, append_query=None, onclick_page=None, onclick_export=None):
     request = context.get('request', None)
@@ -91,6 +105,49 @@ def entity_list(context, entities, categories=None, pagination=None, curfed=None
             'onclick_page': onclick_page,
             'onclick_export': onclick_export,
             'entity_types': DESCRIPTOR_TYPES}
+
+
+@register.inclusion_tag('metadataparser/most_fed_entities_summary.html', takes_context=True)
+def most_fed_entity_list(context, entities, categories=None, pagination=None, curfed=None, show_total=True, append_query=None, onclick_page=None, onclick_export=None):
+    request = context.get('request', None)
+    lang = 'en'
+    if request:
+        lang = request.GET.get('lang', 'en')
+
+    return {'request': request,
+            'entities': entities,
+            'categories': categories,
+            'curfed': curfed,
+            'show_filters': context.get('show_filters'),
+            'append_query': append_query,
+            'show_total': show_total,
+            'lang': lang,
+            'pagination': pagination,
+            'onclick_page': onclick_page,
+            'onclick_export': onclick_export,
+            'entity_types': DESCRIPTOR_TYPES}
+
+
+@register.inclusion_tag('metadataparser/service_search_summary.html', takes_context=True)
+def service_search_result(context, entities, categories=None, pagination=None, curfed=None, show_total=True, append_query=None, onclick_page=None, onclick_export=None):
+    request = context.get('request', None)
+    lang = 'en'
+    if request:
+        lang = request.GET.get('lang', 'en')
+
+    return {'request': request,
+            'entities': entities,
+            'categories': categories,
+            'curfed': curfed,
+            'show_filters': context.get('show_filters'),
+            'append_query': append_query,
+            'show_total': show_total,
+            'lang': lang,
+            'pagination': pagination,
+            'onclick_page': onclick_page,
+            'onclick_export': onclick_export,
+            'entity_types': DESCRIPTOR_TYPES}
+
 
 
 @register.inclusion_tag('metadataparser/tag_entity_filters.html', takes_context=True)

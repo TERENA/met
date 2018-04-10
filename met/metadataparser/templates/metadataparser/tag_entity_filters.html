@@ -3,7 +3,7 @@
 <div class="btn-group pull-right">
   <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
       {% if entity_category and entity_category != 'All' %}{{ entity_category }}{% else %}{% trans "Entity Categories" %}{% endif %}
-      <span class="caret"></span>
+      <span>&nbsp;<font class="freccia" color=white size=3>&#9661;</font></span>
   </a>
   <ul class="dropdown-menu">
     <li>
@@ -18,10 +18,13 @@
   </ul>
 </div>
 
-<ul class="nav nav-pills">
-{% for etype in entity_types %}
-  <li {% if etype == entity_type %}class="active"{% endif %}>
-  <a href="{% entity_filter_url filter_base_path etype otherparams %}">{{ etype|display_etype }}</a>
-  </li>
-{% endfor %}
-</ul>
+
+<div class="menu-fed">
+    <ul class="nav nav-pills">
+    {% for etype in entity_types %}
+      <li {% if etype == entity_type %}class="active"{% endif %}>
+      <a href="{% entity_filter_url filter_base_path etype otherparams %}">{{ etype|display_etype }}</a>
+      </li>
+    {% endfor %}
+    </ul>
+</div>
