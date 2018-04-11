@@ -88,6 +88,7 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'wcc$cfn0p!+@kv%@9y^u3^6fax5_a-n84^o*gl94!%kqc!fm-n'
 
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (

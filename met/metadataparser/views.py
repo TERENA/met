@@ -60,7 +60,7 @@ def increment_current_toplength(request):
         current_top_length -= TOP_LENGTH
 
     request.session['currentTopLength'] = current_top_length
-    return HttpResponseRedirect(reverse('index'))
+    return HttpResponseRedirect(reverse('most_federated_entities'))
     
 def decrement_current_toplength(request):
     current_top_length = request.session.get('currentTopLength', TOP_LENGTH)
@@ -70,7 +70,7 @@ def decrement_current_toplength(request):
         current_top_length = TOP_LENGTH
 
     request.session['currentTopLength'] = current_top_length
-    return HttpResponseRedirect(reverse('index'))
+    return HttpResponseRedirect(reverse('most_federated_entities'))
 
 def _index_export(export, export_format, objects):
     counters = (
