@@ -47,6 +47,8 @@ urlpatterns = patterns('met.metadataparser.views',
                        url(r'^search_entities/$', 'search_entities',
                            name='search_entities'),
 
+                       url(r'^most_federated_entities/$', 'most_federated_entities',
+                           name='most_federated_entities'),
                        url(r'^show_less_entries/$', 'decrement_current_toplength',
                            name='show_less_entries'),
                        url(r'^show_more_entries/$', 'increment_current_toplength',

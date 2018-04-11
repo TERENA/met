@@ -112,10 +112,6 @@ def index(request):
 
     totals = Entity.objects.values('types__xmlname').annotate(Count('types__xmlname'))
 
-    # Entities with count how many federations belongs to, and sorted by most first
-    current_top_length = request.session.get('currentTopLength', TOP_LENGTH)
-    most_federated_entities = Entity.get_most_federated_entities(maxlength=current_top_length, cache_expire=24*60*60)
-
     params = {
        'settings': settings,
        'interfederations': interfederations,
@@ -124,7 +120,6 @@ def index(request):
        'federation_path': request.path,
        'counts': counts,
        'totals': totals,
-       'most_federated_entities': most_federated_entities,
     }
 
     export = request.GET.get('export', None)
@@ -133,6 +128,24 @@ def index(request):
         return _index_export(export, export_format, params)
     
     return render_to_response('metadataparser/index.html', params, context_instance=RequestContext(request))
+
+@profile(name='Most Federated Entities page')
+def most_federated_entities(request):
+    # Entities with count how many federations belongs to, and sorted by most first
+    current_top_length = request.session.get('currentTopLength', TOP_LENGTH)
+    most_federated_entities = Entity.get_most_federated_entities(maxlength=current_top_length, cache_expire=24*60*60)
+
+    params = {
+       'settings': settings,
+       'most_federated_entities': most_federated_entities,
+    }
+
+    export = request.GET.get('export', None)
+    export_format = request.GET.get('format', None)
+    if export and export_format:
+        return _index_export(export, export_format, params)
+    
+    return render_to_response('metadataparser/most_federated_entities.html', params, context_instance=RequestContext(request))
 
 def _paginate_fed(ob_entities, page):
     paginator = Paginator(ob_entities, 20)

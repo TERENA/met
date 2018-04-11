@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load i18n metadataparsertags %}
+
+{% block appendheader %}
+
+{% endblock %}
+
+{% block extrajs %}
+<script type="text/javascript">
+(function($) {
+     $(document).ready(function () {
+         $("ul.querybuttons a").click(function (e) {
+             e.preventDefault();
+             $('html, body').animate({
+                 scrollTop: $($(e.target).attr("href")).offset().top
+             }, 'slow');
+        });
+     });
+})(jQuery);
+</script>
+{% endblock %}
+
+
+{% block content %}
+<div class="col-md-12">
+	<div class="summary" style="clear:both">
+			  <h2 id="mostfederatedentities">{% trans "Most federated entities" %}</h2>
+	</div>
+	<div class="summary">
+		<div class="btn-group pull-left">
+			<a class="btn" href="{% url 'show_less_entries' %}">-</a>
+		</div>
+		<div class="btn-group pull-left">
+	 		<a class="btn" href="{% url 'show_more_entries' %}">+</a>
+		</div>
+	
+		{% most_fed_entity_list most_federated_entities show_total=False append_query="export=most_federated_entities" %}
+	</div>		
+{% endblock %}
+
