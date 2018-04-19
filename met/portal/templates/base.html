@@ -44,7 +44,7 @@
     <div class="container">
       <div class="navbar row">
         <div class="navbar-inner">
-          <a class="brand" href="{% url 'index' %}"><h1 class="brand"><img class="logo" src="{{ STATIC_URL}}images/refeds.png" alt="" width="80" height="79" class="logo">&nbsp;{% trans "Metadata Explorer Tool" %}</h1></a>
+          <a class="brand" href="{% url 'index' %}"><h1 class="brand"><img class="logo"src="{{ STATIC_URL}}images/refeds.png" alt="" width="80" height="79" class="logo">&nbsp;{% trans "Metadata Explorer Tool" %}</h1></a>
           <ul class="nav pull-right">
           {% if request.user.is_authenticated %}
             <li class="divider-vertical"></li>
@@ -64,7 +64,7 @@
                {% if field.value %} value="{{ field.value }}" {% endif %}
                type="text" class="search-query"
                placeholder="{{ field.label }}" name="{{ field.name }}"/>
-		<img class="icon-search" src="{{ STATIC_URL}}images/search_button.png">
+		<img class="lente" src="{{ STATIC_URL}}images/search_button.png">
             {% endwith %}
           </form>
        

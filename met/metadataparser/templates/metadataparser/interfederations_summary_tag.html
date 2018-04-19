@@ -47,12 +47,12 @@
 {% export_summary_menu queryname %}
 {% endif %}
 {% if add_federation %}
-<a class="btn" href="{% url 'federation_add' %}">{% trans "Add federation" %}</a>
+<a class="btn" href="{% url 'federation_add' %}" style="text-shadow: 0px 0px">{% trans "Add federation" %}</a>
 {% endif %}
 </div>
 
 {% if federations %}
-<p class="total"><strong>{% trans "Total" %}: {{ federations|length }}</strong></p>
+<p class="total"><strong>{% trans "Total" %}:</strong> {{ federations|length }}</p>
 
 {% else %}
 {% trans "There are no federations" %}

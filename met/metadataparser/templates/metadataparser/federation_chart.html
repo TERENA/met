@@ -17,7 +17,6 @@
     // Load Charts and the corechart package.
           google.charts.load('visualization', '1.0', {'packages':['corechart','table', 'bar']});
 
-          /*google.charts.setOnLoadCallback(drawChart);*/
 
           // Draw the first chart
           google.charts.setOnLoadCallback(drawStuffFirst);
@@ -30,21 +29,20 @@
 function drawStuffFirst() {
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'Time');
-        data.addColumn('number', 'AA');
         data.addColumn('number', 'SP');
         data.addColumn('number', 'IDP');
+        data.addColumn('number', 'AA');
         data.addRows([
         {% for stat in s_chart %}
-            ['{{ stat.date }}', {{ stat.aa }}, {{ stat.idp }}, {{ stat.sp }}],
-
+            ['{{ stat.date }}', {{ stat.sp }}, {{ stat.idp }}, {{ stat.aa }}],
         {% endfor %}
         ]);
-
         // Set chart options
         var options = {
             isStacked: true,
             colors: ['#D72E3F'],
             height: 400,
+            legend: { position: 'none'},
             chart: {
                 title: 'Service',
             },
@@ -69,7 +67,6 @@ function drawStuffFirst() {
         data.addRows([
         {% for stat2 in p_chart %}
             ['{{ stat2.date }}', {{ stat2.sp_shib1 }}, {{ stat2.idp_shib1 }}, {{ stat2.sp_saml1 }}, {{stat2.idp_saml1}}, {{stat2.sp_saml2}}, {{stat2.idp_saml2}}],
-
         {% endfor %}
         ]);
 
@@ -78,10 +75,12 @@ function drawStuffFirst() {
             isStacked: true,
             colors: ['#3A3A3A', '#D72E3F', '#777777'],
             height:400,
+            legend: { position: 'none'},
             chart: {
                 title: 'Protocols'
+		
             },
-
+           
 
             series: {
 
@@ -109,15 +108,20 @@ function drawStuffFirst() {
     };
 </script>
 <div id="chartFirst_div" ></div>
+<p align=center><img class="legend1" src="{{ STATIC_URL}}images/legend1.png"/></p>
 <div id="chartSecond_div" ></div>
+<p align=center><img class="legend2" src="{{ STATIC_URL}}images/legend2.png"/></p>
   {% endif %}
 
 {% endblock %}
 
 {% block content %}
   {% if statcharts %}
-    <div id="chartFirst_div" ></div>
-    <div id="chartSecond_div" ></div>
+
+  <div id="chartFirst_div" ></div>
+  <div id="chartSecond_div" ></div>
+
+
   {% endif %}
   {% bootstrap_form form cancel_link=form.instance.get_absolute_url delete_link=delete_link %}
 {% endblock %}

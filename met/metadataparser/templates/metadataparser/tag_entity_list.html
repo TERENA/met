@@ -57,7 +57,7 @@ of IDP and SP can be bigger than the number of entities
 		  {% for entity in entities %}
 		  <tr>
 			<td class="column-1">
-			  <a title="{{ entity.entityid }}"
+			  <a class="tronca" title="{{ entity.entityid }}"
 				 href="{{ entity.absolute_url }}{% if curfed %}?federation={{ curfed.slug }}{% endif %}">{{ entity.entityid|wrap:50 }}</a>
 			</td>
 			<td class="column-2">
@@ -71,7 +71,7 @@ of IDP and SP can be bigger than the number of entities
 					<a  class="btn-federations dropdown-toggle" data-toggle="dropdown" href="#">{{ entity.federations|length }} federations</a>
 					<ul class="dropdown-menu-fed">
 						{% for federation in entity.federations %}
-						<li><a href="{{ federation.1 }}">{{ federation.0 }}</a></li> 
+						<li class="federations_name"><a href="{{ federation.1 }}">{{ federation.0 }}</a></li> 
 						{% endfor %}
 					</ul>
 			</td>

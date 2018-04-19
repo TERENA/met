@@ -22,6 +22,8 @@
 
 
 {% block content %}
+
+
 <div class="container-tab">
 	<div class="col-md-6-1">
 		<h2 id="entitiessummary">{% trans "Entities summary" %}</h2>
@@ -48,17 +50,21 @@
 					  </tbody>
 					</table>
 				</div>
+				
 			</div>
+
+			
 		</div>
 		
-		<div class="btn-group pull-right" style="margin-left:20px">
+		<div class="btn-group pull-right" style="margin-left:10px; margin-bottom:5px">
 			<a class="btn" href="{% url 'search_entities' %}">{% trans "Search Entities" %}</a>
 		</div>
 
-		<div class="btn-group pull-right" style="margin-left:20px">
-			<a class="btn" href="{% url 'most_federated_entities' %}">{% trans "Most Federated Entities" %}</a>
-		</div>
+		 <div class="btn-group pull-right">
+                        <a class="btn" href="{% url 'most_federated_entities' %}">{% trans "most federated entities" %}</a>                </div>
+		
 	</div>
+	
 	
 	<div class="col-md-6-2">
 		{% if interfederations %}
@@ -66,35 +72,58 @@
 		
 		<div class="summary">
 			<div id="tablepress-2_wrapper" class="dataTable_wrapper no footer">
+
       				<div class="table-responsive">
-		                {% interfederations_summary "interfederations" counts interfederations %}
+		
+		{% interfederations_summary "interfederations" counts interfederations %}
 				</div>
 			</div>
 		</div>
 		{% endif %}
+	
+	
+	
 	</div>
+	
+	
+	
+</div>
+
+
+
+
 </div>
 
 <div class="col-md-12">
-	<!--div class="summary" style="clear:both">
+
+	<!--<div class="summary" style="clear:both">
 			  <h2 id="mostfederatedentities">{% trans "Most federated entities" %}</h2>
 	</div>
 	<div class="summary">
-		<div class="btn-group pull-left">
-			<a class="btn" href="{% url 'show_less_entries' %}">-</a>
-		</div>
-		<div class="btn-group pull-left">
-	 		<a class="btn" href="{% url 'show_more_entries' %}">+</a>
-		</div>
+
+					<div class="btn-group pull-left">
+					  <a class="btn" href="{% url 'show_less_entries' %}">-</a>
+					</div>
+					<div class="btn-group pull-left">
+					  <a class="btn" href="{% url 'show_more_entries' %}">+</a>
+					</div>
 	
-		{% most_fed_entity_list most_federated_entities show_total=False append_query="export=most_federated_entities" %}
-	</div-->		
+	
+
+	{% entity_list most_federated_entities show_total=False append_query="export=most_federated_entities" %}
+	</div>	-->
+        
+        <div style="height:15px"></div>
+
 	<div class="summary" style="clear:both">
 		<h2 id="federationsmap">{% trans "Federations map" %}</h2>
 	</div>
+
+        <div style="height:10px"></div>
+
 	<div class="summary">
 		<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-   		<div id="regions_div" style="width: 100%; height: 500px;"></div>
+   		<div id="regions_div"></div>
 
 		<script type="text/javascript">
 			google.charts.load('current', {
@@ -124,25 +153,28 @@
 
 	</div>
 
-	<div style="height:20px"></div>
+	
+
+	<div style="height:10px"></div>
+			
 
 	<div class="summary" style="clear:both">
-		<h2 id="federationssummary">{% trans "Federations summary" %}</h2>
+				<h2 id="federationssummary">{% trans "Federations summary" %}</h2>
 	</div>
 	<div class="summary">
-	{% federations_summary "federations" counts federations %}
+				{% federations_summary "federations" counts federations %}
 	</div>
+
 </div>
 
 <div style="height:20px"></div>
-
-<div class="col-md-12">
-	<p class="text-muted" style="text-align:center">
+	<div class="col-md-12">
+		<p class="text-muted" style="text-align:center">
 		{% blocktrans %}
 		Remember that one entity can be IDP and SP at the same time, so the addition
 		of IDP and SP can be bigger than the number of entities
 		{% endblocktrans %}
-	</p>
-</div>
+		</p>
+	</div>
 {% endblock %}
 

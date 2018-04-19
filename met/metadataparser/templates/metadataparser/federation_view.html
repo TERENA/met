@@ -66,20 +66,20 @@
 
 
 
-	<div class="btn-group pull-right" style="margin-bottom:20px">
-	  <a class="btn" href="{% url 'federation_charts' federation.slug %}">{% trans "Charts" %}</a>
+	<div class="btn-group pull-right">
+	  <a class="btn" href="{% url 'federation_charts' federation.slug %}" style="margin-bottom:10px; margin-left:10px">{% trans "Charts" %}</a>
 	</div>
 
 	{% canedit federation %}
 	<div class="btn-group pull-right">
-	 <a class="btn" href="{% url 'federation_edit' federation.slug %}">{% trans "edit" %}</a>
+	 <a class="btn" href="{% url 'federation_edit' federation.slug %}" style="margin-bottom:10px; margin-left:10px">{% trans "edit" %}</a>
 	 {% if add_entity %}
-	 &nbsp;<a class="btn" href="{% url 'entity_add' federation.slug %}">{% trans "add entity" %}</a>
+	 <a class="btn" href="{% url 'entity_add' federation.slug %}" style="margin-bottom:10px; margin-left:10px">{% trans "add entity" %}</a>
 	 {% endif %}
-	 &nbsp;<a class="btn btn-primary" href="#" onclick="update_entities(); return false" data-toggle="modal" data-target="#saveModal">{% trans "update entities" %}</a>
+	 <a class="btn1" href="#" onclick="update_entities(); return false" data-toggle="modal" data-target="#saveModal" style="margin-bottom:10px; margin-left:10px">{% trans "update entities" %}</a>
 	</div>
 	{% endcanedit %}
-	<h1 style="margin-bottom:25px; clear:both">
+	<h1 style="margin-bottom:25px; margin-top:20px; clear:both">
 	 {{ federation }}
 	</h1>
 	{% endblock %}

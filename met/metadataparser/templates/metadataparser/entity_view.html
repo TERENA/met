@@ -51,12 +51,12 @@
 
 	{% canedit entity %}
 	<div class="btn-group pull-right">
-	  <a class="btn" href="{% url 'entity_edit' entity.id %}">{% trans "edit" %}</a>
+	  <a class="btn" href="{% url 'entity_edit' entity.id %}" style="margin-left:10px">{% trans "edit" %}</a>
 	</div>
 	{% endcanedit %}
 
 	<div class="btn-group pull-right">
-	  <a class="btn" href="{% url 'entity_view' entity.entityid %}?viewxml=true{% if entity.curfed %}&federation={{ entity.curfed.slug }}{% endif %}" target="_blank" style="margin-right:20px">{% trans "view xml" %}</a>
+	  <a class="btn" href="{% url 'entity_view' entity.entityid %}?viewxml=true{% if entity.curfed %}&federation={{ entity.curfed.slug }}{% endif %}" target="_blank">{% trans "view xml" %}</a>
 	</div>
 
 {% endblock %}

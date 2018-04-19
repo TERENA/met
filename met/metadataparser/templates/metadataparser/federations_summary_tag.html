@@ -5,12 +5,12 @@
 {% export_summary_menu queryname %}
 {% endif %}
 {% if add_federation %}
-<a class="btn" href="{% url 'federation_add' %}">{% trans "Add federation" %}</a>
+<a class="btn" href="{% url 'federation_add' %}" style="text-shadow: 0px 0px">{% trans "Add federation" %}</a>
 {% endif %}
 </div>
 
 {% if federations %}
-<p><strong>{% trans "Total" %}:</strong> {{ federations|length }}</p>
+<p class="total"><strong>{% trans "Total" %}:</strong> {{ federations|length }}</p>
 
 <div id="tablepress-4_wrapper" class="dataTable_wrapper no footer">
 			<table id="tablepress-4" class="tablepress tablepress-id-4 dataTable no-footer" role="grid" aria-describedby="tablepress-4_info">
