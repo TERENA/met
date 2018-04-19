@@ -1,3 +1,4 @@
+
 {% load i18n metadataparsertags %}
 
 <div class="btn-toolbar pull-right">
@@ -13,36 +14,36 @@
 <p class="total"><strong>{% trans "Total" %}:</strong> {{ federations|length }}</p>
 
 <div id="tablepress-4_wrapper" class="dataTable_wrapper no footer">
-			<table id="tablepress-4" class="tablepress tablepress-id-4 dataTable no-footer" role="grid" aria-describedby="tablepress-4_info">
-			  <thead>
-				<tr class="row-1 odd" role="row">
-				  <th class="column-1 sorting" tabindex="0" aria-controls="tablepress-4" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending"><strong class="tabella">{% trans "Name" %}</strong></th>
-				  {% if queryname == 'federations' %}
-				  <th class="column-2 sorting" tabindex="0" aria-controls="tablepress-4" rowspan="1" colspan="1" aria-label="Country: activate to sort column ascending"><strong class="tabella">{% trans "Country" %}</strong></th>
-				  {% endif %}
-				  <th class="column-3 sorting" tabindex="0" aria-controls="tablepress-4" rowspan="1" colspan="1" aria-label="Entities: activate to sort column ascending"><strong class="tabella">{% trans "Entities" %}</strong></th>
-				  {% for etype in entity_types %}
-				  <th class="column-{{forloop.counter|add:3}} sorting" tabindex="0" aria-controls="tablepress-1" rowspan="1" colspan="1"><strong class="tabella">{{ etype|display_etype }}</strong></th>
-				  {% endfor %}
-				</tr>
-			  </thead>
-			  <tbody class="row-hover">
-			  {% for federation in federations %}
-			  <tr>
-				<td class="column-1">
-				  <a href="{{ federation.get_absolute_url }}">{{ federation }}</a>
-				</td>
-				{% if queryname == 'federations' %}
-				<td class="column-2">{{ federation.country }}</td>
-				{% endif %}
-				<td class="column-3">{% get_fed_count counts federation.id %}</td>
-				{% for etype in entity_types %}
-				<td class="column-{{forloop.counter|add:3}}">{% get_fed_count counts federation.id etype %}</td>
-				{% endfor %}
-			  </tr>
-			  {% endfor %}
-			</tbody>
-			</table>
+                        <table id="tablepress-4" class="tablepress tablepress-id-4 dataTable no-footer" role="grid" aria-describedby="tablepress-4_info">
+                          <thead>
+                                <tr class="row-1 odd" role="row">
+                                  <th class="column-1 sorting" tabindex="0" aria-controls="tablepress-4" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending"><strong class="tabella">{% trans "Name" %}</strong></th>
+                                  {% if queryname == 'federations' %}
+                                  <th class="column-2 sorting" tabindex="0" aria-controls="tablepress-4" rowspan="1" colspan="1" aria-label="Country: activate to sort column ascending"><strong class="tabella">{% trans "Country" %}</strong></th>
+                                  {% endif %}
+                                  <th class="column-3 sorting" tabindex="0" aria-controls="tablepress-4" rowspan="1" colspan="1" aria-label="Entities: activate to sort column ascending"><strong class="tabella">{% trans "Entities" %}</strong></th>
+                                  {% for etype in entity_types %}
+                                  <th class="column-{{forloop.counter|add:3}} sorting" tabindex="0" aria-controls="tablepress-1" rowspan="1" colspan="1"><strong class="tabella">{{ etype|display_etype }}</strong></th>
+								  {% endfor %}
+                                </tr>
+                          </thead>
+                          <tbody class="row-hover">
+                          {% for federation in federations %}
+                          <tr>
+                                <td class="column-1">
+                                  <a href="{{ federation.get_absolute_url }}">{{ federation }}</a>
+                                </td>
+                                {% if queryname == 'federations' %}
+                                <td class="column-2">{{ federation.country }}</td>
+                                {% endif %}
+                                <td class="column-3">{% get_fed_count counts federation.id %}</td>
+                                {% for etype in entity_types %}
+                                <td class="column-{{forloop.counter|add:3}}">{% get_fed_count counts federation.id etype %}</td>
+                                {% endfor %}
+                          </tr>
+                          {% endfor %}
+                        </tbody>
+                        </table>
 </div>
 {% else %}
 {% trans "There are no federations" %}

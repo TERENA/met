@@ -48,17 +48,19 @@
 						</fieldset>
 						{% endfor %}
 					</div>
-				<div class="form-actions">
-					{% if background %}
-					  <button class="btn" data-toggle="modal" data-target="#saveModal" onclick="$('#background_form').submit()" style="margin-left:20px">{% trans "Submit" %}</button>
-					{% else %}
-					  <button class="btn" type="submit" style="margin-left:20px">{% trans "Submit" %}</button>
-					{% endif %}
-					{% if delete_link %}
-					  <button type="button" class="btn btn-danger pull-right" data-toggle="modal" data-target="#deleteModal">{% trans "Delete" %}</button>
-					{% endif %}
-					  <a class="btn1" href="{{ cancel_link }}" style="margin-top:3px">{% trans "Cancel" %}</a>
-				</div>
+						 <div class="form-actions">
+                                        {% if background %}
+                                          <button class="btn" data-toggle="modal" data-target="#saveModal" onclick="$('#background_form').submit()" style="margin-left:10px; margin-bottom:5px; width:80px; height:46px">{% trans "Submit" %}</button>
+                                        {% else %}
+                                          <button class="btn" type="submit" style="margin-left:10px; margin-bottom:5px; width:80px; height:46px">{% trans "Submit" %}</button>
+                                        {% endif %}
+                                        {% if delete_link %}
+                                          <button type="button" class="btn btn-danger pull-right" data-toggle="modal" data-target="#deleteModal" style="margin-left:10px; margin-bottom:5px; width:80px; height:46px"g>{% trans "Delete" %}</button>
+                                        {% endif %}
+                                          <a class="btn1" href="{{ cancel_link }}" style="border-width: 2px; border-style: outset; border-color: buttonface; border-image: initial; width:80px; height:46px">{% trans "Cancel" %}</a>
+                                </div>
+
+
 			</form>
 		
 	</div>

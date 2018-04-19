@@ -27,14 +27,14 @@
 			  <h2 id="mostfederatedentities">{% trans "Most federated entities" %}</h2>
 	</div>
 	<div class="summary">
-		<div class="btn-group pull-left">
+		<div class="btn-group pull-left" style="margin-right:10px">
 			<a class="btn" href="{% url 'show_less_entries' %}">-</a>
 		</div>
 		<div class="btn-group pull-left">
 	 		<a class="btn" href="{% url 'show_more_entries' %}">+</a>
 		</div>
 	
-		{% most_fed_entity_list most_federated_entities show_total=False append_query="export=most_federated_entities" %}
+		{% entity_list most_federated_entities show_total=False append_query="export=most_federated_entities" %}
 	</div>		
 {% endblock %}
 
