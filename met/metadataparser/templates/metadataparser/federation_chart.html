@@ -55,7 +55,7 @@ function drawStuffFirst() {
         chart.draw(data, google.charts.Bar.convertOptions(options));
     }
 
-        function drawStuffSecond() {
+    function drawStuffSecond() {
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'Time');
         data.addColumn('number', 'SP Shibboleth 1.0');
@@ -80,10 +80,14 @@ function drawStuffFirst() {
                 title: 'Protocols'
 		
             },
-           
-
+            vAxis: {
+                viewWindowMode: 'explicit',
+                viewWindow: {
+                    min: 0,
+                    max: {{p_chart_axis_max}},
+                },
+            },
             series: {
-
                 2: {
                     targetAxisIndex: 1
                 },
@@ -96,16 +100,13 @@ function drawStuffFirst() {
                 5: {
                     targetAxisIndex: 2
                 },
-
-
-
             },
         };
 
         // Instantiate and draw our chart, passing in some options.
         var chart = new google.charts.Bar(document.getElementById('chartSecond_div'));
         chart.draw(data, google.charts.Bar.convertOptions(options));
-    };
+    }
 </script>
 <div id="chartFirst_div" ></div>
 <p align=center><img class="legend1" src="{{ STATIC_URL}}images/legend1.png"/></p>

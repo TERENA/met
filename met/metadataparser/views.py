@@ -370,11 +370,21 @@ def federation_charts(request, federation_slug=None):
                     cur_stat[p.feature] = p.value
                 p_chart.append(cur_stat)
 
+            p_chart_axis_max = 0
+            for p in p_chart:
+               newval = p['sp_shib1'] + p['idp_shib1']
+               if newval > p_chart_axis_max: p_chart_axis_max = newval
+               newval = p['sp_saml1'] + p['idp_saml1']
+               if newval > p_chart_axis_max: p_chart_axis_max = newval
+               newval = p['sp_saml2'] + p['idp_saml2']
+               if newval > p_chart_axis_max: p_chart_axis_max = newval
+
             return render_to_response('metadataparser/federation_chart.html',
                                       {'form': form,
-                                       'statcharts': ['aa'], #[s_chart, p_chart],
+                                       'statcharts': True, 
                                        's_chart': s_chart,
                                        'p_chart': p_chart,
+                                       'p_chart_axis_max': p_chart_axis_max,
                                       },
                                       context_instance=RequestContext(request))
 

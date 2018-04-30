@@ -141,6 +141,10 @@ input[type="reset"],
   -webkit-appearance: button;
 }*/
 
+input {
+  height: 30px;
+}
+
 input[type="search"] {
   -webkit-box-sizing: content-box;
      -moz-box-sizing: content-box;
