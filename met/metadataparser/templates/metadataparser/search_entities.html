@@ -29,9 +29,9 @@
 {% endblock %}
 
 {% block content %}
-  {% bootstrap_form form delete_link=False %}
-
   {% if object_list %}
     {% entity_list object_list pagination=pagination onclick_page="change_page" onclick_export="change_export" %}
   {% endif %}
+
+  {% bootstrap_form form cancel_link='/' delete_link=False %}
 {% endblock %}
