@@ -9,24 +9,21 @@
   {% endif %}
 
   {% if statcharts %}
-<!-- Google charts -->
-    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <!-- Google charts -->
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jsapi.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/charts-loader.js"></script>
 
-<script type="text/javascript">
+    <script type="text/javascript">
     // Load Charts and the corechart package.
-          google.charts.load('visualization', '1.0', {'packages':['corechart','table', 'bar']});
+    google.charts.load('visualization', '1.0', {'packages':['corechart','table', 'bar']});
 
+    // Draw the first chart
+    google.charts.setOnLoadCallback(drawStuffFirst);
 
-          // Draw the first chart
-          google.charts.setOnLoadCallback(drawStuffFirst);
+    // Draw the second chart
+    google.charts.setOnLoadCallback(drawStuffSecond);
 
-          // Draw the second chart
-          google.charts.setOnLoadCallback(drawStuffSecond);
-
-
-
-function drawStuffFirst() {
+    function drawStuffFirst() {
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'Time');
         data.addColumn('number', 'SP');
@@ -86,6 +83,14 @@ function drawStuffFirst() {
                     min: 0,
                     max: {{p_chart_axis_max}},
                 },
+            },
+            vAxes: {
+                1: {
+                   textStyle: { fontSize: 0 }
+                },
+                2: {
+                   textStyle: { fontSize: 0 }
+                }
             },
             series: {
                 2: {
