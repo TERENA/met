@@ -138,8 +138,8 @@
 			function drawRegionsMap() {
 				var data = google.visualization.arrayToDataTable([
 					['Country', 'Entitites'],
-                                        {% for federation in federations %}
-                                        ['{{ federation.country }}', {% get_fed_count counts federation.id %} ],
+                                        {% for fed in federations %}
+                                        ['{{ fed.country }}', {% get_fed_count_by_country fed_countries fed.country %} ],
                                         {% endfor %}
 				]);
 

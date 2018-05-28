@@ -14,6 +14,7 @@ import re, time
 import pytz
 import operator
 import simplejson as json
+import numpy as np
 from urllib import unquote
 from datetime import datetime
 from dateutil import tz
@@ -112,10 +113,13 @@ def index(request):
 
     totals = Entity.objects.values('types__xmlname').annotate(Count('types__xmlname'))
 
+    fed_countries = Entity.objects.values('federations__country').annotate(Count('federations__country'))
+
     params = {
        'settings': settings,
        'interfederations': interfederations,
        'federations': federations,
+       'fed_countries': fed_countries,
        'entity_types': DESCRIPTOR_TYPES,
        'federation_path': request.path,
        'counts': counts,

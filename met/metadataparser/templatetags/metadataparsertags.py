@@ -263,6 +263,15 @@ def get_fed_count(counts, federation='All', entity_type='All'):
     return fed_count
 
 
+@register.simple_tag()
+def get_fed_count_by_country(count, country='All'):
+    fed_count = 0
+    for curcount in count:
+        if country == 'All' or curcount['federations__country'] == country:
+            fed_count += curcount['federations__country__count']
+    return fed_count
+
+
 @register.simple_tag(takes_context=True)
 def l10n_property(context, prop, lang):
     if isinstance(prop, dict) and len(prop) > 0:
