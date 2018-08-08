@@ -66,47 +66,8 @@ def export_entity_json(entity):
     return response
 
 
-class Dict2XML(object):
-    """ http://stackoverflow.com/questions/1019895/serialize-python-dictionary-to-xml """
-    doc = Document()
-
-    def __init__(self, structure):
-        if len(structure) == 1:
-            root_name = str(structure.keys()[0])
-            self.root = self.doc.createElement(root_name)
-
-            #self.doc.appendChild(self.root)
-            self.build(self.root, structure[root_name])
-
-    def build(self, father, structure):
-        if type(structure) == dict:
-            for k in structure:
-                tag = self.doc.createElement(k)
-                father.appendChild(tag)
-                self.build(tag, structure[k])
-
-        elif type(structure) == list:
-            grand_father = father.parentNode
-            tag_name = father.tagName
-            grand_father.removeChild(father)
-            for l in structure:
-                tag = self.doc.createElement(tag_name)
-                self.build(tag, l)
-                grand_father.appendChild(tag)
-        else:
-            if type(structure) == unicode:
-                data = structure.encode("ascii", errors="xmlcharrefreplace")
-            else:
-                data = str(structure)
-            tag = self.doc.createTextNode(data)
-            father.appendChild(tag)
-
-    def __str__(self):
-        return self.doc.toprettyxml(indent=" ")
-
-
 def export_entity_xml(entity):
-    entity_xml = Dict2XML({"Entity": entity.to_dict()})
+    entity_xml = entity.xml
 
     # Return XML file to browser as download
     response = HttpResponse(str(entity_xml), content_type='application/xml')
