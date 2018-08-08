@@ -75,7 +75,7 @@ class Dict2XML(object):
             root_name = str(structure.keys()[0])
             self.root = self.doc.createElement(root_name)
 
-            self.doc.appendChild(self.root)
+            #self.doc.appendChild(self.root)
             self.build(self.root, structure[root_name])
 
     def build(self, father, structure):
