@@ -290,9 +290,10 @@ def organization_property(context, organizations, prop, lang):
         return prop
 
     lang = lang or context.get('LANGUAGE_CODE', None)
+    val = None
     for organization in organizations:
         if prop in organization:
-            val = organization[prop]
+            if val is None: val = organization[prop]
             if organization['lang'] == lang:
                 val = organization[prop]
 
