@@ -20,7 +20,7 @@ from django.core import validators
 from django.core.files.base import ContentFile
 from django.utils.translation import ugettext_lazy as _
 
-from pyff.mdrepo import MDRepository
+from pyff.repo import MDRepository
 from pyff.pipes import Plumbing
 
 from met.metadataparser.xmlparser import MetadataParser
@@ -107,7 +107,7 @@ class Base(models.Model):
     registration_authority = models.CharField(verbose_name=_('Registration Authority'),
                                               max_length=200, blank=True, null=True)
 
-    editor_users = models.ManyToManyField(User, null=True, blank=True,
+    editor_users = models.ManyToManyField(User, blank=True,
                                           verbose_name=_('editor users'))
 
     class Meta(object):
@@ -152,7 +152,7 @@ class Base(models.Model):
             entities = Plumbing(pipeline=pipeline, id=self.slug).process(
                 md, state={'batch': True, 'stats': {}})
             return etree.tostring(entities)
-        except Exception, e:
+        except Exception as e:
             raise Exception(
                 'Getting metadata from %s failed.\nError: %s' % (load_streams, e))
 

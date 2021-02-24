@@ -18,7 +18,7 @@ from met.metadataparser.models import Federation
 from met.metadataparser.xmlparser import DESCRIPTOR_TYPES, DESCRIPTOR_TYPES_DISPLAY
 from met.metadataparser.query_export import export_modes
 from met.metadataparser.summary_export import export_summary_modes
-from urllib import urlencode
+from urllib.parse import urlencode
 
 register = template.Library()
 

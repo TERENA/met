@@ -21,7 +21,8 @@ try:
     from local_settings import LOGIN_URL, LOGOUT_URL, SAML_DESCRIPTION, SAML_ENTITYID, SAML_CONFIG, DJANGO_FEDERATIONS, DJANGO_ADDITIONAL_IDPS
     from local_settings import MAIL_CONFIG, SLACK_CONFIG, OWA_BASEURL, OWA_SITEID
 except Exception:
-    print "Error in loading local_settings"
+    raise
+    print("Error in loading local_settings")
 
 MANAGERS = ADMINS
 
@@ -114,7 +115,7 @@ ROOT_URLCONF = 'met.urls'
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'met.wsgi.application'
 
-INSTALLED_APPS = filter(None, (
+INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -125,14 +126,14 @@ INSTALLED_APPS = filter(None, (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
     'pagination',
-    'silk' if PROFILE else None,
     'met.portal',
     'met.metadataparser',
     'djangosaml2',
     'chartit',
-))
+]
 
 if PROFILE:
+    INSTALLED_APPS.append('silk')
     SILKY_META = True
     SILKY_PYTHON_PROFILER = True
     SILKY_INTERCEPT_PERCENT = 100

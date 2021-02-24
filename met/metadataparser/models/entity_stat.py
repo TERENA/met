@@ -28,7 +28,7 @@ class EntityStat(models.Model):
     feature = models.CharField(max_length=100, blank=False, null=False, db_index=True,
                                verbose_name=_(u'Feature name'))
 
-    value = models.PositiveIntegerField(max_length=100, blank=False, null=False,
+    value = models.PositiveIntegerField(blank=False, null=False,
                                         verbose_name=_(u'Feature value'))
 
     federation = models.ForeignKey('Federation', blank=False,

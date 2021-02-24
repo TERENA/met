@@ -11,8 +11,8 @@
 
 import simplejson as json
 
-from urlparse import urlparse
-from urllib import quote_plus
+from urllib.parse import urlparse
+from urllib.parse import quote_plus
 from datetime import datetime
 
 from django.conf import settings
@@ -109,7 +109,7 @@ class Entity(Base):
     certstats = models.CharField(blank=True, null=True, max_length=200,
                                  unique=False, verbose_name=_(u'Certificate Stats'))
 
-    _display_protocols = models.CharField(blank=True, null=True, max_length=300,		
+    _display_protocols = models.CharField(blank=True, null=True, max_length=300,
                                           unique=False, verbose_name=_(u'Display Protocols'))
 
     objects = models.Manager()
@@ -405,8 +405,8 @@ class Entity(Base):
 
         self.certstats = self._get_property('certstats')
 
-        newprotocols = self.protocols		
-        if newprotocols and newprotocols != "":		
+        newprotocols = self.protocols
+        if newprotocols and newprotocols != "":
             self._display_protocols = newprotocols
 
         if str(self._get_property('registration_authority')) != '':

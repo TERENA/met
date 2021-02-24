@@ -376,7 +376,7 @@ def federation_pre_save(sender, instance, **kwargs):
     # if instance.file_url and instance.file_url != '':
     #    try:
     #        instance.fetch_metadata_file(slug)
-    #    except Exception, e:
+    #    except Exception as e:
     #        pass
 
     if instance.name:

@@ -233,7 +233,7 @@ class MetadataParser(object):
                 cert = x509.load_pem_x509_certificate(
                     certText, default_backend())
                 certName = cert.signature_hash_algorithm.name
-            except Exception, e:
+            except Exception as e:
                 pass
 
             if certName not in hashes:
