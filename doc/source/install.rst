@@ -3,6 +3,17 @@
 Metadata Explorer Tool Install
 ==============================
 
+Install Python 3.7
+******************
+
+
+.. code-block:: bash
+
+  add-apt-repository ppa:deadsnakes/ppa
+  apt-get update
+  apt-get install python3.7
+
+  python3.7 -m pip install --upgrade pip
 
 Install requirements
 ********************
@@ -27,6 +38,21 @@ System packages (ubuntu-1204)
 * django_chartit
 * dateutils
 
+PIP dependencies:
+
+.. code-block:: bash
+
+  python3.7 -m pip install
+
+Make sure locales are correctly installed
+*****************************************
+
+.. code-block:: bash
+
+  echo "LC_ALL=en_US.UTF-8" >> /etc/environment
+  echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+  echo "LANG=en_US.UTF-8" > /etc/locale.conf
+  locale-gen en_US.UTF-8
 
 Create database
 ***************
@@ -72,33 +98,27 @@ Project deployment
 
   .. code-block:: bash
 
-      git clone git://github.com/Yaco-Sistemas/met.git
+      git clone git://github.com/GEANT/met.git
 
 * Deploy met egg:
 
   .. code-block:: bash
 
       cd met
-      python setup.py develop
+      python3.7 setup.py develop
 
 * Configure ``local_settings`` and initialize met database (create models):
 
   .. code-block:: bash
 
-      cp local_settings.example.py local_settings.py
-      python manage.py syncdb
+      cp local_settings.py.example local_settings.py
+      python3.7 manage.py migrate
 
 * To initialize static files for admin page of Django execute:
 
   .. code-block:: bash
 
       python manage.py collectstatic
-
-* Patch the pyFF modyle with files in pyff-patch
-   
-  .. code-block:: bash
-
-      cp pyff-patch/* met-venv/lib/python2.7/site-packages/pyff/
 
 
 Apache configuration
@@ -129,7 +149,7 @@ http://httpd.apache.org/docs/2.2/mod/core.html#allowencodedslashes
 
     WSGIDaemonProcess <server name> home=/home/met
     WSGIProcessGroup <server name>
-    
+
     WSGIScriptAlias / /home/met/met/met-wsgi.py
 
     <Directory /home/met/met/met-wsgi.py>
@@ -187,7 +207,7 @@ Automatic refresh of federations' metadata
 ******************************************
 
 Metadata of configured federations can be refreshed automatically. To achieve this
-you just need to configure a cronjob on your server such as: 
+you just need to configure a cronjob on your server such as:
 
 .. code-block:: bash
 
