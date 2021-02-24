@@ -98,9 +98,8 @@ TEMPLATE_LOADERS = (
     #'django.template.loaders.eggs.Loader',
 )
 
-MIDDLEWARE_CLASSES = filter(None, (
+MIDDLEWARE_CLASSES = [
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'silk.middleware.SilkyMiddleware' if PROFILE else None,
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -108,7 +107,10 @@ MIDDLEWARE_CLASSES = filter(None, (
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'pagination.middleware.PaginationMiddleware',
-))
+]
+
+if PROFILE:
+    MIDDLEWARE_CLASSES.insert(1, 'silk.middleware.SilkyMiddleware')
 
 ROOT_URLCONF = 'met.urls'
 
