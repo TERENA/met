@@ -9,40 +9,16 @@ Install Python 3.7
 
 .. code-block:: bash
 
-  add-apt-repository ppa:deadsnakes/ppa
-  apt-get update
-  apt-get install python3.7
-
-  python3.7 -m pip install --upgrade pip
+  # apt-get update
+  # apt-get install python3
+  # apt-get install python3-pip
 
 Install requirements
 ********************
 
-System packages (ubuntu-1204)
-
-* python-setuptools
-* python-dev
-* python-virtualenv
-* python-imaging
-* libjpeg-dev
-* libpng-dev
-* postgresql
-* libapache2-mod-wsgi
-* build-essential
-* libxml2-dev
-* libxslt-dev
-* libpq-dev
-* xmlsec1
-* memcached
-* libffi-dev
-* django_chartit
-* dateutils
-
-PIP dependencies:
-
 .. code-block:: bash
 
-  python3.7 -m pip install
+  # pip3 install -r requirements.txt
 
 Make sure locales are correctly installed
 *****************************************
