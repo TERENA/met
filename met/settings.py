@@ -177,7 +177,7 @@ LOGGING = {
         'saml2file': {
             'level': 'ERROR',
             'class': 'logging.FileHandler',
-            'filename': '/var/log/djangosaml2.log',
+            'filename': '/tmp/djangosaml2.log',
             'formatter': 'verbose',
         }
     },
