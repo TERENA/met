@@ -16,3 +16,5 @@ selenium
 numpy
 slackclient
 Pillow
+uWSGI==2.0.19.1
+uwsgitop==0.11
