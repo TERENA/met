@@ -5,6 +5,7 @@ requests-cache
 djangosaml2==0.17.2
 django-pagination>=1.0.7
 django-chartit
+django-dotenv
 setuptools-rust
 python-memcached>=1.48
 simplejson
