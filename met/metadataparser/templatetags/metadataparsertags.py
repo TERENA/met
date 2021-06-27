@@ -302,15 +302,15 @@ def organization_property(context, organizations, prop, lang):
 
 @register.simple_tag()
 def get_property(obj, prop=None):
-    uprop = unicode(prop)
+    uprop = str(prop)
     if not uprop:
         return '<a href="{link}">{name}</a>'.format(link=obj.get_absolute_url(),
-                                                    name=unicode(obj))
+                                                    name=str(obj))
     if isinstance(obj, dict):
         return obj.get(prop, None)
     if getattr(getattr(obj, uprop, None), 'all', None):
         return '. '.join(['<a href="{link}">{name}</a>'.format(link=item.get_absolute_url(),
-                                                               name=unicode(item))
+                                                               name=str(item))
                           for item in getattr(obj, uprop).all()])
     if isinstance(getattr(obj, uprop, ''), list):
         return ', '.join(getattr(obj, uprop, []))
@@ -330,7 +330,7 @@ def display_etype(value, separator=', '):
     if isinstance(value, list):
         return separator.join(value)
     elif hasattr(value, 'all'):
-        return separator.join([unicode(item) for item in value.all()])
+        return separator.join([str(item) for item in value.all()])
     else:
         if value in DESCRIPTOR_TYPES_DISPLAY:
             return DESCRIPTOR_TYPES_DISPLAY.get(value)
@@ -348,7 +348,7 @@ def mailto(value):
 
 @register.filter(name='wrap')
 def wrap(value, length):
-    value = unicode(value)
+    value = str(value)
     if len(value) > length:
         return "%s..." % value[:length]
     return value

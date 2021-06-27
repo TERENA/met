@@ -214,8 +214,8 @@ def federation_view(request, federation_slug=None):
                 'entityid': entity.entityid,
                 'name': entity.name,
                 'absolute_url': entity.get_absolute_url(),
-                'types': [unicode(item) for item in entity.types.all()],
-                'federations': [(unicode(item.name), item.get_absolute_url()) for item in entity.federations.all()],
+                'types': [str(item) for item in entity.types.all()],
+                'federations': [(str(item.name), item.get_absolute_url()) for item in entity.federations.all()],
             })
 
     if 'format' in request.GET:
@@ -308,7 +308,7 @@ def federation_delete(request, federation_slug):
 
     messages.success(request,
                      _("%(federation)s federation was deleted successfully"
-                     % {'federation': unicode(federation)}))
+                     % {'federation': str(federation)}))
     federation.delete()
     return HttpResponseRedirect(reverse('index'))
 
@@ -587,7 +587,7 @@ def entity_delete(request, entity_id):
     entity = get_object_or_404(Entity, id=entity_id)
     messages.success(request,
                      _("%(entity)s entity was deleted successfully"
-                     % {'entity': unicode(entity)}))
+                     % {'entity': str(entity)}))
     entity.delete()
     return HttpResponseRedirect(reverse('index'))
 
@@ -695,8 +695,8 @@ def search_service(request):
                 'entityid': entity.entityid,
                 'name': entity.name,
                 'absolute_url': entity.get_absolute_url(),
-                'types': [unicode(item) for item in entity.types.all()],
-                'federations': [(unicode(item.name), item.get_absolute_url()) for item in entity.federations.all()],
+                'types': [str(item) for item in entity.types.all()],
+                'federations': [(str(item.name), item.get_absolute_url()) for item in entity.federations.all()],
             })
 
         return export_query_set(request.GET.get('format'), entities,
@@ -708,8 +708,8 @@ def search_service(request):
             'entityid': entity.entityid,
             'name': entity.name,
             'absolute_url': entity.get_absolute_url(),
-            'types': [unicode(item) for item in entity.types.all()],
-            'federations': [(unicode(item.name), item.get_absolute_url()) for item in entity.federations.all()],
+            'types': [str(item) for item in entity.types.all()],
+            'federations': [(str(item.name), item.get_absolute_url()) for item in entity.federations.all()],
         })
 
     return render_to_response('metadataparser/service_search.html',
@@ -780,8 +780,8 @@ def search_entities(request):
                     'entityid': entity.entityid,
                     'name': entity.name,
                     'absolute_url': entity.get_absolute_url(),
-                    'types': [unicode(item) for item in entity.types.all()],
-                    'federations': [(unicode(item.name), item.get_absolute_url()) for item in entity.federations.all()],
+                    'types': [str(item) for item in entity.types.all()],
+                    'federations': [(str(item.name), item.get_absolute_url()) for item in entity.federations.all()],
                 })
 
             export_format = form.cleaned_data['export_format']

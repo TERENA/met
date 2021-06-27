@@ -613,7 +613,7 @@ Find a (set of) EntityDescriptor element(s) based on the specified 'member' expr
         elif hasattr(member, 'xpath'):
             log.debug("xpath filter %s <- %s" % (xp, member))
             return member.xpath(xp, namespaces=NS)
-        elif type(member) is str or type(member) is unicode:
+        elif type(member) is str or type(member) is str:
             log.debug("string lookup %s" % member)
 
             if '+' in member:

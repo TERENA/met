@@ -93,7 +93,7 @@ class Federation(Base):
             self._metadata_cache = self.load_file()
         return self._metadata_cache
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def get_entity_metadata(self, entityid):
@@ -372,7 +372,7 @@ def federation_pre_save(sender, instance, **kwargs):
     if kwargs.has_key('update_fields') and kwargs['update_fields'] == {'file'}:
         return
 
-    #slug = slugify(unicode(instance.name))[:200]
+    #slug = slugify(str(instance.name))[:200]
     # if instance.file_url and instance.file_url != '':
     #    try:
     #        instance.fetch_metadata_file(slug)
@@ -380,13 +380,13 @@ def federation_pre_save(sender, instance, **kwargs):
     #        pass
 
     if instance.name:
-        instance.slug = slugify(unicode(instance))[:200]
+        instance.slug = slugify(str(instance))[:200]
 
 
 @receiver(pre_save, sender=Entity, dispatch_uid='entity_pre_save')
 def entity_pre_save(sender, instance, **kwargs):
     # if refetch and instance.file_url:
-    #    slug = slugify(unicode(instance.name))[:200]
+    #    slug = slugify(str(instance.name))[:200]
     #    instance.fetch_metadata_file(slug)
     #    instance.process_metadata()
     pass

@@ -116,7 +116,7 @@ class Base(models.Model):
     class XmlError(Exception):
         pass
 
-    def __unicode__(self):
+    def __str__(self):
         return self.url or "Metadata %s" % self.id
 
     def load_file(self):

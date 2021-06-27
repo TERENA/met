@@ -34,5 +34,5 @@ class EntityStat(models.Model):
     federation = models.ForeignKey('Federation', blank=False,
                                    verbose_name=_('Federations'))
 
-    def __unicode__(self):
+    def __str__(self):
         return self.feature

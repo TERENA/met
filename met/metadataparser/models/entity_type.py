@@ -25,5 +25,5 @@ class EntityType(models.Model):
     xmlname = models.CharField(blank=False, max_length=20, unique=True,
                                verbose_name=_('Name in XML'), db_index=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name

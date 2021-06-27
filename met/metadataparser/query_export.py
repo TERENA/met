@@ -83,7 +83,7 @@ def _parse_xml_element(xml, father, structure):
             _parse_xml_element(xml, tag, l)
             father.appendChild(tag)
     else:
-        if type(structure) == unicode:
+        if type(structure) == str:
             data = structure.encode("ascii", errors="xmlcharrefreplace")
         else:
             data = str(structure)

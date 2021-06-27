@@ -29,5 +29,5 @@ class EntityCategory(models.Model):
                             blank=True, null=True,
                             help_text=_('The name of the entity category'))
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name or self.category_id

@@ -322,7 +322,7 @@ class Entity(Base):
         verbose_name = _('Entity')
         verbose_name_plural = _('Entities')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.entityid
 
     def load_metadata(self, federation=None, entity_data=None):
@@ -420,8 +420,8 @@ class Entity(Base):
         self.load_metadata()
 
         entity = self._entity_cached.copy()
-        entity["types"] = [unicode(f) for f in self.types.all()]
-        entity["federations"] = [{"name": unicode(f), "url": f.get_absolute_url()}
+        entity["types"] = [str(f) for f in self.types.all()]
+        entity["federations"] = [{"name": str(f), "url": f.get_absolute_url()}
                                  for f in self.federations.all()]
 
         if self.registration_authority:
@@ -437,7 +437,7 @@ class Entity(Base):
         return entity
 
     def display_etype(value, separator=', '):
-        return separator.join([unicode(item) for item in value.all()])
+        return separator.join([str(item) for item in value.all()])
 
     @classmethod
     def get_most_federated_entities(self, maxlength=TOP_LENGTH, cache_expire=None):
@@ -459,8 +459,8 @@ class Entity(Base):
                     'entityid': entity.entityid,
                     'name': entity.name,
                     'absolute_url': entity.get_absolute_url(),
-                    'types': [unicode(item) for item in entity.types.all()],
-                    'federations': [(unicode(item.name), item.get_absolute_url()) for item in entity.federations.all()],
+                    'types': [str(item) for item in entity.types.all()],
+                    'federations': [(str(item.name), item.get_absolute_url()) for item in entity.federations.all()],
                 })
 
         if cache_expire:
