@@ -31,7 +31,7 @@ def _send_message_via_email_and_slack(error_msg, federation, logger=None):
         subject = mail_config_dict['refresh_subject'] % federation
         from_address = mail_config_dict['from_email_address']
         send_mail(from_address, subject, '%s' % error_msg)
-        send_slack('%s, - %s' % (subject, error_msg))
+        send_slack(f'{subject}, - {error_msg}')
     except Exception as errorMessage:
         log('Message could not be posted successfully: %s' %
             errorMessage, logger, logging.ERROR)
@@ -83,7 +83,7 @@ def refresh(fed_name=None, force_refresh=False, logger=None):
                     federation, logger, logging.DEBUG)
                 federation.metadata_update = datetime.now()
                 federation.save(update_fields=['file', 'metadata_update'])
-                log('[%s] Federation update time modified with %s' % (
+                log('[{}] Federation update time modified with {}'.format(
                     federation, federation.metadata_update), logger, logging.INFO)
 
             log('[%s] Updating federation statistics ...' %
@@ -97,7 +97,7 @@ def refresh(fed_name=None, force_refresh=False, logger=None):
         except Exception as e:
             if error_msg is None:
                 error_msg = '%s' % e
-            error_msg = '%s\n%s' % (error_msg, e)
+            error_msg = f'{error_msg}\n{e}'
 
         finally:
             if error_msg:

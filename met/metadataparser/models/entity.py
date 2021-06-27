@@ -49,7 +49,7 @@ class EntityQuerySet(QuerySet):
 
     def iterator(self):
         cached_federations = {}
-        for entity in super(EntityQuerySet, self).iterator():
+        for entity in super().iterator():
             if entity.file:
                 continue
 
@@ -96,21 +96,21 @@ class Entity(Base):
     }
 
     entityid = models.CharField(blank=False, max_length=200, unique=True,
-                                verbose_name=_(u'EntityID'), db_index=True)
+                                verbose_name=_('EntityID'), db_index=True)
 
     federations = models.ManyToManyField('Federation', through='Entity_Federations',
-                                         verbose_name=_(u'Federations'))
+                                         verbose_name=_('Federations'))
 
-    types = models.ManyToManyField('EntityType', verbose_name=_(u'Type'))
+    types = models.ManyToManyField('EntityType', verbose_name=_('Type'))
 
     name = JSONField(blank=True, null=True, max_length=2000,
-                     verbose_name=_(u'Display Name'))
+                     verbose_name=_('Display Name'))
 
     certstats = models.CharField(blank=True, null=True, max_length=200,
-                                 unique=False, verbose_name=_(u'Certificate Stats'))
+                                 unique=False, verbose_name=_('Certificate Stats'))
 
     _display_protocols = models.CharField(blank=True, null=True, max_length=300,
-                                          unique=False, verbose_name=_(u'Display Protocols'))
+                                          unique=False, verbose_name=_('Display Protocols'))
 
     objects = models.Manager()
 
@@ -293,7 +293,7 @@ class Entity(Base):
         contacts = []
         for cur_contact in self._get_property('contacts'):
             if cur_contact['name'] and cur_contact['surname']:
-                contact_name = '%s %s' % (
+                contact_name = '{} {}'.format(
                     cur_contact['name'], cur_contact['surname'])
             elif cur_contact['name']:
                 contact_name = cur_contact['name']
@@ -318,9 +318,9 @@ class Entity(Base):
 
         return logos
 
-    class Meta(object):
-        verbose_name = _(u'Entity')
-        verbose_name_plural = _(u'Entities')
+    class Meta:
+        verbose_name = _('Entity')
+        verbose_name_plural = _('Entities')
 
     def __unicode__(self):
         return self.entityid
@@ -389,7 +389,7 @@ class Entity(Base):
             self.load_metadata()
 
         if self.entityid.lower() != entity_data.get('entityid').lower():
-            raise ValueError("EntityID is not the same: %s != %s" % (
+            raise ValueError("EntityID is not the same: {} != {}".format(
                 self.entityid.lower(), entity_data.get('entityid').lower()))
 
         self._entity_cached = entity_data
@@ -421,7 +421,7 @@ class Entity(Base):
 
         entity = self._entity_cached.copy()
         entity["types"] = [unicode(f) for f in self.types.all()]
-        entity["federations"] = [{u"name": unicode(f), u"url": f.get_absolute_url()}
+        entity["federations"] = [{"name": unicode(f), "url": f.get_absolute_url()}
                                  for f in self.federations.all()]
 
         if self.registration_authority:

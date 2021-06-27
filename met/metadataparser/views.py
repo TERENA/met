@@ -307,7 +307,7 @@ def federation_delete(request, federation_slug):
             entity.delete()
 
     messages.success(request,
-                     _(u"%(federation)s federation was deleted successfully"
+                     _("%(federation)s federation was deleted successfully"
                      % {'federation': unicode(federation)}))
     federation.delete()
     return HttpResponseRedirect(reverse('index'))
@@ -586,7 +586,7 @@ def entity_edit(request, federation_slug=None, entity_id=None):
 def entity_delete(request, entity_id):
     entity = get_object_or_404(Entity, id=entity_id)
     messages.success(request,
-                     _(u"%(entity)s entity was deleted successfully"
+                     _("%(entity)s entity was deleted successfully"
                      % {'entity': unicode(entity)}))
     entity.delete()
     return HttpResponseRedirect(reverse('index'))

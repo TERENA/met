@@ -647,7 +647,7 @@ Find a (set of) EntityDescriptor element(s) based on the specified 'member' expr
                     log.debug("selecting %s filtered by %s" % (src, xp))
                 return self._lookup(src, xp)
 
-            m = re.match("^\{(.+)\}(.+)$", member)
+            m = re.match(r"^\{(.+)\}(.+)$", member)
             if m is not None:
                 log.debug("attribute-value match: %s='%s'" %
                           (m.group(1), m.group(2)))

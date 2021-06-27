@@ -56,7 +56,7 @@ def user_can_edit(objtype, login_url=None, delete=False):
                 return view_func(request, *args, **kwargs)
 
             if request.user.is_authenticated():
-                return HttpResponseForbidden(u"You can't edit this object")
+                return HttpResponseForbidden("You can't edit this object")
 
             return login_request(path, login_url)
         return _wrapped_view

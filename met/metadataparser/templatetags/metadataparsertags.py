@@ -213,7 +213,7 @@ def export_menu(context, entities, append_query=None, onclick=None):
     for mode in export_modes.keys():
         url = base_path
         if query:
-            url += '?%s&format=%s' % (query, mode)
+            url += f'?{query}&format={mode}'
         else:
             url += '?format=%s' % (mode)
         if append_query:
@@ -229,7 +229,7 @@ def export_summary_menu(query, onclick=None):
     for mode in export_summary_modes.keys():
         urlquery = {'format': mode,
                     'export': query}
-        url = "./?%(query)s" % {'query': urlencode(urlquery)}
+        url = f"./?{urlencode(urlquery)}"
         formats.append({'url': url, 'label': mode, 'onclick': onclick})
 
     return {'formats': formats}
@@ -304,13 +304,13 @@ def organization_property(context, organizations, prop, lang):
 def get_property(obj, prop=None):
     uprop = unicode(prop)
     if not uprop:
-        return '<a href="%(link)s">%(name)s</a>' % {"link": obj.get_absolute_url(),
-                                                    "name": unicode(obj)}
+        return '<a href="{link}">{name}</a>'.format(link=obj.get_absolute_url(),
+                                                    name=unicode(obj))
     if isinstance(obj, dict):
         return obj.get(prop, None)
     if getattr(getattr(obj, uprop, None), 'all', None):
-        return '. '.join(['<a href="%(link)s">%(name)s</a>' % {"link": item.get_absolute_url(),
-                                                               "name": unicode(item)}
+        return '. '.join(['<a href="{link}">{name}</a>'.format(link=item.get_absolute_url(),
+                                                               name=unicode(item))
                           for item in getattr(obj, uprop).all()])
     if isinstance(getattr(obj, uprop, ''), list):
         return ', '.join(getattr(obj, uprop, []))

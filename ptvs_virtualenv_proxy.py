@@ -23,7 +23,7 @@ if sys.version_info[0] == 3:
 
     def exec_file(path, global_dict):
         """Execute a file"""
-        with open(path, 'r') as f:
+        with open(path) as f:
             code = f.read()
         code = code.replace('\r\n', '\n') + '\n'
         exec(code, global_dict)
@@ -37,7 +37,7 @@ def log(txt):
     if log_file:
         f = open(log_file, 'a+')
         try:
-            f.write('%s: %s' % (datetime.datetime.now(), txt))
+            f.write(f'{datetime.datetime.now()}: {txt}')
         finally:
             f.close()
 
@@ -86,7 +86,7 @@ def get_wsgi_handler(handler_name):
             last_tb = ': ' + traceback.format_exc()
     
     if handler is None:
-        raise ValueError('"%s" could not be imported%s' % (handler_name, last_tb))
+        raise ValueError(f'"{handler_name}" could not be imported{last_tb}')
     
     return handler
 

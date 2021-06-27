@@ -42,7 +42,7 @@ def _connect_to_smtp(server, port=25, login_type=None, username=None, password=N
                 smtp_send.esmtp_features['auth'] = login_type
             smtp_send.login(username, password)
         except Exception as errorMessage:
-            print('Error occurred while trying to login to the email server with user %s: %s' % (
+            print('Error occurred while trying to login to the email server with user {}: {}'.format(
                 username, errorMessage))
             raise
 

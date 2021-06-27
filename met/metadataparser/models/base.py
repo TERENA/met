@@ -47,7 +47,7 @@ class JSONField(models.CharField):
     description = _("JSON object")
 
     def __init__(self, *args, **kwargs):
-        super(JSONField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.validators.append(validators.MaxLengthValidator(self.max_length))
 
     @classmethod
@@ -75,7 +75,7 @@ class JSONField(models.CharField):
             return None
 
         db_value = json.dumps(value)
-        return super(JSONField, self).get_prep_value(db_value)
+        return super().get_prep_value(db_value)
 
     def get_db_prep_value(self, value, connection, prepared=False):
         """Convert our JSON object to a string before we save"""
@@ -84,7 +84,7 @@ class JSONField(models.CharField):
             return None
 
         db_value = json.dumps(value)
-        return super(JSONField, self).get_db_prep_value(db_value, connection, prepared)
+        return super().get_db_prep_value(db_value, connection, prepared)
 
 
 class Base(models.Model):
@@ -96,13 +96,13 @@ class Base(models.Model):
     file_url = models.CharField(verbose_name='Metadata url',
                                 max_length=1000,
                                 blank=True, null=True,
-                                help_text=_(u'Url to fetch metadata file'))
+                                help_text=_('Url to fetch metadata file'))
     file = models.FileField(upload_to='metadata', blank=True, null=True,
-                            verbose_name=_(u'metadata xml file'),
+                            verbose_name=_('metadata xml file'),
                             help_text=_("if url is set, metadata url will be "
                                         "fetched and replace file value"))
     file_id = models.CharField(blank=True, null=True, max_length=500,
-                               verbose_name=_(u'File ID'))
+                               verbose_name=_('File ID'))
 
     registration_authority = models.CharField(verbose_name=_('Registration Authority'),
                                               max_length=200, blank=True, null=True)
@@ -110,14 +110,14 @@ class Base(models.Model):
     editor_users = models.ManyToManyField(User, blank=True,
                                           verbose_name=_('editor users'))
 
-    class Meta(object):
+    class Meta:
         abstract = True
 
     class XmlError(Exception):
         pass
 
     def __unicode__(self):
-        return self.url or u"Metadata %s" % self.id
+        return self.url or "Metadata %s" % self.id
 
     def load_file(self):
         if not hasattr(self, '_loaded_file'):
@@ -135,10 +135,10 @@ class Base(models.Model):
             count = 1
             for stream in load_streams:
                 curid = "%s%d" % (self.slug, count)
-                load.append("%s as %s" % (stream[0], curid))
+                load.append(f"{stream[0]} as {curid}")
                 if stream[1] == 'SP' or stream[1] == 'IDP':
                     select.append(
-                        "%s!//md:EntityDescriptor[md:%sSSODescriptor]" % (curid, stream[1]))
+                        f"{curid}!//md:EntityDescriptor[md:{stream[1]}SSODescriptor]")
                 else:
                     select.append("%s" % curid)
                 count = count + 1
@@ -154,7 +154,7 @@ class Base(models.Model):
             return etree.tostring(entities)
         except Exception as e:
             raise Exception(
-                'Getting metadata from %s failed.\nError: %s' % (load_streams, e))
+                f'Getting metadata from {load_streams} failed.\nError: {e}')
 
     def fetch_metadata_file(self, file_name):
         file_url = self.file_url

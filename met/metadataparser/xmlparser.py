@@ -63,13 +63,13 @@ FEDERATION_ROOT_TAG = addns('EntitiesDescriptor')
 ENTITY_ROOT_TAG = addns('EntityDescriptor')
 
 
-class MetadataParser(object):
+class MetadataParser:
     def __init__(self, filename=None):
         if filename is None:
             raise ValueError('filename is required')
 
         self.filename = filename
-        with open(filename, 'r') as myfile:
+        with open(filename) as myfile:
             data = myfile.read().replace('\n', '')
         self.rootelem = etree.fromstring(data)
         self.file_id = self.rootelem.get('ID', None)
@@ -131,7 +131,7 @@ class MetadataParser(object):
                     entity_details = MetadataParser._get_entity_details(
                         element)
                     entity.update(entity_details)
-                    entity = dict((k, v) for k, v in entity.iteritems() if v)
+                    entity = {k: v for k, v in entity.iteritems() if v}
 
                 entity['languages'] = MetadataParser._entity_lang_seen(entity)
                 yield entity
