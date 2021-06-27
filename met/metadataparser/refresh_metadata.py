@@ -31,8 +31,8 @@ def _send_message_via_email_and_slack(error_msg, federation, logger=None):
         subject = mail_config_dict['refresh_subject'] % federation
         from_address = mail_config_dict['from_email_address']
         send_mail(from_address, subject, '%s' % error_msg)
-        send_slack('%s, - %s' % (subject, error_msg))
-    except Exception, errorMessage:
+        send_slack(f'{subject}, - {error_msg}')
+    except Exception as errorMessage:
         log('Message could not be posted successfully: %s' %
             errorMessage, logger, logging.ERROR)
 
@@ -41,7 +41,7 @@ def _fetch_new_metadata_file(federation, logger):
     try:
         changed = federation.fetch_metadata_file(federation.slug)
         return None, changed
-    except Exception, errorMessage:
+    except Exception as errorMessage:
         log('%s' % errorMessage, logger, logging.ERROR)
         return "%s" % errorMessage, False
 
@@ -83,7 +83,7 @@ def refresh(fed_name=None, force_refresh=False, logger=None):
                     federation, logger, logging.DEBUG)
                 federation.metadata_update = datetime.now()
                 federation.save(update_fields=['file', 'metadata_update'])
-                log('[%s] Federation update time modified with %s' % (
+                log('[{}] Federation update time modified with {}'.format(
                     federation, federation.metadata_update), logger, logging.INFO)
 
             log('[%s] Updating federation statistics ...' %
@@ -94,10 +94,10 @@ def refresh(fed_name=None, force_refresh=False, logger=None):
             log('[%s] NOT Computed statistics: %s' %
                 (federation, not_computed), logger, logging.DEBUG)
 
-        except Exception, e:
+        except Exception as e:
             if error_msg is None:
                 error_msg = '%s' % e
-            error_msg = '%s\n%s' % (error_msg, e)
+            error_msg = f'{error_msg}\n{e}'
 
         finally:
             if error_msg:
@@ -110,14 +110,14 @@ def refresh(fed_name=None, force_refresh=False, logger=None):
         log('Removing entity categories with no entity associated...', logger, logging.INFO)
         EntityCategory.objects.all().annotate(entitylength=Count("entity_federations")
                                               ).filter(entitylength__lte=0).delete()
-    except Exception, errorMessage:
+    except Exception as errorMessage:
         log('Error: %s' % errorMessage, logger, logging.ERROR)
 
     try:
         log('Removing entities with no federation associated...', logger, logging.INFO)
         Entity.objects.all().annotate(federationslength=Count("federations")
                                       ).filter(federationslength__lte=0).delete()
-    except Exception, errorMessage:
+    except Exception as errorMessage:
         log('Error: %s' % errorMessage, logger, logging.ERROR)
 
     log('Refreshing metadata terminated.', logger, logging.INFO)

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Saml2 Metadata Explorer Tool documentation build configuration file, created by
 # sphinx-quickstart on Thu Oct  4 17:54:30 2012.
@@ -40,8 +39,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Saml2 Metadata Explorer Tool'
-copyright = u'2012, Antonio Pérez-Aranda Alcaide at Yaco Sistemas SL'
+project = 'Saml2 Metadata Explorer Tool'
+copyright = '2012, Antonio Pérez-Aranda Alcaide at Yaco Sistemas SL'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -183,8 +182,8 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'Saml2MetadataExplorerTool.tex', u'Saml2 Metadata Explorer Tool Documentation',
-   u'Antonio Pérez-Aranda Alcaide at Yaco Sistemas SL', 'manual'),
+  ('index', 'Saml2MetadataExplorerTool.tex', 'Saml2 Metadata Explorer Tool Documentation',
+   'Antonio Pérez-Aranda Alcaide at Yaco Sistemas SL', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -213,8 +212,8 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'saml2metadataexplorertool', u'Saml2 Metadata Explorer Tool Documentation',
-     [u'Antonio Pérez-Aranda Alcaide at Yaco Sistemas SL'], 1)
+    ('index', 'saml2metadataexplorertool', 'Saml2 Metadata Explorer Tool Documentation',
+     ['Antonio Pérez-Aranda Alcaide at Yaco Sistemas SL'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -227,8 +226,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'Saml2MetadataExplorerTool', u'Saml2 Metadata Explorer Tool Documentation',
-   u'Antonio Pérez-Aranda Alcaide at Yaco Sistemas SL', 'Saml2MetadataExplorerTool', 'One line description of project.',
+  ('index', 'Saml2MetadataExplorerTool', 'Saml2 Metadata Explorer Tool Documentation',
+   'Antonio Pérez-Aranda Alcaide at Yaco Sistemas SL', 'Saml2MetadataExplorerTool', 'One line description of project.',
    'Miscellaneous'),
 ]
 

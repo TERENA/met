@@ -11,8 +11,8 @@
 
 import simplejson as json
 
-from urlparse import urlparse
-from urllib import quote_plus
+from urllib.parse import urlparse
+from urllib.parse import quote_plus
 from datetime import datetime
 
 from django.conf import settings
@@ -49,7 +49,7 @@ class EntityQuerySet(QuerySet):
 
     def iterator(self):
         cached_federations = {}
-        for entity in super(EntityQuerySet, self).iterator():
+        for entity in super().iterator():
             if entity.file:
                 continue
 
@@ -96,21 +96,21 @@ class Entity(Base):
     }
 
     entityid = models.CharField(blank=False, max_length=200, unique=True,
-                                verbose_name=_(u'EntityID'), db_index=True)
+                                verbose_name=_('EntityID'), db_index=True)
 
     federations = models.ManyToManyField('Federation', through='Entity_Federations',
-                                         verbose_name=_(u'Federations'))
+                                         verbose_name=_('Federations'))
 
-    types = models.ManyToManyField('EntityType', verbose_name=_(u'Type'))
+    types = models.ManyToManyField('EntityType', verbose_name=_('Type'))
 
     name = JSONField(blank=True, null=True, max_length=2000,
-                     verbose_name=_(u'Display Name'))
+                     verbose_name=_('Display Name'))
 
     certstats = models.CharField(blank=True, null=True, max_length=200,
-                                 unique=False, verbose_name=_(u'Certificate Stats'))
+                                 unique=False, verbose_name=_('Certificate Stats'))
 
-    _display_protocols = models.CharField(blank=True, null=True, max_length=300,		
-                                          unique=False, verbose_name=_(u'Display Protocols'))
+    _display_protocols = models.CharField(blank=True, null=True, max_length=300,
+                                          unique=False, verbose_name=_('Display Protocols'))
 
     objects = models.Manager()
 
@@ -293,7 +293,7 @@ class Entity(Base):
         contacts = []
         for cur_contact in self._get_property('contacts'):
             if cur_contact['name'] and cur_contact['surname']:
-                contact_name = '%s %s' % (
+                contact_name = '{} {}'.format(
                     cur_contact['name'], cur_contact['surname'])
             elif cur_contact['name']:
                 contact_name = cur_contact['name']
@@ -318,11 +318,11 @@ class Entity(Base):
 
         return logos
 
-    class Meta(object):
-        verbose_name = _(u'Entity')
-        verbose_name_plural = _(u'Entities')
+    class Meta:
+        verbose_name = _('Entity')
+        verbose_name_plural = _('Entities')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.entityid
 
     def load_metadata(self, federation=None, entity_data=None):
@@ -389,7 +389,7 @@ class Entity(Base):
             self.load_metadata()
 
         if self.entityid.lower() != entity_data.get('entityid').lower():
-            raise ValueError("EntityID is not the same: %s != %s" % (
+            raise ValueError("EntityID is not the same: {} != {}".format(
                 self.entityid.lower(), entity_data.get('entityid').lower()))
 
         self._entity_cached = entity_data
@@ -405,8 +405,8 @@ class Entity(Base):
 
         self.certstats = self._get_property('certstats')
 
-        newprotocols = self.protocols		
-        if newprotocols and newprotocols != "":		
+        newprotocols = self.protocols
+        if newprotocols and newprotocols != "":
             self._display_protocols = newprotocols
 
         if str(self._get_property('registration_authority')) != '':
@@ -420,8 +420,8 @@ class Entity(Base):
         self.load_metadata()
 
         entity = self._entity_cached.copy()
-        entity["types"] = [unicode(f) for f in self.types.all()]
-        entity["federations"] = [{u"name": unicode(f), u"url": f.get_absolute_url()}
+        entity["types"] = [str(f) for f in self.types.all()]
+        entity["federations"] = [{"name": str(f), "url": f.get_absolute_url()}
                                  for f in self.federations.all()]
 
         if self.registration_authority:
@@ -437,7 +437,7 @@ class Entity(Base):
         return entity
 
     def display_etype(value, separator=', '):
-        return separator.join([unicode(item) for item in value.all()])
+        return separator.join([str(item) for item in value.all()])
 
     @classmethod
     def get_most_federated_entities(self, maxlength=TOP_LENGTH, cache_expire=None):
@@ -459,8 +459,8 @@ class Entity(Base):
                     'entityid': entity.entityid,
                     'name': entity.name,
                     'absolute_url': entity.get_absolute_url(),
-                    'types': [unicode(item) for item in entity.types.all()],
-                    'federations': [(unicode(item.name), item.get_absolute_url()) for item in entity.federations.all()],
+                    'types': [str(item) for item in entity.types.all()],
+                    'federations': [(str(item.name), item.get_absolute_url()) for item in entity.federations.all()],
                 })
 
         if cache_expire:

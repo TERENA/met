@@ -15,7 +15,7 @@ import pytz
 import operator
 import simplejson as json
 import numpy as np
-from urllib import unquote
+from urllib.parse import unquote
 from datetime import datetime
 from dateutil import tz
 
@@ -62,7 +62,7 @@ def increment_current_toplength(request):
 
     request.session['currentTopLength'] = current_top_length
     return HttpResponseRedirect(reverse('most_federated_entities'))
-    
+
 def decrement_current_toplength(request):
     current_top_length = request.session.get('currentTopLength', TOP_LENGTH)
     current_top_length -= TOP_LENGTH
@@ -130,7 +130,7 @@ def index(request):
     export_format = request.GET.get('format', None)
     if export and export_format:
         return _index_export(export, export_format, params)
-    
+
     return render_to_response('metadataparser/index.html', params, context_instance=RequestContext(request))
 
 @profile(name='Most Federated Entities page')
@@ -148,7 +148,7 @@ def most_federated_entities(request):
     export_format = request.GET.get('format', None)
     if export and export_format:
         return _index_export(export, export_format, params)
-    
+
     return render_to_response('metadataparser/most_federated_entities.html', params, context_instance=RequestContext(request))
 
 def _paginate_fed(ob_entities, page):
@@ -198,7 +198,7 @@ def federation_view(request, federation_slug=None):
     if request.GET and 'entity_type' in request.GET:
         entity_type = request.GET['entity_type']
         ob_entities = ob_entities.filter(types__xmlname=entity_type)
-    
+
     entity_category = None
     if request.GET and 'entity_category' in request.GET:
         entity_category = request.GET['entity_category']
@@ -214,8 +214,8 @@ def federation_view(request, federation_slug=None):
                 'entityid': entity.entityid,
                 'name': entity.name,
                 'absolute_url': entity.get_absolute_url(),
-                'types': [unicode(item) for item in entity.types.all()],
-                'federations': [(unicode(item.name), item.get_absolute_url()) for item in entity.federations.all()],
+                'types': [str(item) for item in entity.types.all()],
+                'federations': [(str(item.name), item.get_absolute_url()) for item in entity.federations.all()],
             })
 
     if 'format' in request.GET:
@@ -307,8 +307,8 @@ def federation_delete(request, federation_slug):
             entity.delete()
 
     messages.success(request,
-                     _(u"%(federation)s federation was deleted successfully"
-                     % {'federation': unicode(federation)}))
+                     _("%(federation)s federation was deleted successfully"
+                     % {'federation': str(federation)}))
     federation.delete()
     return HttpResponseRedirect(reverse('index'))
 
@@ -327,7 +327,7 @@ def federation_charts(request, federation_slug=None):
             stats_config_dict = getattr(settings, "STATS")
             service_terms = stats_config_dict['statistics']['entity_by_type']['terms']
             protocol_terms = stats_config_dict['statistics']['entity_by_protocol']['terms']
-            
+
             protocols = stats_config_dict['protocols']
 
             from_time = datetime.fromordinal(form.cleaned_data['fromDate'].toordinal())
@@ -357,7 +357,7 @@ def federation_charts(request, federation_slug=None):
                         s_chart.append(cur_stat)
                         cur_data = s.time.strftime('%d/%m/%y')
                         cur_stat = { 'date': cur_data }
-                    
+
                     cur_stat[s.feature] = s.value
                 s_chart.append(cur_stat)
 
@@ -385,7 +385,7 @@ def federation_charts(request, federation_slug=None):
 
             return render_to_response('metadataparser/federation_chart.html',
                                       {'form': form,
-                                       'statcharts': True, 
+                                       'statcharts': True,
                                        's_chart': s_chart,
                                        'p_chart': p_chart,
                                        'p_chart_axis_max': p_chart_axis_max,
@@ -433,7 +433,7 @@ def stats_chart(stats_config_dict, request, stats, entity, protocols=None):
     return Chart(
         datasource = statdata,
         series_options = series_options,
-        chart_options = chart_options, 
+        chart_options = chart_options,
         x_sortf_mapf_mts=(None, lambda i: datetime.fromtimestamp(time.mktime(i.replace(tzinfo=tz.gettz('UTC')).astimezone(tz.tzlocal()).timetuple())).strftime(time_format), False)
     )
 
@@ -445,7 +445,7 @@ def _create_statdata(chart_type, stats, terms=None, term_names=None):
            series=[{'options': {
                        'source': stats.filter(feature=term)},
                        'legend_by': 'feature',
-                       'terms': [{'time_%s' %term :'time'}, 
+                       'terms': [{'time_%s' %term :'time'},
                                  {term_names[term] : 'value', 'name': 'feature'}]
                     } for term in terms]
         )
@@ -534,7 +534,7 @@ def entity_view(request, entityid):
     return render_to_response('metadataparser/entity_view.html',
             {'settings': settings,
              'entity': entity,
-             'lang': request.GET.get('lang', 'en') 
+             'lang': request.GET.get('lang', 'en')
             }, context_instance=RequestContext(request))
 
 
@@ -586,8 +586,8 @@ def entity_edit(request, federation_slug=None, entity_id=None):
 def entity_delete(request, entity_id):
     entity = get_object_or_404(Entity, id=entity_id)
     messages.success(request,
-                     _(u"%(entity)s entity was deleted successfully"
-                     % {'entity': unicode(entity)}))
+                     _("%(entity)s entity was deleted successfully"
+                     % {'entity': str(entity)}))
     entity.delete()
     return HttpResponseRedirect(reverse('index'))
 
@@ -611,7 +611,7 @@ def entity_comment(request, federation_slug=None, entity_id=None):
                 subject = mail_config['comment_subject'] %entity
                 send_mail(form.data['email'], subject, form.data['comment'])
                 messages.success(request, _('Comment posted successfully'))
-            except Exception, errorMessage:
+            except Exception as errorMessage:
                 messages.error(request, _('Comment could not be posted successfully: %s' %errorMessage))
 
             return HttpResponseRedirect(form.instance.get_absolute_url())
@@ -642,7 +642,7 @@ def entity_proposal(request, federation_slug=None, entity_id=None):
 
     if request.method == 'POST':
         form = EntityProposalForm(request.POST, request.FILES, instance=entity)
-     
+
         if form.is_valid():
             mail_config = getattr(settings, "MAIL_CONFIG")
             try:
@@ -651,7 +651,7 @@ def entity_proposal(request, federation_slug=None, entity_id=None):
                 body = mail_config['proposal_body'] % (entity, ', '.join(my_dict['federations']), form.data['comment'])
                 send_mail(form.data['email'], subject, body)
                 messages.success(request, _('Proposal posted successfully'))
-            except Exception, errorMessage:
+            except Exception as errorMessage:
                 messages.error(request, _('Proposal could not be posted successfully: %s' %errorMessage))
 
             return HttpResponseRedirect(form.instance.get_absolute_url())
@@ -695,8 +695,8 @@ def search_service(request):
                 'entityid': entity.entityid,
                 'name': entity.name,
                 'absolute_url': entity.get_absolute_url(),
-                'types': [unicode(item) for item in entity.types.all()],
-                'federations': [(unicode(item.name), item.get_absolute_url()) for item in entity.federations.all()],
+                'types': [str(item) for item in entity.types.all()],
+                'federations': [(str(item.name), item.get_absolute_url()) for item in entity.federations.all()],
             })
 
         return export_query_set(request.GET.get('format'), entities,
@@ -708,8 +708,8 @@ def search_service(request):
             'entityid': entity.entityid,
             'name': entity.name,
             'absolute_url': entity.get_absolute_url(),
-            'types': [unicode(item) for item in entity.types.all()],
-            'federations': [(unicode(item.name), item.get_absolute_url()) for item in entity.federations.all()],
+            'types': [str(item) for item in entity.types.all()],
+            'federations': [(str(item.name), item.get_absolute_url()) for item in entity.federations.all()],
         })
 
     return render_to_response('metadataparser/service_search.html',
@@ -780,8 +780,8 @@ def search_entities(request):
                     'entityid': entity.entityid,
                     'name': entity.name,
                     'absolute_url': entity.get_absolute_url(),
-                    'types': [unicode(item) for item in entity.types.all()],
-                    'federations': [(unicode(item.name), item.get_absolute_url()) for item in entity.federations.all()],
+                    'types': [str(item) for item in entity.types.all()],
+                    'federations': [(str(item.name), item.get_absolute_url()) for item in entity.federations.all()],
                 })
 
             export_format = form.cleaned_data['export_format']

@@ -122,7 +122,7 @@ Parse a time delta from expressions like 1w 32d 4h 5s - i.e in weeks, days hours
 :param input: A human-friendly string representation of a timedelta
     """
     keys = ["weeks", "days", "hours", "minutes"]
-    regex = "".join(["((?P<%s>\d+)%s ?)?" % (k, k[0]) for k in keys])
+    regex = "".join([r"((?P<%s>\d+)%s ?)?" % (k, k[0]) for k in keys])
     kwargs = {}
     for k, v in re.match(regex, input).groupdict(default="0").items():
         kwargs[k] = int(v)
@@ -297,7 +297,7 @@ def root(t):
 
 def duration2timedelta(period):
     regex = re.compile(
-        '(?P<sign>[-+]?)P(?:(?P<years>\d+)[Yy])?(?:(?P<months>\d+)[Mm])?(?:(?P<days>\d+)[Dd])?(?:T(?:(?P<hours>\d+)[Hh])?(?:(?P<minutes>\d+)[Mm])?(?:(?P<seconds>\d+)[Ss])?)?')
+        r'(?P<sign>[-+]?)P(?:(?P<years>\d+)[Yy])?(?:(?P<months>\d+)[Mm])?(?:(?P<days>\d+)[Dd])?(?:T(?:(?P<hours>\d+)[Hh])?(?:(?P<minutes>\d+)[Mm])?(?:(?P<seconds>\d+)[Ss])?)?')
 
     # Fetch the match groups with default value of 0 (not None)
     m = regex.match(period)

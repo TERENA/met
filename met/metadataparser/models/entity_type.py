@@ -20,10 +20,10 @@ class EntityType(models.Model):
     """
 
     name = models.CharField(blank=False, max_length=20, unique=True,
-                            verbose_name=_(u'Name'), db_index=True)
+                            verbose_name=_('Name'), db_index=True)
 
     xmlname = models.CharField(blank=False, max_length=20, unique=True,
-                               verbose_name=_(u'Name in XML'), db_index=True)
+                               verbose_name=_('Name in XML'), db_index=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name

@@ -55,10 +55,10 @@ class Federation(Base):
     """
 
     name = models.CharField(blank=False, null=False, max_length=200,
-                            unique=True, verbose_name=_(u'Name'))
+                            unique=True, verbose_name=_('Name'))
 
     type = models.CharField(blank=True, null=True, max_length=100,
-                            unique=False, verbose_name=_(u'Type'), choices=FEDERATION_TYPES)
+                            unique=False, verbose_name=_('Type'), choices=FEDERATION_TYPES)
 
     url = models.URLField(verbose_name='Federation url',
                           blank=True, null=True)
@@ -67,21 +67,21 @@ class Federation(Base):
                                        max_length=150, blank=True, null=True)
 
     logo = models.ImageField(upload_to='federation_logo', blank=True,
-                             null=True, verbose_name=_(u'Federation logo'))
+                             null=True, verbose_name=_('Federation logo'))
 
     is_interfederation = models.BooleanField(default=False, db_index=True,
-                                             verbose_name=_(u'Is interfederation'))
+                                             verbose_name=_('Is interfederation'))
 
     slug = models.SlugField(max_length=200, unique=True)
 
     country = models.CharField(blank=True, null=True, max_length=100,
-                               unique=False, verbose_name=_(u'Country'))
+                               unique=False, verbose_name=_('Country'))
 
     metadata_update = models.DateTimeField(blank=True, null=True,
-                                           unique=False, verbose_name=_(u'Metadata update date and time'))
+                                           unique=False, verbose_name=_('Metadata update date and time'))
 
     certstats = models.CharField(blank=True, null=True, max_length=200,
-                                 unique=False, verbose_name=_(u'Certificate Stats'))
+                                 unique=False, verbose_name=_('Certificate Stats'))
 
     @property
     def certificates(self):
@@ -93,7 +93,7 @@ class Federation(Base):
             self._metadata_cache = self.load_file()
         return self._metadata_cache
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def get_entity_metadata(self, entityid):
@@ -369,24 +369,24 @@ class Federation(Base):
 @receiver(pre_save, sender=Federation, dispatch_uid='federation_pre_save')
 def federation_pre_save(sender, instance, **kwargs):
     # Skip pre_save if only file name is saved
-    if kwargs.has_key('update_fields') and kwargs['update_fields'] == set(['file']):
+    if kwargs.has_key('update_fields') and kwargs['update_fields'] == {'file'}:
         return
 
-    #slug = slugify(unicode(instance.name))[:200]
+    #slug = slugify(str(instance.name))[:200]
     # if instance.file_url and instance.file_url != '':
     #    try:
     #        instance.fetch_metadata_file(slug)
-    #    except Exception, e:
+    #    except Exception as e:
     #        pass
 
     if instance.name:
-        instance.slug = slugify(unicode(instance))[:200]
+        instance.slug = slugify(str(instance))[:200]
 
 
 @receiver(pre_save, sender=Entity, dispatch_uid='entity_pre_save')
 def entity_pre_save(sender, instance, **kwargs):
     # if refetch and instance.file_url:
-    #    slug = slugify(unicode(instance.name))[:200]
+    #    slug = slugify(str(instance.name))[:200]
     #    instance.fetch_metadata_file(slug)
     #    instance.process_metadata()
     pass

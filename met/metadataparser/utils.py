@@ -14,7 +14,7 @@ import hashlib
 import smtplib
 from email.mime.text import MIMEText
 from django.conf import settings
-from slackclient import SlackClient
+from slack import RTMClient as SlackClient
 
 
 def compare_filecontents(a, b):
@@ -41,8 +41,8 @@ def _connect_to_smtp(server, port=25, login_type=None, username=None, password=N
             if login_type:
                 smtp_send.esmtp_features['auth'] = login_type
             smtp_send.login(username, password)
-        except Exception, errorMessage:
-            print('Error occurred while trying to login to the email server with user %s: %s' % (
+        except Exception as errorMessage:
+            print('Error occurred while trying to login to the email server with user {}: {}'.format(
                 username, errorMessage))
             raise
 
@@ -85,7 +85,7 @@ def send_mail(from_email_address, subject, message):
             mail_config_dict['to_email_address'],
             message.as_string()
         )
-    except Exception, errorMessage:
+    except Exception as errorMessage:
         print('Error occurred while trying to send an email to %s: %s' %
               (mail_config_dict['to_email_address'], errorMessage))
         raise

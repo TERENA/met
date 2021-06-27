@@ -35,7 +35,7 @@ class FunctionalTest(StaticLiveServerTestCase):
         Tests that Home is loading properly
         """
         self.selenium.get(self._get_full_url("/"))
-        self.assertIn(u'Metadata Explorer Tool', self.selenium.title)
+        self.assertIn('Metadata Explorer Tool', self.selenium.title)
 
     def test_home_sections(self):
         """

@@ -23,16 +23,16 @@ class EntityStat(models.Model):
     """
 
     time = models.DateTimeField(blank=False, null=False,
-                                verbose_name=_(u'Metadata time stamp'))
+                                verbose_name=_('Metadata time stamp'))
 
     feature = models.CharField(max_length=100, blank=False, null=False, db_index=True,
-                               verbose_name=_(u'Feature name'))
+                               verbose_name=_('Feature name'))
 
-    value = models.PositiveIntegerField(max_length=100, blank=False, null=False,
-                                        verbose_name=_(u'Feature value'))
+    value = models.PositiveIntegerField(blank=False, null=False,
+                                        verbose_name=_('Feature value'))
 
     federation = models.ForeignKey('Federation', blank=False,
-                                   verbose_name=_(u'Federations'))
+                                   verbose_name=_('Federations'))
 
-    def __unicode__(self):
+    def __str__(self):
         return self.feature

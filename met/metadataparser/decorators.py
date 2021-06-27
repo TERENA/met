@@ -10,7 +10,7 @@
 # Consortium GARR, http://www.garr.it
 ##########################################################################
 
-import urlparse
+from urllib.parse import urlparse
 from django.http import HttpResponseForbidden
 try:
     from functools import wraps
@@ -25,9 +25,9 @@ def login_request(request, login_url=None):
     path = request.build_absolute_uri()
     # If the login url is the same scheme and net location then just
     # use the path as the "next" url.
-    login_scheme, login_netloc = urlparse.urlparse(login_url or
+    login_scheme, login_netloc = urlparse(login_url or
                                                    settings.LOGIN_URL)[:2]
-    current_scheme, current_netloc = urlparse.urlparse(path)[:2]
+    current_scheme, current_netloc = urlparse(path)[:2]
     if ((not login_scheme or login_scheme == current_scheme) and
             (not login_netloc or login_netloc == current_netloc)):
         path = request.get_full_path()
@@ -56,7 +56,7 @@ def user_can_edit(objtype, login_url=None, delete=False):
                 return view_func(request, *args, **kwargs)
 
             if request.user.is_authenticated():
-                return HttpResponseForbidden(u"You can't edit this object")
+                return HttpResponseForbidden("You can't edit this object")
 
             return login_request(path, login_url)
         return _wrapped_view

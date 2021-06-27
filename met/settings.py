@@ -13,15 +13,41 @@
 # Django settings for met project.
 
 import os
+from os import environ
 
 try:
-    from local_settings import HOSTNAME, BASEURL, BASEDIR, DEBUG, PROFILE, TEMPLATE_DEBUG, DATABASES, MYSQLPOOL_BACKEND, MYSQLPOOL_ARGUMENTS
+    from local_settings import MYSQLPOOL_BACKEND, MYSQLPOOL_ARGUMENTS
     from local_settings import ADMINS, INTERNAL_IPS, ALLOWED_HOSTS, CACHES
     from local_settings import SAML_CREATE_UNKNOWN_USER, SAML_DJANGO_USER_MAIN_ATTRIBUTE, SAML_ATTRIBUTE_MAPPING, ORGANIZATION_NAME, SAML2DIR
     from local_settings import LOGIN_URL, LOGOUT_URL, SAML_DESCRIPTION, SAML_ENTITYID, SAML_CONFIG, DJANGO_FEDERATIONS, DJANGO_ADDITIONAL_IDPS
     from local_settings import MAIL_CONFIG, SLACK_CONFIG, OWA_BASEURL, OWA_SITEID
 except Exception:
-    print "Error in loading local_settings"
+    raise
+    print("Error in loading local_settings")
+
+
+def to_bool(val):
+    return val.lower() == 'true'
+
+
+# Settings configurable in the env file
+BASEURL = environ.get('BASEURL', '')
+DATABASES = {
+    'default': {
+        'ENGINE': environ.get('DATABASE_ENGINE'),
+        'NAME': environ.get('DATABASE_NAME'),
+        'USER': environ.get('DATABASE_USER'),
+        'PASSWORD': environ.get('DATABASE_PASSWORD'),
+        'HOST': environ.get('DATABASE_HOST'),
+        'PORT': environ.get('DATABASE_PORT'),
+    }
+}
+DEBUG = to_bool(environ.get('DEBUG', 'True'))
+HOSTNAME = environ.get('HOSTNAME', '')
+PROFILE = to_bool(environ.get('PROFILE', 'False'))
+TEMPLATE_DEBUG = DEBUG
+
+BASEDIR = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
 
 MANAGERS = ADMINS
 
@@ -97,9 +123,8 @@ TEMPLATE_LOADERS = (
     #'django.template.loaders.eggs.Loader',
 )
 
-MIDDLEWARE_CLASSES = filter(None, (
+MIDDLEWARE_CLASSES = [
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'silk.middleware.SilkyMiddleware' if PROFILE else None,
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -107,14 +132,17 @@ MIDDLEWARE_CLASSES = filter(None, (
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'pagination.middleware.PaginationMiddleware',
-))
+]
+
+if PROFILE:
+    MIDDLEWARE_CLASSES.insert(1, 'silk.middleware.SilkyMiddleware')
 
 ROOT_URLCONF = 'met.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'met.wsgi.application'
 
-INSTALLED_APPS = filter(None, (
+INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -125,14 +153,14 @@ INSTALLED_APPS = filter(None, (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
     'pagination',
-    'silk' if PROFILE else None,
     'met.portal',
     'met.metadataparser',
     'djangosaml2',
     'chartit',
-))
+]
 
 if PROFILE:
+    INSTALLED_APPS.append('silk')
     SILKY_META = True
     SILKY_PYTHON_PROFILER = True
     SILKY_INTERCEPT_PERCENT = 100
@@ -174,7 +202,7 @@ LOGGING = {
         'saml2file': {
             'level': 'ERROR',
             'class': 'logging.FileHandler',
-            'filename': '/var/log/djangosaml2.log',
+            'filename': '/tmp/djangosaml2.log',
             'formatter': 'verbose',
         }
     },

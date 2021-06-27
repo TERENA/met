@@ -22,12 +22,12 @@ class EntityCategory(models.Model):
     category_id = models.CharField(verbose_name='Entity category ID',
                                    max_length=1000,
                                    blank=False, null=False,
-                                   help_text=_(u'The ID of the entity category'))
+                                   help_text=_('The ID of the entity category'))
 
     name = models.CharField(verbose_name='Entity category name',
                             max_length=1000,
                             blank=True, null=True,
-                            help_text=_(u'The name of the entity category'))
+                            help_text=_('The name of the entity category'))
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name or self.category_id

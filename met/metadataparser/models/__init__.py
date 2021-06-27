@@ -12,13 +12,13 @@
 
 from django.conf import settings
 
-from base import Dummy
-from federation import Federation, FEDERATION_TYPES
-from entity import Entity
-from entity_type import EntityType
-from entity_category import EntityCategory
-from entity_federations import Entity_Federations
-from entity_stat import EntityStat
+from .base import Dummy
+from .federation import Federation, FEDERATION_TYPES
+from .entity import Entity
+from .entity_type import EntityType
+from .entity_category import EntityCategory
+from .entity_federations import Entity_Federations
+from .entity_stat import EntityStat
 
 TOP_LENGTH = getattr(settings, "TOP_LENGTH", 5)
 
